@@ -6,34 +6,48 @@ import java.util.Vector;
 public class Server {
 	private String name;
 	private int maxTrafficTypes;
-	private Queue[] queues;
-	private Vector routingTable;
-	private double recieveRate;
-	private double sendRate;
-	private Random generator;
-	private Packet servicedPacket;
+	public Queue[] queues;
+	private RoutingTable rtable;
+	public double recieveRate;
+	public double sendRate;
+	
+	/**
+	 * Specifies the current traffic serviced by server, the lower value means higher priority
+	 */
+	public int currentTrafficType;
+	
+	/**
+	 * Currently serviced packet in the server
+	 */
+	public Packet servicedPacket;
+	
+	/**
+	 * Specifies if the server is currently busy(if it is servicing any packet)
+	 */
+	boolean busy;
 	
 	public void recieve() {
 		//Select traffic type for the new packet
-		short selection = (short)(maxTrafficTypes * generator.nextDouble());
+		short selection = (short)(maxTrafficTypes * Monitor.generator.nextDouble());
 		
 		//Create and move packet to the end of the queue of this server 
 		new Packet(selection).moveToServer(this);
 		
 		//Create new packet arrival event with the time created randomly based on recieveRate
-		double time = Monitor.clock + generator.nextDouble() * recieveRate;
+		double time = Monitor.clock + Monitor.generator.nextDouble() * recieveRate;
 		
 		//Schedule new arrival event
-		Monitor.schedule(new Reception(time, this));
+		Monitor.schedule(new Generator(time, this));
 	}
 	
 	public void send() {
-		;
-	}
-	
-	public void route() {
 		
 	}
+	
+	public Server route() {
+		return rtable.getServerForResult(Monitor.generator.nextFloat());
+	}
+	
 	/**
 	 * Constructor for Server class
 	 * @param serverName String with the name of the server
@@ -41,9 +55,12 @@ public class Server {
 	 * @param sRate double Rate of sending the packets
 	 * @param routeTab Vector of Routing elements specifing routing table
 	 */
-	public Server(String serverName, double rRate, double sRate, Vector routeTab, Random gen) {
-		//assumption for FAN - there are only 2 traffic types
+	public Server(String serverName, double rRate, double sRate, RoutingTable routeTab) {
+		//assumption for FAN - there are only 2 traffic types (0 - stream, 1 - elastic)
 		maxTrafficTypes = 2;
+		
+		//the default traffic type is 0 - stream, with the highest priority
+		currentTrafficType = 0;
 		
 		//assing the name
 		this.name = serverName;
@@ -59,9 +76,7 @@ public class Server {
 		this.sendRate 		= sRate;
 		
 		//assign the routing table
-		this.routingTable = routeTab;
+		this.rTable = routeTab;
 		
-		//assign the random numbers generator
-		generator = gen;
 	}
 }
