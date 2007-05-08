@@ -1,5 +1,5 @@
 #include "Common.h"	
 
-bool Time::operator< (const Time& y){
-	return t < y.t;
+bool TimeCompare::operator()(const Time a,const Time b){
+	return a.t < b.t;
 }
