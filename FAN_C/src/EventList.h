@@ -5,7 +5,7 @@
 #include "Event.h"
 
 class EventList{
-		std::map<Time, Event*> list;
+		std::map<Time, Event*,TimeCompare> list;
 	public:
 		EventList();
 		Event* removeFirst();
