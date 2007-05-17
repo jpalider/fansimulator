@@ -2,8 +2,7 @@ package fan;
 
 /**
  * This is the class that represents Time in fan simulator
- * @author dodek
- *
+ * 
  */
 public class Time implements Comparable<Time>{
 	/**
