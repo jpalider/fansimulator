@@ -1,6 +1,11 @@
 package fan;
 import java.util.Vector;
 
+/**This is the server class
+ * 
+ * @author dodek
+ *
+ */
 public class Server {
 	private	String name;
 	private	int maxTrafficTypes;
