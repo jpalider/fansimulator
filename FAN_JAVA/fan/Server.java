@@ -38,7 +38,29 @@ public class Server {
 	 * @param p Packet to be recieved by Server
 	 */
 	public void recieve(Packet p){
+		//Choose the next server and its interface that will be a next destination for this packet
+		Interface choiceIntface = routing.getServerInterfaceForResult( (float)Monitor.generator.getNumber(1) );
 		
+		//Check if interface is empty
+		if( !choiceIntface.isBusy() ) {
+			//sendTime is equal to: packet length / interface speed
+			Time sendTime = new Time( (double) p.getLength() / choiceIntface.getBandwidth() );
+			
+			//Schedule new Depart event
+			Monitor.agenda.schedule( new Depart(Monitor.clock.add(sendTime),this) );
+			
+			//And set interface as busy
+			choiceIntface.setBusy();
+		}
+		
+		//If the interface is busy then check if queue for interface has any free places
+		else if( choiceIntface.getQueue().isFull() ) {
+			//reject packet
+		}
+		
+		else {
+			choiceIntface.getQueue().putPacket(p);
+		}
 	}
 	
 	/**
