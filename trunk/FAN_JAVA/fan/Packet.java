@@ -16,5 +16,9 @@ public class Packet {
 		type = ftype;
 	}
 	
+	public int getLength() {
+		return length;
+	}
+	
 	
 }
