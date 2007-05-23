@@ -6,6 +6,31 @@ package fan;
  *
  */
 public class Packet {
+	// Under construction...
+	private class Header{
+		class Address{
+			char A;
+			char B;
+			char C;
+			char D;
+			public Address(char a, char b , char c, char d){}
+		}
+		int getVersion(){ return 0; }
+		int getIHL(){ return 0; }
+		int getTOS(){ return 0; }
+		int getLength(){ return 0; }
+		int getIdentification(){ return 0; }
+		int getFlags(){ return 0; }
+		int getFragmentOffset(){ return 0; }
+		int getTTL(){ return 0; }
+		int getProtocol(){ return 0; }
+		int getHeaderChecksum(){ return 0; }
+		Address getSourceAddress(){ return new Address((char)0,(char)0,(char)0,(char)0) ;}
+		Address getDestinationAddress(){return new Address((char)0,(char)0,(char)0,(char)0);}
+		
+		
+		
+	}
 	/**
 	 * Describes two types of considered traffic in FAN architecture.
 	 */
@@ -38,6 +63,8 @@ public class Packet {
 		type = ftype;
 	}
 	
-	
+	public int getLength(){
+		return length;
+	}
 }
-}
+
