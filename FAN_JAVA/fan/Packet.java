@@ -15,20 +15,42 @@ public class Packet {
 			char D;
 			public Address(char a, char b , char c, char d){}
 		}
-		int getVersion(){ return 0; }
-		int getIHL(){ return 0; }
-		int getTOS(){ return 0; }
-		int getLength(){ return 0; }
-		int getIdentification(){ return 0; }
-		int getFlags(){ return 0; }
-		int getFragmentOffset(){ return 0; }
-		int getTTL(){ return 0; }
-		int getProtocol(){ return 0; }
-		int getHeaderChecksum(){ return 0; }
-		Address getSourceAddress(){ return new Address((char)0,(char)0,(char)0,(char)0) ;}
-		Address getDestinationAddress(){return new Address((char)0,(char)0,(char)0,(char)0);}
 		
+		public enum Protocol { TCP, UDP }
 		
+		private int version;	
+		private int ihl;	
+		private int tos;	
+		private int length;	
+		private int identification;	
+		private int flags;	
+		private int fragmentOffset;
+		private int ttl;	
+		private int protocol;	
+		private int headerChecksum;	
+		private Address sourceAddress;	
+		private Address destinationAddress;	
+	
+	
+		public int getVersion(){ return version; }
+		public int getIHL(){ return ihl; }
+		public int getTOS(){ return tos; }
+		public int getLength(){ return length; }
+		public int getIdentification(){ return identification; }
+		public int getFlags(){ return flags; }
+		public int getFragmentOffset(){ return fragmentOffset; }
+		public int getTTL(){ return ttl; }
+		public int getProtocol(){ return protocol; }
+		public int getHeaderChecksum(){ return headerChecksum; }
+		public Address getSourceAddress(){ return sourceAddress; }
+		public Address getDestinationAddress(){return destinationAddress; }
+		
+		// Only the most important fields in IP Packet
+		private Header(Address source, Address destination, int length){
+			
+		}
+		private Header(Address source, Address destination, int length, int protocol){			
+		}
 		
 	}
 	/**
