@@ -48,7 +48,7 @@ public class Server {
 			p = null;
 		}
 		
-		//Check if interface is empty
+		//Check if interface is free
 		if( !choiceIntface.isBusy() ) {
 			//sendTime is equal to: packet length / interface speed
 			Time sendTime = new Time( (double) p.getLength() / choiceIntface.getBandwidth() );
@@ -60,14 +60,27 @@ public class Server {
 			choiceIntface.setBusy();
 		}
 		
-		//If the interface is busy then check if queue for interface has any free places
-		else if( choiceIntface.getQueue().isFull() ) {
-			//reject packet
-		}
+//		//If the interface is busy then check if queue for interface has any free places
+//		else if( choiceIntface.getQueue().isFull() ) {
+//			//reject packet
+//		}
 		
 		else {
 			choiceIntface.getQueue().putPacket(p);
 		}
+	}
+	
+	/**
+	 * Default constructor 
+	 * @param name
+	 * @param rt
+	 */
+	public Server(String name, RoutingTable rt) {
+		this.name = name;
+		this.maxTrafficTypes = 2;
+		this.routing = rt;
+		//do przedyskutowania jak nalezy zrobic konfiguracje interfejsow, co konfigurujemy pierwsze
+		this.interfaces = rt.getInterfaces();
 	}
 	
 	

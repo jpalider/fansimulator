@@ -1,6 +1,6 @@
 package fan;
 
-public class Interface {
+public class Interface{
 	private int bandwidth;
 	
 	private Server peer;
@@ -47,7 +47,6 @@ public class Interface {
 	 *
 	 */
 	public void send(){
-		
-		
+				
 	}
 }

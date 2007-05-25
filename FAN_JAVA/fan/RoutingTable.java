@@ -1,6 +1,7 @@
 package fan;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Vector;
 
 
@@ -96,5 +97,13 @@ public class RoutingTable {
 			sum += routing.elementAt(i).probability;
 		}
 		return sum;
+	}
+	
+	public Vector<Interface> getInterfaces() {
+		Vector<Interface> output = new Vector<Interface>();
+		for (Iterator<Route> iter = routing.iterator(); iter.hasNext();) {
+			output.add(iter.next().serverInterface);			
+		}
+		return output;
 	}
 }
