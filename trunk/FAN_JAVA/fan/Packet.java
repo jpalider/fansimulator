@@ -7,6 +7,7 @@ package fan;
  */
 public class Packet {
 	// Under construction...
+	public enum Protocol { TCP, UDP }
 	private class Header{
 		class Address{
 			char A;
@@ -16,8 +17,7 @@ public class Packet {
 			public Address(char a, char b , char c, char d){}
 		}
 		
-		public enum Protocol { TCP, UDP }
-		
+			
 		private int version;	
 		private int ihl;	
 		private int tos;	

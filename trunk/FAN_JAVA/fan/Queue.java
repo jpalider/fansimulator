@@ -1,15 +1,10 @@
 package fan;
 
-public class Queue {
-	public boolean isFull(){
-		return false;
-	}
+public interface Queue {
+	public boolean isFull();
 	
-	public void putPacket(Packet p) {
-		
-	}
+	public boolean putPacket(Packet p);
 	
-	public Packet removeFirst() {
-		return null;
-	}
+	public Packet removeFirst();
 }
+
