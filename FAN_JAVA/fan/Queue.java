@@ -8,4 +8,8 @@ public class Queue {
 	public void putPacket(Packet p) {
 		
 	}
+	
+	public Packet removeFirst() {
+		return null;
+	}
 }
