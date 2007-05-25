@@ -41,6 +41,13 @@ public class Server {
 		//Choose the next server and its interface that will be a next destination for this packet
 		Interface choiceIntface = routing.getServerInterfaceForResult( (float)Monitor.generator.getNumber(1) );
 		
+		//check if interface is pointing back to this server - if true than it means that the packet
+		//is leaving network - e.g. its final destination is this server or is leaving
+		//simulated network
+		if( choiceIntface.getServer() == this ){
+			p = null;
+		}
+		
 		//Check if interface is empty
 		if( !choiceIntface.isBusy() ) {
 			//sendTime is equal to: packet length / interface speed
@@ -63,14 +70,5 @@ public class Server {
 		}
 	}
 	
-	/**
-	 * Called by Depart event. send() makes a call to recieve(Packet p)
-	 * method of the next Server. Besides that it takes the first packet
-	 * from the interface queue and sets Depart event for it.
-	 * It sets inteface as free if there are no more waiting packets
-	 *
-	 */
-	public void send(){
 	
-	}
 }
