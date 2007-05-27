@@ -34,4 +34,8 @@ public class EventList {
 	public void schedule(Event newEvent) {
 		queue.add(newEvent);
 	}
+	
+	public boolean isEmpty() {
+		return queue.isEmpty();
+	}
 }
