@@ -5,10 +5,10 @@ package fan;
  * event in fan simulator
  */
 public class Event implements Comparable<Event>{
-	/**
-	 * The server where the event is scheduled to occur
-	 */
-	protected Server place;
+//	/**
+//	 * The server where the event is scheduled to occur
+//	 */
+//	protected Server place;
 	
 	/**
 	 * Time of when the event should occur
@@ -19,9 +19,9 @@ public class Event implements Comparable<Event>{
 	 * @param t Time when the event should occur
 	 * @param s Server where the event should occur
 	 */
-	public Event(Time t, Server s) {
+	public Event(Time t/*, Server s*/) {
 		this.time = t;
-		this.place = s;
+//		this.place = s;
 	}
 	
 	/**

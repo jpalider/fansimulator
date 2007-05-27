@@ -1,7 +1,9 @@
 package fan;
 
 public class Depart extends Event {
-	public Depart(Time t, Server s) {
-		super(t,s);
+	Interface intface;
+	public Depart(Time t, Interface intface) {
+		super(t);
+		this.intface = intface;
 	}
 }

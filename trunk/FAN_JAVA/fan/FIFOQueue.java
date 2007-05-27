@@ -24,5 +24,9 @@ public class FIFOQueue implements Queue {
 	public Packet removeFirst() {
 		return fifo.poll();
 	}
+	
+	public Packet peekFirst() {
+		return fifo.peek();
+	}
 
 }
