@@ -1,6 +1,9 @@
 package fan;
 import java.util.Vector;
 
+/**
+ * @author  dodek
+ */
 public class Monitor {
 	static Vector<Server> servers = new Vector<Server>();
 	static Time clock = new Time(-1);

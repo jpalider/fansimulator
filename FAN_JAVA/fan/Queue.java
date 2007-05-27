@@ -8,5 +8,7 @@ public interface Queue {
 	public Packet removeFirst();
 	
 	public Packet peekFirst();
+	
+	public boolean isEmpty();
 }
 

@@ -2,12 +2,17 @@ package fan;
 
 /**
  * This is the class that represents Packets in fan simulator.
- * @author Mumin
- *
+ * @author  Mumin
  */
 public class Packet {
 	// Under construction...
+	/**
+	 * @author  dodek
+	 */
 	public enum Protocol { TCP, UDP }
+	/**
+	 * @author  dodek
+	 */
 	private class Header{
 		class Address{
 			char A;
@@ -32,17 +37,53 @@ public class Packet {
 		private Address destinationAddress;	
 	
 	
+		/**
+		 * @return  the version
+		 * @uml.property  name="version"
+		 */
 		public int getVersion(){ return version; }
 		public int getIHL(){ return ihl; }
 		public int getTOS(){ return tos; }
+		/**
+		 * @return  the length
+		 * @uml.property  name="length"
+		 */
 		public int getLength(){ return length; }
+		/**
+		 * @return  the identification
+		 * @uml.property  name="identification"
+		 */
 		public int getIdentification(){ return identification; }
+		/**
+		 * @return  the flags
+		 * @uml.property  name="flags"
+		 */
 		public int getFlags(){ return flags; }
+		/**
+		 * @return  the fragmentOffset
+		 * @uml.property  name="fragmentOffset"
+		 */
 		public int getFragmentOffset(){ return fragmentOffset; }
 		public int getTTL(){ return ttl; }
+		/**
+		 * @return  the protocol
+		 * @uml.property  name="protocol"
+		 */
 		public int getProtocol(){ return protocol; }
+		/**
+		 * @return  the headerChecksum
+		 * @uml.property  name="headerChecksum"
+		 */
 		public int getHeaderChecksum(){ return headerChecksum; }
+		/**
+		 * @return  the sourceAddress
+		 * @uml.property  name="sourceAddress"
+		 */
 		public Address getSourceAddress(){ return sourceAddress; }
+		/**
+		 * @return  the destinationAddress
+		 * @uml.property  name="destinationAddress"
+		 */
 		public Address getDestinationAddress(){return destinationAddress; }
 		
 		// Only the most important fields in IP Packet
@@ -66,7 +107,7 @@ public class Packet {
 	 * @see Packet(FlowIdentifier id, FlowType ftype, int l)
 	 */
 	public Packet(FlowIdentifier id, FlowType ftype) {
-		new Packet(id, ftype, 65535);
+		this(id, ftype, 35);
 	}
 	/**
 	 * Constructor.
@@ -85,6 +126,10 @@ public class Packet {
 		type = ftype;
 	}
 	
+	/**
+	 * @return  the length
+	 * @uml.property  name="length"
+	 */
 	public int getLength(){
 		return length;
 	}

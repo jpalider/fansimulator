@@ -1,5 +1,8 @@
 package fan;
 
+/**
+ * @author  dodek
+ */
 public class Depart extends Event {
 	
 	Interface intface;

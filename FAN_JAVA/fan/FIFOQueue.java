@@ -29,4 +29,8 @@ public class FIFOQueue implements Queue {
 		return fifo.peek();
 	}
 
+	public boolean isEmpty() {
+		return fifo.isEmpty();
+	}
+
 }

@@ -1,5 +1,8 @@
 package fan;
 
+/**
+ * @author  dodek
+ */
 public class Interface{
 	private int bandwidth;
 	
@@ -12,8 +15,8 @@ public class Interface{
 	private boolean busy;
 	
 	/**
-	 * 
 	 * @return
+	 * @uml.property  name="busy"
 	 */
 	public boolean isBusy() {
 		return this.busy;
@@ -47,13 +50,18 @@ public class Interface{
 		this.peer = newPeer;
 	}
 	
+	/**
+	 * @return  the queue
+	 * @uml.property  name="queue"
+	 */
 	public Queue getQueue() {
 		return this.queue;
 	}
 	
 	/**
 	 * Getter for interface bandwidth
-	 * @return int bandwidth of the server
+	 * @return  int bandwidth of the server
+	 * @uml.property  name="bandwidth"
 	 */
 	public int getBandwidth() {
 		return this.bandwidth;
@@ -68,25 +76,39 @@ public class Interface{
 	 */
 	public void send(){
 		peer.recieve(queue.removeFirst());
-		Packet p = queue.peekFirst();
-		Time sendTime = new Time( (double) p.getLength() / bandwidth );
-		Monitor.agenda.schedule( new Depart(Monitor.clock.add(sendTime),this) );
+		if(queue.isEmpty())
+			this.setNotBusy();
+		else {
+			Packet p = queue.peekFirst();
+			Time sendTime = new Time( (double) p.getLength() / (double)bandwidth );
+			Monitor.agenda.schedule( new Depart(Monitor.clock.add(sendTime),this) );
+		}
 	}
 
 	public Interface(int bandwidth, Server peer, Server local) {
-		this.bandwidth = bandwidth;
+		this(bandwidth);
 		this.peer = peer;
 		this.localhost = local;
 	}
 
 	public Interface(int bandwidth) {
 		this.bandwidth = bandwidth;
+		this.queue = new FIFOQueue(50);
+		this.setNotBusy();
 	}
 
+	/**
+	 * @return  the localhost
+	 * @uml.property  name="localhost"
+	 */
 	public Server getLocalhost() {
 		return localhost;
 	}
 
+	/**
+	 * @param localhost  the localhost to set
+	 * @uml.property  name="localhost"
+	 */
 	public void setLocalhost(Server locahost) {
 		this.localhost = locahost;
 	}

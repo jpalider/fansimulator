@@ -1,8 +1,7 @@
 package fan;
 
-/**This is the basic event class - a parent class for  
- * Depart and Generate classes. It presents a simulation
- * event in fan simulator
+/**
+ * This is the basic event class - a parent class for   Depart and Generate classes. It presents a simulation event in fan simulator
  */
 public class Event implements Comparable<Event>{
 //	/**

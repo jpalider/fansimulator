@@ -9,7 +9,6 @@ public class RoutingTable {
 	
 	/**
 	 * Class for holding information about the possible routes.
-	 * 
 	 */
 	private class Route implements Comparable{
 		
@@ -92,7 +91,7 @@ public class RoutingTable {
 	 * @return float with the sum of probabilites
 	 */
 	public double getProbabilitySum() {
-		float sum = 0;
+		double sum = 0;
 		for(int i=0; i< routing.size(); i++) {
 			sum += routing.elementAt(i).probability;
 		}

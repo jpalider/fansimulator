@@ -2,8 +2,7 @@ package fan;
 
 /**
  * This is the class responsible for generating new packets at input interface of server
- * @author dodek
- *
+ * @author  dodek
  */
 public class Generate extends Event {
 	private Server place;
