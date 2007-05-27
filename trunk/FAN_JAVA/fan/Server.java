@@ -49,7 +49,7 @@ public class Server {
 		}
 		
 		//Check if interface is free
-		if( !choiceIntface.isBusy() ) {
+		else if( !choiceIntface.isBusy() ) {
 			//sendTime is equal to: packet length / interface speed
 			Time sendTime = new Time( (double) p.getLength() / choiceIntface.getBandwidth() );
 			
@@ -87,6 +87,7 @@ public class Server {
 		this.name = name;
 		this.maxTrafficTypes = 2;
 		this.routing = new RoutingTable();
+		this.interfaces = new Vector<Interface>();
 	}
 	
 	/**

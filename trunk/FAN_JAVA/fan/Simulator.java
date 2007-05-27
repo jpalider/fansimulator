@@ -14,10 +14,18 @@ public class Simulator {
 //			System.out.println("Error in adding route to RoutingTable rt");
 //			return;
 //		}
+		double simulationTime = 100;
 		Server server1 = new Server("server1");
 		server1.addInterface(server1, 1, 10);
 		Generate firstGeneratator = new Generate(new Time(1),server1);
-				
+		Monitor.clock = new Time(-1);
+		Monitor.agenda.schedule(new Generate(new Time(0),server1));
+		while( !Monitor.agenda.isEmpty() && Monitor.clock.compareTo(new Time(simulationTime)) <= 0 ) {
+			Event now = Monitor.agenda.removeFirst();
+			Monitor.clock = now.time;
+			now.run();
+			System.out.println("The time is now: " + Monitor.clock);
+		}
 	}
 
 }

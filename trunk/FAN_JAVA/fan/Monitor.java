@@ -2,8 +2,8 @@ package fan;
 import java.util.Vector;
 
 public class Monitor {
-	static Vector<Server> servers;
-	static Time clock;
-	static EventList agenda;
-	static Random generator;
+	static Vector<Server> servers = new Vector<Server>();
+	static Time clock = new Time(-1);
+	static EventList agenda = new EventList();
+	static Random generator = new Random();
 }

@@ -1,5 +1,7 @@
 package fan;
 
+import com.sun.xml.internal.bind.v2.runtime.RuntimeUtil.ToStringAdapter;
+
 /**
  * This is the class that represents Time in fan simulator
  * 
@@ -53,6 +55,14 @@ public class Time implements Comparable<Time>{
 	 *  @see Comparable interface
 	 */
 	public int compareTo(Time tt) {
-		return (int)(tt.t - this.t);
+		if(tt.t - this.t < 0)
+			return 1;
+		else if(tt.t - this.t == 0)
+			return 0;
+		return -1;
+	}
+	
+	public String toString(){
+		return String.valueOf(t);
 	}
 }
