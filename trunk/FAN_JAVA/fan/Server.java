@@ -1,8 +1,8 @@
 package fan;
 import java.util.Vector;
 
-/**This is the server class
- * 
+/**
+ * This is the server class
  */
 public class Server {
 	/**
@@ -46,6 +46,8 @@ public class Server {
 		//simulated network
 		if( choiceIntface.getServer() == this ){
 			p = null;
+			System.out.println("Packet left network\nThe time is now: " + Monitor.clock);
+			
 		}
 		
 		//Check if interface is free
