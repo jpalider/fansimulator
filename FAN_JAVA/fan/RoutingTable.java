@@ -18,7 +18,7 @@ public class RoutingTable {
 		/** Probability specifing the possibility of the packet 
 		 * going into this destination 
 		 */
-		public float probability;
+		public double probability;
 		
 		/**
 		 * Method to compare Route objects by their probability;
@@ -34,7 +34,7 @@ public class RoutingTable {
 			else return -1;
 		}
 		
-		public Route(Interface newServerInterface, float probab) {
+		public Route(Interface newServerInterface, double probab) {
 			serverInterface = newServerInterface;
 			probability = probab;
 		}
@@ -61,7 +61,7 @@ public class RoutingTable {
 	 * @return true if probability is specified correctly, false when the probability is too big and
 	 * the sum of all probabilites is more than 1
 	 */
-	public boolean addRoute(Interface newServerInterface,float probability) {
+	public boolean addRoute(Interface newServerInterface,double probability) {
 		if(getProbabilitySum() + probability <= 1) {
 			routing.add( new Route(newServerInterface,probability) );
 			return true;
@@ -91,7 +91,7 @@ public class RoutingTable {
 	 * this class object
 	 * @return float with the sum of probabilites
 	 */
-	public float getProbabilitySum() {
+	public double getProbabilitySum() {
 		float sum = 0;
 		for(int i=0; i< routing.size(); i++) {
 			sum += routing.elementAt(i).probability;

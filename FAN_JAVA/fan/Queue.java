@@ -6,5 +6,7 @@ public interface Queue {
 	public boolean putPacket(Packet p);
 	
 	public Packet removeFirst();
+	
+	public Packet peekFirst();
 }
 

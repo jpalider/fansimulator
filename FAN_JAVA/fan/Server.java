@@ -54,7 +54,7 @@ public class Server {
 			Time sendTime = new Time( (double) p.getLength() / choiceIntface.getBandwidth() );
 			
 			//Schedule new Depart event
-			Monitor.agenda.schedule( new Depart(Monitor.clock.add(sendTime),this) );
+			Monitor.agenda.schedule( new Depart(Monitor.clock.add(sendTime),choiceIntface) );
 			
 			//And set interface as busy
 			choiceIntface.setBusy();
@@ -70,17 +70,35 @@ public class Server {
 		}
 	}
 	
-	/**
-	 * Default constructor 
-	 * @param name
-	 * @param rt
-	 */
-	public Server(String name, RoutingTable rt) {
+//	/**
+//	 * Default constructor 
+//	 * @param name
+//	 * @param rt
+//	 */
+//	public Server(String name, RoutingTable rt) {
+//		this.name = name;
+//		this.maxTrafficTypes = 2;
+//		this.routing = rt;
+//		//do przedyskutowania jak nalezy zrobic konfiguracje interfejsow, co konfigurujemy pierwsze
+//		//this.interfaces = rt.getInterfaces();
+//	}
+	
+	public Server(String name) {
 		this.name = name;
 		this.maxTrafficTypes = 2;
-		this.routing = rt;
-		//do przedyskutowania jak nalezy zrobic konfiguracje interfejsow, co konfigurujemy pierwsze
-		this.interfaces = rt.getInterfaces();
+		this.routing = new RoutingTable();
+	}
+	
+	/**
+	 * Method for adding new interface to server
+	 * @param destServ Server that is a destination
+	 * @param probability Float with probability of packet going that server
+	 * @param bandwidth Int with the bandwidth of this interface
+	 */
+	public void addInterface(Server destServ, double probability, int bandwidth) {
+		Interface intfc = new Interface( bandwidth, destServ,this );
+		routing.addRoute(intfc, probability);
+		interfaces.add(intfc);
 	}
 	
 	
