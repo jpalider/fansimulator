@@ -30,7 +30,7 @@ public class Simulator {
 			Event now = Monitor.agenda.removeFirst();
 			Monitor.clock = now.time;
 			now.run();
-			System.out.println("The time is now: " + Monitor.clock);
+			//System.out.println("The time is now: " + Monitor.clock);
 		}
 		
 		RaportPrinter.printResultsForServer(server1);
