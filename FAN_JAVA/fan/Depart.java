@@ -12,7 +12,7 @@ public class Depart extends Event {
 	}
 	
 	public void run() {
-		System.out.println("Inside run of Depart");
+		//System.out.println("Inside run of Depart");
 		super.run();
 		intface.send();
 	}
