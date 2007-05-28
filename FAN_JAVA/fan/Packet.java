@@ -101,6 +101,10 @@ public class Packet {
 	private int length;
 	private FlowType type;
 	private FlowIdentifier flowID;
+	/**
+	 * Variable for holding information about the Time in which the Server registered this packet;
+	 */
+	private Time serviceStartTime;
 	
 	/**
 	 * Constructor.
@@ -132,6 +136,14 @@ public class Packet {
 	 */
 	public int getLength(){
 		return length;
+	}
+	
+	public void setServiceStartTime(Time t) {
+		this.serviceStartTime = t;
+	}
+	
+	public Time getServiceStartTime() {
+		return serviceStartTime;
 	}
 }
 

@@ -33,4 +33,8 @@ public class FIFOQueue implements Queue {
 		return fifo.isEmpty();
 	}
 
+	public int getSize() {
+		return fifo.size();
+	}
+
 }

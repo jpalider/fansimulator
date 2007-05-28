@@ -80,6 +80,10 @@ public class Interface{
 			this.setNotBusy();
 		else {
 			Packet p = queue.peekFirst();
+			
+			//Time used to send packet is not added to its service time
+			localhost.results.addServicedPacket( Monitor.clock.substract(p.getServiceStartTime()).toDouble() );
+			
 			Time sendTime = new Time( (double) p.getLength() / (double)bandwidth );
 			Monitor.agenda.schedule( new Depart(Monitor.clock.add(sendTime),this) );
 		}
@@ -111,6 +115,13 @@ public class Interface{
 	 */
 	public void setLocalhost(Server locahost) {
 		this.localhost = locahost;
+	}
+
+	/** Getter for the peer
+	 * @return Server that is a pointed by this interface
+	 */
+	public Server getPeer() {
+		return peer;
 	}
 	
 	

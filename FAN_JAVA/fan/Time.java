@@ -65,4 +65,8 @@ public class Time implements Comparable<Time>{
 	public String toString(){
 		return String.valueOf(t);
 	}
+	
+	public double toDouble(){
+		return this.t;
+	}
 }

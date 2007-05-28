@@ -31,6 +31,11 @@ public class Server {
 	private	FlowList flowList;
 	
 	/**
+	 * The ResultsCollector holding information about simultation times for this Server
+	 */
+	public ResultsCollector results;
+	
+	/**
 	 * Method for recieving Packet. It rejects or accepts this packet.
 	 * If it is accepted then it is added to the queue (interface is full,busy) 
 	 * or automatically creates the Depart event (after the time depending
@@ -46,8 +51,9 @@ public class Server {
 		//simulated network
 		if( choiceIntface.getServer() == this ){
 			p = null;
-			System.out.println("Packet left network\nThe time is now: " + Monitor.clock);
-			
+			results.addServicedPacket(0);
+			results.addLocallyServicedPacket();
+			results.addQueueLength(0);			
 		}
 		
 		//Check if interface is free
@@ -60,6 +66,8 @@ public class Server {
 			
 			//And set interface as busy
 			choiceIntface.setBusy();
+			results.addServicedPacket(0);
+			results.addQueueLength(0);
 		}
 		
 //		//If the interface is busy then check if queue for interface has any free places
@@ -68,7 +76,11 @@ public class Server {
 //		}
 		
 		else {
-			choiceIntface.getQueue().putPacket(p);
+			if( choiceIntface.getQueue().putPacket(p) ) {
+				p.setServiceStartTime(Monitor.clock);
+				results.addQueueLength(choiceIntface.getQueue().getSize() );
+			} else
+				results.addRejectedPacket();
 		}
 	}
 	
@@ -90,6 +102,7 @@ public class Server {
 		this.maxTrafficTypes = 2;
 		this.routing = new RoutingTable();
 		this.interfaces = new Vector<Interface>();
+		this.results = new ResultsCollector();
 	}
 	
 	/**
@@ -102,6 +115,26 @@ public class Server {
 		Interface intfc = new Interface( bandwidth, destServ,this );
 		routing.addRoute(intfc, probability);
 		interfaces.add(intfc);
+	}
+	
+	/**
+	 * Getter for server name
+	 * @return String with the name of the server
+	 */
+	public String getName() {
+		return name;
+	}
+	
+	/**
+	 * Returns the int with the number of interfaces that server has
+	 * @return Int with the number of interfaces
+	 */
+	public int getInterfacesNumber() {
+		return this.interfaces.size();
+	}
+
+	public RoutingTable getRoutingTable() {
+		return routing;
 	}
 	
 	

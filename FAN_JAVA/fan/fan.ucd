@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<editmodel:ClassDiagramEditModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:editmodel="editmodel.xmi" xmlns:options="options.xmi" id="fan" metadata="uml2-1.0" initialized="true" scrolledY="1288" tag="1000" key="32303036313030362046414E5F4A4156412F646F64656B">
+  <children xsi:type="editmodel:ClassEditModel" name="Packet" location="50,50" size="457,1169" id="fan/Packet" runTimeClassModel="fan.Packet.FlowType,fan.Packet.Protocol,fan.Packet.Header,length,Packet(Lfan.FlowIdentifier;Lfan.Packet.FlowType;I),getLength(),type,flowID,Packet(Lfan.FlowIdentifier;Lfan.Packet.FlowType;)">
+    <children xsi:type="editmodel:CompartmentEditModel" size="121,54">
+      <children xsi:type="editmodel:AttributeEditModel" name="flowID" id="fan/Packet#flowID"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="length" id="fan/Packet#length"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="type" id="fan/Packet#type"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="284,54">
+      <children xsi:type="editmodel:MethodEditModel" name="Packet" id="fan/Packet#Packet(Lfan.FlowIdentifier;Lfan.Packet.FlowType;I)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="Packet" id="fan/Packet#Packet(Lfan.FlowIdentifier;Lfan.Packet.FlowType;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getLength" id="fan/Packet#getLength()"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="434,972">
+      <children xsi:type="editmodel:EnumerationEditModel" name="FlowType" size="104,119" id="fan/Packet$FlowType" runTimeClassModel="STREAM%,ELASTIC%">
+        <children xsi:type="editmodel:CompartmentEditModel" size="61,36">
+          <children xsi:type="editmodel:EnumerationLiteralEditModel" name="STREAM" id="fan/Packet$FlowType#STREAM%"/>
+          <children xsi:type="editmodel:EnumerationLiteralEditModel" name="ELASTIC" id="fan/Packet$FlowType#ELASTIC%"/>
+        </children>
+        <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" showMethodsParameterTypes="true" showMethodsReturnType="true" showMethodsParameterNames="true" showMethodsParameterKinds="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPrivateAttributes="true" showProtectedAttributes="true" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showProtectedMethods="true" showPublicMethods="true" showPackageMethods="true" showPrivateMethods="true" showStaticMethods="true" showProtectedInnerClasses="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showPrivateInnerClasses="true" showStaticInnerClasses="true" showAssociationMember="true"/>
+      </children>
+      <children xsi:type="editmodel:ClassEditModel" name="Header" size="434,728" id="fan/Packet$Header" runTimeClassModel="getIdentification(),fragmentOffset,version,getDestinationAddress(),tos,getIHL(),getTOS(),length,getVersion(),sourceAddress,getSourceAddress(),fan.Packet.Header.Address,protocol,flags,getProtocol(),ihl,getFlags(),getLength(),ttl,headerChecksum,getHeaderChecksum(),getFragmentOffset(),Header(Lfan.Packet.Header.Address;Lfan.Packet.Header.Address;I),identification,destinationAddress,Header(Lfan.Packet.Header.Address;Lfan.Packet.Header.Address;II),getTTL()">
+        <children xsi:type="editmodel:CompartmentEditModel" size="161,216">
+          <children xsi:type="editmodel:AttributeEditModel" name="destinationAddress" id="fan/Packet$Header#destinationAddress"/>
+          <children xsi:type="editmodel:AttributeEditModel" name="flags" id="fan/Packet$Header#flags"/>
+          <children xsi:type="editmodel:AttributeEditModel" name="fragmentOffset" id="fan/Packet$Header#fragmentOffset"/>
+          <children xsi:type="editmodel:AttributeEditModel" name="headerChecksum" id="fan/Packet$Header#headerChecksum"/>
+          <children xsi:type="editmodel:AttributeEditModel" name="identification" id="fan/Packet$Header#identification"/>
+          <children xsi:type="editmodel:AttributeEditModel" name="ihl" id="fan/Packet$Header#ihl"/>
+          <children xsi:type="editmodel:AttributeEditModel" name="length" id="fan/Packet$Header#length"/>
+          <children xsi:type="editmodel:AttributeEditModel" name="protocol" id="fan/Packet$Header#protocol"/>
+          <children xsi:type="editmodel:AttributeEditModel" name="sourceAddress" id="fan/Packet$Header#sourceAddress"/>
+          <children xsi:type="editmodel:AttributeEditModel" name="tos" id="fan/Packet$Header#tos"/>
+          <children xsi:type="editmodel:AttributeEditModel" name="ttl" id="fan/Packet$Header#ttl"/>
+          <children xsi:type="editmodel:AttributeEditModel" name="version" id="fan/Packet$Header#version"/>
+        </children>
+        <children xsi:type="editmodel:CompartmentEditModel" size="411,252">
+          <children xsi:type="editmodel:MethodEditModel" name="Header" id="fan/Packet$Header#Header(Lfan.Packet.Header.Address;Lfan.Packet.Header.Address;II)"/>
+          <children xsi:type="editmodel:MethodEditModel" name="Header" id="fan/Packet$Header#Header(Lfan.Packet.Header.Address;Lfan.Packet.Header.Address;I)"/>
+          <children xsi:type="editmodel:MethodEditModel" name="getDestinationAddress" id="fan/Packet$Header#getDestinationAddress()"/>
+          <children xsi:type="editmodel:MethodEditModel" name="getFlags" id="fan/Packet$Header#getFlags()"/>
+          <children xsi:type="editmodel:MethodEditModel" name="getFragmentOffset" id="fan/Packet$Header#getFragmentOffset()"/>
+          <children xsi:type="editmodel:MethodEditModel" name="getHeaderChecksum" id="fan/Packet$Header#getHeaderChecksum()"/>
+          <children xsi:type="editmodel:MethodEditModel" name="getIHL" id="fan/Packet$Header#getIHL()"/>
+          <children xsi:type="editmodel:MethodEditModel" name="getIdentification" id="fan/Packet$Header#getIdentification()"/>
+          <children xsi:type="editmodel:MethodEditModel" name="getLength" id="fan/Packet$Header#getLength()"/>
+          <children xsi:type="editmodel:MethodEditModel" name="getProtocol" id="fan/Packet$Header#getProtocol()"/>
+          <children xsi:type="editmodel:MethodEditModel" name="getSourceAddress" id="fan/Packet$Header#getSourceAddress()"/>
+          <children xsi:type="editmodel:MethodEditModel" name="getTOS" id="fan/Packet$Header#getTOS()"/>
+          <children xsi:type="editmodel:MethodEditModel" name="getTTL" id="fan/Packet$Header#getTTL()"/>
+          <children xsi:type="editmodel:MethodEditModel" name="getVersion" id="fan/Packet$Header#getVersion()"/>
+        </children>
+        <children xsi:type="editmodel:CompartmentEditModel" size="293,171">
+          <children xsi:type="editmodel:ClassEditModel" name="Address" size="293,169" id="fan/Packet$Header$Address" runTimeClassModel="d,b,c,a,Address(CCCC)">
+            <children xsi:type="editmodel:CompartmentEditModel" size="55,72">
+              <children xsi:type="editmodel:AttributeEditModel" name="a" id="fan/Packet$Header$Address#a"/>
+              <children xsi:type="editmodel:AttributeEditModel" name="b" id="fan/Packet$Header$Address#b"/>
+              <children xsi:type="editmodel:AttributeEditModel" name="c" id="fan/Packet$Header$Address#c"/>
+              <children xsi:type="editmodel:AttributeEditModel" name="d" id="fan/Packet$Header$Address#d"/>
+            </children>
+            <children xsi:type="editmodel:CompartmentEditModel" size="270,18">
+              <children xsi:type="editmodel:MethodEditModel" name="Address" id="fan/Packet$Header$Address#Address(CCCC)"/>
+            </children>
+            <children xsi:type="editmodel:CompartmentEditModel"/>
+            <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" showMethodsParameterTypes="true" showMethodsReturnType="true" showMethodsParameterNames="true" showMethodsParameterKinds="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPrivateAttributes="true" showProtectedAttributes="true" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showProtectedMethods="true" showPublicMethods="true" showPackageMethods="true" showPrivateMethods="true" showStaticMethods="true" showProtectedInnerClasses="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showPrivateInnerClasses="true" showStaticInnerClasses="true" showAssociationMember="true"/>
+          </children>
+        </children>
+        <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" showMethodsParameterTypes="true" showMethodsReturnType="true" showMethodsParameterNames="true" showMethodsParameterKinds="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPrivateAttributes="true" showProtectedAttributes="true" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showProtectedMethods="true" showPublicMethods="true" showPackageMethods="true" showPrivateMethods="true" showStaticMethods="true" showProtectedInnerClasses="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showPrivateInnerClasses="true" showStaticInnerClasses="true" showAssociationMember="true"/>
+      </children>
+      <children xsi:type="editmodel:EnumerationEditModel" name="Protocol" size="95,119" id="fan/Packet$Protocol" runTimeClassModel="TCP%,UDP%">
+        <children xsi:type="editmodel:CompartmentEditModel" size="39,36">
+          <children xsi:type="editmodel:EnumerationLiteralEditModel" name="UDP" id="fan/Packet$Protocol#UDP%"/>
+          <children xsi:type="editmodel:EnumerationLiteralEditModel" name="TCP" id="fan/Packet$Protocol#TCP%"/>
+        </children>
+        <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" showMethodsParameterTypes="true" showMethodsReturnType="true" showMethodsParameterNames="true" showMethodsParameterKinds="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPrivateAttributes="true" showProtectedAttributes="true" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showProtectedMethods="true" showPublicMethods="true" showPackageMethods="true" showPrivateMethods="true" showStaticMethods="true" showProtectedInnerClasses="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showPrivateInnerClasses="true" showStaticInnerClasses="true" showAssociationMember="true"/>
+      </children>
+    </children>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" showMethodsParameterTypes="true" showMethodsReturnType="true" showMethodsParameterNames="true" showMethodsParameterKinds="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPrivateAttributes="true" showProtectedAttributes="true" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showProtectedMethods="true" showPublicMethods="true" showPackageMethods="true" showPrivateMethods="true" showStaticMethods="true" showProtectedInnerClasses="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showPrivateInnerClasses="true" showStaticInnerClasses="true" showAssociationMember="true" showMethods="true" showAttributes="true" showLiterals="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="Simulator" location="438,3248" size="148,97" id="fan/Simulator" runTimeClassModel="main([Ljava.lang.String;)">
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="125,18">
+      <children xsi:type="editmodel:MethodEditModel" name="main" id="fan/Simulator#main([Ljava.lang.String;)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" showMethodsParameterTypes="true" showMethodsReturnType="true" showMethodsParameterNames="true" showMethodsParameterKinds="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPrivateAttributes="true" showProtectedAttributes="true" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showProtectedMethods="true" showPublicMethods="true" showPackageMethods="true" showPrivateMethods="true" showStaticMethods="true" showProtectedInnerClasses="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showPrivateInnerClasses="true" showStaticInnerClasses="true" showAssociationMember="true" showMethods="true" showAttributes="true" showLiterals="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="Interface" location="50,2017" size="331,385" id="fan/Interface" runTimeClassModel="peer,queue,setLocalhost(Lfan.Server;),Interface(I),setNotBusy(),busy,getServer(),localhost,setBusy(),bandwidth,Interface(ILfan.Server;Lfan.Server;),send(),setServer(Lfan.Server;),getQueue(),isBusy(),getBandwidth(),getLocalhost()">
+    <children xsi:type="editmodel:CompartmentEditModel" size="101,90">
+      <children xsi:type="editmodel:AttributeEditModel" name="bandwidth" id="fan/Interface#bandwidth"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="busy" id="fan/Interface#busy"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="localhost" id="fan/Interface#localhost"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="peer" id="fan/Interface#peer"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="queue" id="fan/Interface#queue"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="308,216">
+      <children xsi:type="editmodel:MethodEditModel" name="Interface" id="fan/Interface#Interface(ILfan.Server;Lfan.Server;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="Interface" id="fan/Interface#Interface(I)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getBandwidth" id="fan/Interface#getBandwidth()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getLocalhost" id="fan/Interface#getLocalhost()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getQueue" id="fan/Interface#getQueue()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getServer" id="fan/Interface#getServer()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="isBusy" id="fan/Interface#isBusy()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="send" id="fan/Interface#send()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setBusy" id="fan/Interface#setBusy()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setLocalhost" id="fan/Interface#setLocalhost(Lfan.Server;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setNotBusy" id="fan/Interface#setNotBusy()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setServer" id="fan/Interface#setServer(Lfan.Server;)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" showMethodsParameterTypes="true" showMethodsReturnType="true" showMethodsParameterNames="true" showMethodsParameterKinds="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPrivateAttributes="true" showProtectedAttributes="true" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showProtectedMethods="true" showPublicMethods="true" showPackageMethods="true" showPrivateMethods="true" showStaticMethods="true" showProtectedInnerClasses="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showPrivateInnerClasses="true" showStaticInnerClasses="true" showAssociationMember="true" showMethods="true" showAttributes="true" showLiterals="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="Time" location="320,2904" size="172,187" id="fan/Time" runTimeClassModel="t,substract(Lfan.Time;),add(Lfan.Time;),compareTo(Lfan.Time;),Time(D),toString()">
+    <children xsi:type="editmodel:CompartmentEditModel" size="60,18">
+      <children xsi:type="editmodel:AttributeEditModel" name="t" id="fan/Time#t"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="149,90">
+      <children xsi:type="editmodel:MethodEditModel" name="Time" id="fan/Time#Time(D)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="add" id="fan/Time#add(Lfan.Time;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="compareTo" id="fan/Time#compareTo(Lfan.Time;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="substract" id="fan/Time#substract(Lfan.Time;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="toString" id="fan/Time#toString()"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" showMethodsParameterTypes="true" showMethodsReturnType="true" showMethodsParameterNames="true" showMethodsParameterKinds="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPrivateAttributes="true" showProtectedAttributes="true" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showProtectedMethods="true" showPublicMethods="true" showPackageMethods="true" showPrivateMethods="true" showStaticMethods="true" showProtectedInnerClasses="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showPrivateInnerClasses="true" showStaticInnerClasses="true" showAssociationMember="true" showMethods="true" showAttributes="true" showLiterals="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="EventList" location="542,2904" size="190,169" id="fan/EventList" runTimeClassModel="EventList(),queue,schedule(Lfan.Event;),isEmpty(),removeFirst()">
+    <children xsi:type="editmodel:CompartmentEditModel" size="82,18">
+      <children xsi:type="editmodel:AttributeEditModel" name="queue" id="fan/Event@queue+fan/EventList@|fan/Event#queue"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="167,72">
+      <children xsi:type="editmodel:MethodEditModel" name="EventList" id="fan/EventList#EventList()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="removeFirst" id="fan/EventList#removeFirst()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="schedule" id="fan/EventList#schedule(Lfan.Event;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="isEmpty" id="fan/EventList#isEmpty()"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" showMethodsParameterTypes="true" showMethodsReturnType="true" showMethodsParameterNames="true" showMethodsParameterKinds="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPrivateAttributes="true" showProtectedAttributes="true" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showProtectedMethods="true" showPublicMethods="true" showPackageMethods="true" showPrivateMethods="true" showStaticMethods="true" showProtectedInnerClasses="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showPrivateInnerClasses="true" showStaticInnerClasses="true" showAssociationMember="true" showMethods="true" showAttributes="true" showLiterals="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="RoutingTable" location="50,1635" size="405,350" id="fan/RoutingTable" runTimeClassModel="getProbabilitySum(),fan.RoutingTable.Route,getServerInterfaceForResult(F),RoutingTable(),getInterfaces(),routing,addRoute(Lfan.Interface;D)">
+    <children xsi:type="editmodel:CompartmentEditModel" size="86,18">
+      <children xsi:type="editmodel:AttributeEditModel" name="routing" id="fan/RoutingTable$Route@routing+fan/RoutingTable@|fan/RoutingTable$Route#routing"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="382,90">
+      <children xsi:type="editmodel:MethodEditModel" name="RoutingTable" id="fan/RoutingTable#RoutingTable()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="addRoute" id="fan/RoutingTable#addRoute(Lfan.Interface;D)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getInterfaces" id="fan/RoutingTable#getInterfaces()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getProbabilitySum" id="fan/RoutingTable#getProbabilitySum()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getServerInterfaceForResult" id="fan/RoutingTable#getServerInterfaceForResult(F)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="328,153">
+      <children xsi:type="editmodel:ClassEditModel" name="Route" size="328,151" id="fan/RoutingTable$Route" runTimeClassModel="Route(Lfan.Interface;D),serverInterface,compareTo(Ljava.lang.Object;),probability">
+        <children xsi:type="editmodel:CompartmentEditModel" size="143,36">
+          <children xsi:type="editmodel:AttributeEditModel" name="probability" id="fan/RoutingTable$Route#probability"/>
+          <children xsi:type="editmodel:AttributeEditModel" name="serverInterface" id="fan/RoutingTable$Route#serverInterface"/>
+        </children>
+        <children xsi:type="editmodel:CompartmentEditModel" size="305,36">
+          <children xsi:type="editmodel:MethodEditModel" name="Route" id="fan/RoutingTable$Route#Route(Lfan.Interface;D)"/>
+          <children xsi:type="editmodel:MethodEditModel" name="compareTo" id="fan/RoutingTable$Route#compareTo(Ljava.lang.Object;)"/>
+        </children>
+        <children xsi:type="editmodel:CompartmentEditModel"/>
+        <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" showMethodsParameterTypes="true" showMethodsReturnType="true" showMethodsParameterNames="true" showMethodsParameterKinds="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPrivateAttributes="true" showProtectedAttributes="true" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showProtectedMethods="true" showPublicMethods="true" showPackageMethods="true" showPrivateMethods="true" showStaticMethods="true" showProtectedInnerClasses="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showPrivateInnerClasses="true" showStaticInnerClasses="true" showAssociationMember="true"/>
+      </children>
+    </children>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" showMethodsParameterTypes="true" showMethodsReturnType="true" showMethodsParameterNames="true" showMethodsParameterKinds="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPrivateAttributes="true" showProtectedAttributes="true" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showProtectedMethods="true" showPublicMethods="true" showPackageMethods="true" showPrivateMethods="true" showStaticMethods="true" showProtectedInnerClasses="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showPrivateInnerClasses="true" showStaticInnerClasses="true" showAssociationMember="true" showMethods="true" showAttributes="true" showLiterals="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="Monitor" location="254,3248" size="134,141" id="fan/Monitor" runTimeClassModel="agenda,clock,servers,generator">
+    <children xsi:type="editmodel:CompartmentEditModel" size="111,72">
+      <children xsi:type="editmodel:AttributeEditModel" name="agenda" id="fan/Monitor#agenda"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="clock" id="fan/Monitor#clock"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="generator" id="fan/Monitor#generator"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="servers" id="fan/Server@servers+fan/Monitor@|fan/Server#servers"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" showMethodsParameterTypes="true" showMethodsReturnType="true" showMethodsParameterNames="true" showMethodsParameterKinds="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPrivateAttributes="true" showProtectedAttributes="true" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showProtectedMethods="true" showPublicMethods="true" showPackageMethods="true" showPrivateMethods="true" showStaticMethods="true" showProtectedInnerClasses="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showPrivateInnerClasses="true" showStaticInnerClasses="true" showAssociationMember="true" showMethods="true" showAttributes="true" showLiterals="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="FlowList" location="636,3248" size="95,59" id="fan/FlowList" runTimeClassModel="">
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" showMethodsParameterTypes="true" showMethodsReturnType="true" showMethodsParameterNames="true" showMethodsParameterKinds="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPrivateAttributes="true" showProtectedAttributes="true" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showProtectedMethods="true" showPublicMethods="true" showPackageMethods="true" showPrivateMethods="true" showStaticMethods="true" showProtectedInnerClasses="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showPrivateInnerClasses="true" showStaticInnerClasses="true" showAssociationMember="true" showMethods="true" showAttributes="true" showLiterals="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="Server" location="50,2452" size="397,223" id="fan/Server" runTimeClassModel="addInterface(Lfan.Server;DI),recieve(Lfan.Packet;),maxTrafficTypes,Server(Ljava.lang.String;),name,flowList,interfaces,routing">
+    <children xsi:type="editmodel:CompartmentEditModel" size="120,90">
+      <children xsi:type="editmodel:AttributeEditModel" name="flowList" id="fan/Server#flowList"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="interfaces" id="fan/Interface@interfaces+fan/Server@|fan/Interface#interfaces"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="maxTrafficTypes" id="fan/Server#maxTrafficTypes"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="name" id="fan/Server#name"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="routing" id="fan/Server#routing"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="374,54">
+      <children xsi:type="editmodel:MethodEditModel" name="Server" id="fan/Server#Server(Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="addInterface" id="fan/Server#addInterface(Lfan.Server;DI)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="recieve" id="fan/Server#recieve(Lfan.Packet;)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" showMethodsParameterTypes="true" showMethodsReturnType="true" showMethodsParameterNames="true" showMethodsParameterKinds="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPrivateAttributes="true" showProtectedAttributes="true" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showProtectedMethods="true" showPublicMethods="true" showPackageMethods="true" showPrivateMethods="true" showStaticMethods="true" showProtectedInnerClasses="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showPrivateInnerClasses="true" showStaticInnerClasses="true" showAssociationMember="true" showMethods="true" showAttributes="true" showLiterals="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="FlowIdentifier" location="50,3248" size="154,115" id="fan/FlowIdentifier" runTimeClassModel="id,FlowIdentifier(I)">
+    <children xsi:type="editmodel:CompartmentEditModel" size="44,18">
+      <children xsi:type="editmodel:AttributeEditModel" name="id" id="fan/FlowIdentifier#id"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="131,18">
+      <children xsi:type="editmodel:MethodEditModel" name="FlowIdentifier" id="fan/FlowIdentifier#FlowIdentifier(I)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" showMethodsParameterTypes="true" showMethodsReturnType="true" showMethodsParameterNames="true" showMethodsParameterKinds="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPrivateAttributes="true" showProtectedAttributes="true" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showProtectedMethods="true" showPublicMethods="true" showPackageMethods="true" showPrivateMethods="true" showStaticMethods="true" showProtectedInnerClasses="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showPrivateInnerClasses="true" showStaticInnerClasses="true" showAssociationMember="true" showMethods="true" showAttributes="true" showLiterals="true"/>
+  </children>
+  <children xsi:type="editmodel:InterfaceEditModel" targetConnections="//@children.11/@sourceConnections.0" name="Queue" location="497,2452" size="199,183" id="fan/Queue" runTimeClassModel="peekFirst(),isFull(),putPacket(Lfan.Packet;),isEmpty(),removeFirst()">
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="176,90">
+      <children xsi:type="editmodel:MethodEditModel" name="isFull" id="fan/Queue#isFull()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="peekFirst" id="fan/Queue#peekFirst()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="putPacket" id="fan/Queue#putPacket(Lfan.Packet;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="removeFirst" id="fan/Queue#removeFirst()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="isEmpty" id="fan/Queue#isEmpty()"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" showMethodsParameterTypes="true" showMethodsReturnType="true" showMethodsParameterNames="true" showMethodsParameterKinds="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPrivateAttributes="true" showProtectedAttributes="true" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showProtectedMethods="true" showPublicMethods="true" showPackageMethods="true" showPrivateMethods="true" showStaticMethods="true" showProtectedInnerClasses="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showPrivateInnerClasses="true" showStaticInnerClasses="true" showAssociationMember="true" showMethods="true" showAttributes="true" showLiterals="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="FIFOQueue" location="497,2667" size="199,223" id="fan/FIFOQueue" runTimeClassModel="peekFirst(),isFull(),putPacket(Lfan.Packet;),isEmpty(),FIFOQueue(I),removeFirst(),fifo,maxSize">
+    <children xsi:type="editmodel:CompartmentEditModel" size="77,36">
+      <children xsi:type="editmodel:AttributeEditModel" name="fifo" id="fan/Packet@fifo+fan/FIFOQueue@|fan/Packet#fifo"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="maxSize" id="fan/FIFOQueue#maxSize"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="176,108">
+      <children xsi:type="editmodel:MethodEditModel" name="FIFOQueue" id="fan/FIFOQueue#FIFOQueue(I)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="isFull" id="fan/FIFOQueue#isFull()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="peekFirst" id="fan/FIFOQueue#peekFirst()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="putPacket" id="fan/FIFOQueue#putPacket(Lfan.Packet;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="removeFirst" id="fan/FIFOQueue#removeFirst()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="isEmpty" id="fan/FIFOQueue#isEmpty()"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <sourceConnections xsi:type="editmodel:GeneralizationEditModel" autoLocated="true" id="fan/Queue&lt;-fan/FIFOQueue" source="//@children.11" target="//@children.10" targetEnd="//@children.11/@sourceConnections.0/@children.1" sourceEnd="//@children.11/@sourceConnections.0/@children.0" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:AssociationEndEditModel" location="99,0" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="99,183"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" showMethodsParameterTypes="true" showMethodsReturnType="true" showMethodsParameterNames="true" showMethodsParameterKinds="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPrivateAttributes="true" showProtectedAttributes="true" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showProtectedMethods="true" showPublicMethods="true" showPackageMethods="true" showPrivateMethods="true" showStaticMethods="true" showProtectedInnerClasses="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showPrivateInnerClasses="true" showStaticInnerClasses="true" showAssociationMember="true" showMethods="true" showAttributes="true" showLiterals="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="Depart" location="50,1470" size="226,133" id="fan/Depart" runTimeClassModel="Depart(Lfan.Time;Lfan.Interface;),intface,run()">
+    <children xsi:type="editmodel:CompartmentEditModel" size="101,18">
+      <children xsi:type="editmodel:AttributeEditModel" name="intface" id="fan/Depart#intface"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="203,36">
+      <children xsi:type="editmodel:MethodEditModel" name="Depart" id="fan/Depart#Depart(Lfan.Time;Lfan.Interface;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="run" id="fan/Depart#run()"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <sourceConnections xsi:type="editmodel:GeneralizationEditModel" targetConnections="//@children.13/@sourceConnections.0" autoLocated="true" id="fan/Event&lt;-fan/Depart" source="//@children.12" target="//@children.14" targetEnd="//@children.12/@sourceConnections.0/@children.1" sourceEnd="//@children.12/@sourceConnections.0/@children.0" connectionRouterKind="GeneralizationManhattan">
+      <children xsi:type="editmodel:AssociationEndEditModel" location="113,0" anchorKind="FixedAtEdge" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="87,151" anchorKind="FixedAtEdge"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" showMethodsParameterTypes="true" showMethodsReturnType="true" showMethodsParameterNames="true" showMethodsParameterKinds="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPrivateAttributes="true" showProtectedAttributes="true" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showProtectedMethods="true" showPublicMethods="true" showPackageMethods="true" showPrivateMethods="true" showStaticMethods="true" showProtectedInnerClasses="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showPrivateInnerClasses="true" showStaticInnerClasses="true" showAssociationMember="true" showMethods="true" showAttributes="true" showLiterals="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="Generate" location="306,1470" size="202,133" id="fan/Generate" runTimeClassModel="Generate(Lfan.Time;Lfan.Server;),run(),place">
+    <children xsi:type="editmodel:CompartmentEditModel" size="84,18">
+      <children xsi:type="editmodel:AttributeEditModel" name="place" id="fan/Generate#place"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="179,36">
+      <children xsi:type="editmodel:MethodEditModel" name="Generate" id="fan/Generate#Generate(Lfan.Time;Lfan.Server;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="run" id="fan/Generate#run()"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <sourceConnections xsi:type="editmodel:GeneralizationEditModel" autoLocated="true" id="fan/Event&lt;-fan/Generate" source="//@children.13" target="//@children.12/@sourceConnections.0" targetEnd="//@children.13/@sourceConnections.0/@children.1" sourceEnd="//@children.13/@sourceConnections.0/@children.0" connectionRouterKind="GeneralizationManhattan">
+      <children xsi:type="editmodel:AssociationEndEditModel" location="101,0" anchorKind="FixedAtEdge" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" showMethodsParameterTypes="true" showMethodsReturnType="true" showMethodsParameterNames="true" showMethodsParameterKinds="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPrivateAttributes="true" showProtectedAttributes="true" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showProtectedMethods="true" showPublicMethods="true" showPackageMethods="true" showPrivateMethods="true" showStaticMethods="true" showProtectedInnerClasses="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showPrivateInnerClasses="true" showStaticInnerClasses="true" showAssociationMember="true" showMethods="true" showAttributes="true" showLiterals="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" targetConnections="//@children.12/@sourceConnections.0" name="Event" location="198,1269" size="174,151" id="fan/Event" runTimeClassModel="time,run(),compareTo(Lfan.Event;),Event(Lfan.Time;)">
+    <children xsi:type="editmodel:CompartmentEditModel" size="66,18">
+      <children xsi:type="editmodel:AttributeEditModel" name="time" id="fan/Event#time"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="151,54">
+      <children xsi:type="editmodel:MethodEditModel" name="Event" id="fan/Event#Event(Lfan.Time;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="compareTo" id="fan/Event#compareTo(Lfan.Event;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="run" id="fan/Event#run()"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" showMethodsParameterTypes="true" showMethodsReturnType="true" showMethodsParameterNames="true" showMethodsParameterKinds="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPrivateAttributes="true" showProtectedAttributes="true" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showProtectedMethods="true" showPublicMethods="true" showPackageMethods="true" showPrivateMethods="true" showStaticMethods="true" showProtectedInnerClasses="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showPrivateInnerClasses="true" showStaticInnerClasses="true" showAssociationMember="true" showMethods="true" showAttributes="true" showLiterals="true"/>
+  </children>
+  <children xsi:type="editmodel:InterfaceEditModel" targetConnections="//@children.16/@sourceConnections.0" name="Randomize" location="50,2904" size="220,111" id="fan/Randomize" runTimeClassModel="getNumber(D)">
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="197,18">
+      <children xsi:type="editmodel:MethodEditModel" name="getNumber" id="fan/Randomize#getNumber(D)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" showMethodsParameterTypes="true" showMethodsReturnType="true" showMethodsParameterNames="true" showMethodsParameterKinds="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPrivateAttributes="true" showProtectedAttributes="true" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showProtectedMethods="true" showPublicMethods="true" showPackageMethods="true" showPrivateMethods="true" showStaticMethods="true" showProtectedInnerClasses="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showPrivateInnerClasses="true" showStaticInnerClasses="true" showAssociationMember="true" showMethods="true" showAttributes="true" showLiterals="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="Random" location="50,3065" size="220,133" id="fan/Random" runTimeClassModel="getNumber(D),Random(),generator">
+    <children xsi:type="editmodel:CompartmentEditModel" size="111,18">
+      <children xsi:type="editmodel:AttributeEditModel" name="generator" id="fan/Random#generator"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="197,36">
+      <children xsi:type="editmodel:MethodEditModel" name="Random" id="fan/Random#Random()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getNumber" id="fan/Random#getNumber(D)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <sourceConnections xsi:type="editmodel:GeneralizationEditModel" autoLocated="true" id="fan/Randomize&lt;-fan/Random" source="//@children.16" target="//@children.15" targetEnd="//@children.16/@sourceConnections.0/@children.1" sourceEnd="//@children.16/@sourceConnections.0/@children.0" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:AssociationEndEditModel" location="110,0" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="110,111"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" showMethodsParameterTypes="true" showMethodsReturnType="true" showMethodsParameterNames="true" showMethodsParameterKinds="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPrivateAttributes="true" showProtectedAttributes="true" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showProtectedMethods="true" showPublicMethods="true" showPackageMethods="true" showPrivateMethods="true" showStaticMethods="true" showProtectedInnerClasses="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showPrivateInnerClasses="true" showStaticInnerClasses="true" showAssociationMember="true" showMethods="true" showAttributes="true" showLiterals="true"/>
+  </children>
+  <diagramOptions xsi:type="options:ClassDiagramOptions" properties="wireOptions=1" autoName="false"/>
+  <boardSetting snapToGeometry="true" gridEnabled="true" gridSpacing="10,10" gridOrigin="0,0" rulerUnit="pixel">
+    <leftRuler/>
+    <topRuler/>
+  </boardSetting>
+  <classDiagramPreferences xsi:type="editmodel:UMLClassDiagramPreference" showMethodsParameterTypes="true" showMethodsReturnType="true" showMethodsParameterNames="true" showMethodsParameterKinds="true" attributeSorter="Natural" methodSorter="Natural" showClassStereotype="true" showPackageStereotype="true" innerClassSorter="Natural" showPrivateAttributes="true" showProtectedAttributes="true" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showProtectedMethods="true" showPublicMethods="true" showPackageMethods="true" showPrivateMethods="true" showStaticMethods="true" showProtectedInnerClasses="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showPrivateInnerClasses="true" showStaticInnerClasses="true" showInterfaceStereotype="true" showAssociationMember="true" showMethods="true" showAttributes="true" showLiterlas="true"/>
+</editmodel:ClassDiagramEditModel>
