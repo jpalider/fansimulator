@@ -51,6 +51,7 @@ public class Time implements Comparable<Time>{
 	
 	/** Method to implement Comparable interface
 	 *  @see Comparable interface
+	 *  @return 1 when this object is bigger than tt, 0 when equal, and -1 when tt is bigger than this
 	 */
 	public int compareTo(Time tt) {
 		if(tt.t - this.t < 0)
