@@ -17,7 +17,7 @@ public class Simulator {
 		
 //		new GUI();
 		
-		double simulationTime = 7;
+		double simulationTime = 200;
 		Server server1 = new Server("Server1");
 		server1.addInterface(server1, 0.3 , 1250000);
 		Server server2 = new Server("Server2");
