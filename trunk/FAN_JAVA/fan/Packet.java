@@ -111,7 +111,7 @@ public class Packet {
 	 * @see Packet(FlowIdentifier id, FlowType ftype, int l)
 	 */
 	public Packet(FlowIdentifier id, FlowType ftype) {
-		this(id, ftype, 35);
+		this(id, ftype, 1500);
 	}
 	/**
 	 * Constructor.

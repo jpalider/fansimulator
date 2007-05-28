@@ -27,8 +27,7 @@ public class EventList {
 		return queue.poll();
 	}
 	/**
-	 * Schedules an event according to occurence time of that event. In case of
-	 * duplicate time entries ?? where is it put first/last ??
+	 * Schedules an event according to occurence time of that event.
 	 * @author Mumin
 	 */
 	public void schedule(Event newEvent) {
