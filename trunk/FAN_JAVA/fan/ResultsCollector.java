@@ -1,14 +1,17 @@
 package fan;
 
+import java.text.DecimalFormat;
+
 public class ResultsCollector {
 	private	double avgQueueLength;
 	private double avgPacketServiceTime;
 	private double avgRejectedPackets;
-	
+		
 	private int maxQueueLength;
 	
 	private int servicedPackets;
 	private int rejectedPackets;
+	private int locallyServicedPackets;
 	private int queueLengthResults;
 	
 	
@@ -20,11 +23,16 @@ public class ResultsCollector {
 		this.rejectedPackets = 0;
 		this.servicedPackets = 0;
 		this.queueLengthResults = 0;
+		this.locallyServicedPackets = 0;
 	}
 	
 	public void addServicedPacket(double serviceTime) {
 		avgPacketServiceTime = (avgPacketServiceTime * (double)servicedPackets + serviceTime) / (double)(servicedPackets + 1);
 		servicedPackets++;
+	}
+	
+	public void addLocallyServicedPacket() {
+		locallyServicedPackets++;
 	}
 	
 	public void addRejectedPacket() {
@@ -41,9 +49,9 @@ public class ResultsCollector {
 	
 	public double getAvgRejectedPackets() {
 		if(servicedPackets > 0)
-			return (double)rejectedPackets / (double)servicedPackets;
+			return ((double)rejectedPackets / (double)servicedPackets) * 100d;
 		else if(rejectedPackets > 0) {
-			return 1;
+			return 100;
 		}
 		else return 0; 
 	}
@@ -56,7 +64,7 @@ public class ResultsCollector {
 		return avgQueueLength;
 	}
 		
-	public int maxQueueLength() {
+	public int getMaxQueueLength() {
 		return maxQueueLength;
 	}
 
@@ -68,5 +76,8 @@ public class ResultsCollector {
 		return servicedPackets;
 	}
 	
-	
+	public int getLocallyServicedPackets() {
+		return locallyServicedPackets;
+	}
+
 }

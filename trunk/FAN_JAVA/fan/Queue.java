@@ -10,5 +10,7 @@ public interface Queue {
 	public Packet peekFirst();
 	
 	public boolean isEmpty();
+	
+	public int getSize();
 }
 

@@ -10,14 +10,14 @@ public class RoutingTable {
 	/**
 	 * Class for holding information about the possible routes.
 	 */
-	private class Route implements Comparable{
+	public class Route implements Comparable{
 		
-		public Interface serverInterface;
+		private Interface serverInterface;
 		
 		/** Probability specifing the possibility of the packet 
 		 * going into this destination 
 		 */
-		public double probability;
+		private double probability;
 		
 		/**
 		 * Method to compare Route objects by their probability;
@@ -37,6 +37,16 @@ public class RoutingTable {
 			serverInterface = newServerInterface;
 			probability = probab;
 		}
+
+		public double getProbability() {
+			return probability;
+		}
+
+		public Interface getServerInterface() {
+			return serverInterface;
+		}
+		
+		
 		
 	}
 	
@@ -44,7 +54,7 @@ public class RoutingTable {
 	 * Vector of Route objects holding information about
 	 * possible routes to other hosts
 	 */
-	Vector<Route> routing;
+	private Vector<Route> routing;
 	
 	/**
 	 * Default constructot for class RoutingTable
@@ -104,5 +114,9 @@ public class RoutingTable {
 			output.add(iter.next().serverInterface);			
 		}
 		return output;
+	}
+
+	public Vector<Route> getRouting() {
+		return routing;
 	}
 }
