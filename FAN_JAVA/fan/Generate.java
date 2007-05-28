@@ -12,7 +12,7 @@ public class Generate extends Event {
 	}
 	
 	public void run() {
-		System.out.println("Inside run of Generate");
+		//System.out.println("Inside run of Generate");
 		Packet p = new Packet( new FlowIdentifier((int)Monitor.generator.getNumber(5)), Packet.FlowType.STREAM  );
 		place.recieve(p);
 //		Time newEventTime = Monitor.clock.add( new Time(Monitor.generator.getNumber(0.0008)) );

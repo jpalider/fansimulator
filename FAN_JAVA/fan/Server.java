@@ -58,6 +58,7 @@ public class Server {
 		
 		//Check if interface is free
 		else if( !choiceIntface.isBusy() ) {
+			choiceIntface.getQueue().putPacket(p);
 			//sendTime is equal to: packet length / interface speed
 			Time sendTime = new Time( (double) p.getLength() / choiceIntface.getBandwidth() );
 			
