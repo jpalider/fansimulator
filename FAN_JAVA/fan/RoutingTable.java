@@ -83,10 +83,10 @@ public class RoutingTable {
 	 * @param result float from 0 to 1
 	 * @return Server for this random value
 	 */
-	public Interface getServerInterfaceForResult(float result) {
+	public Interface getServerInterfaceForResult(double result) {
 		Collections.sort(routing);
 		Collections.reverse(routing);
-		float sum = 0;
+		double sum = 0;
 		for(int i=0; i < routing.size(); i++) {
 			sum += routing.elementAt(i).probability;
 			if(sum >= result)
