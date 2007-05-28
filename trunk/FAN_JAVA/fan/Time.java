@@ -1,7 +1,5 @@
 package fan;
 
-import com.sun.xml.internal.bind.v2.runtime.RuntimeUtil.ToStringAdapter;
-
 /**
  * This is the class that represents Time in fan simulator
  * 
