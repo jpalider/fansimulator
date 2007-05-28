@@ -45,7 +45,6 @@ public class Server {
 	public void recieve(Packet p){
 		//Choose the next server and its interface that will be a next destination for this packet
 		Interface choiceIntface = routing.getServerInterfaceForResult( (float)Monitor.generator.getNumber(1) );
-		
 		//check if interface is pointing back to this server - if true than it means that the packet
 		//is leaving network - e.g. its final destination is this server or is leaving
 		//simulated network
@@ -76,8 +75,10 @@ public class Server {
 //		}
 		
 		else {
+			
 			if( choiceIntface.getQueue().putPacket(p) ) {
 				p.setServiceStartTime(Monitor.clock);
+//				results.addServicedPacket(0);
 				results.addQueueLength(choiceIntface.getQueue().getSize() );
 			} else
 				results.addRejectedPacket();
