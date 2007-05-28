@@ -83,7 +83,6 @@ public class Interface{
 			
 			//Time used to send packet is not added to its service time
 			localhost.results.addServicedPacket( Monitor.clock.substract(p.getServiceStartTime()).toDouble() );
-			System.out.println("-" + Monitor.clock.substract(p.getServiceStartTime()).toDouble());
 			Time sendTime = new Time( (double) p.getLength() / (double)bandwidth );
 			Monitor.agenda.schedule( new Depart(Monitor.clock.add(sendTime),this) );
 		}
