@@ -31,10 +31,6 @@ public class Configurator {
 	    try {
 	       DocumentBuilder builder = factory.newDocumentBuilder();
 	       document = builder.parse( new File(configFile) );
-		    NodeList listOfServers = document.getElementsByTagName("server");
-	        int totalServers = listOfServers.getLength();
-	        System.out.println("Total no of servers : " + totalServers);
-		    //document.getChildNodes();
 	
 	    } catch (SAXException sxe) {
 	       // Error generated during parsing)
@@ -54,7 +50,15 @@ public class Configurator {
 	} 
 	
 	public boolean configure( Vector<Server> serverVector ){
-		
+	    NodeList listOfServers = document.getElementsByTagName("server");
+        int totalServers = listOfServers.getLength();
+//      System.out.println("Total no of servers : " + totalServers);
+//	    document.getChildNodes();
+        // for each server defined in config.xml create it in simulator
+        for (int i = 0; i < totalServers; i++) {
+        	serverVector.add(new Server(listOfServers.item(i).getAttributes()));
+        	// for each interface in config.xml add that interface to server;
+		}
 		return true;
 	}
 }
