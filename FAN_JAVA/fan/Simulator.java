@@ -1,4 +1,5 @@
 package fan;
+import java.util.Vector;
 
 public class Simulator {
 
@@ -14,7 +15,11 @@ public class Simulator {
 //			System.out.println("Error in adding route to RoutingTable rt");
 //			return;
 //		}
-		
+//		Vector<Server> serverVector = new Vector<Server>();
+//		Configurator cfg = new Configurator("config.xml");
+//		cfg.configure(serverVector);
+//		if (true) return;
+
 //		new GUI();
 		
 		double simulationTime = 200;
