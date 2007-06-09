@@ -113,10 +113,27 @@ public class Server {
 	 * @param probability Float with probability of packet going that server
 	 * @param bandwidth Int with the bandwidth of this interface
 	 */
-	public void addInterface(Server destServ, double probability, int bandwidth) {
+	public boolean addInterface(Server destServ, double probability, int bandwidth) {
 		Interface intfc = new Interface( bandwidth, destServ,this );
-		routing.addRoute(intfc, probability);
-		interfaces.add(intfc);
+		if(routing.addRoute(intfc, probability)) {
+			interfaces.add(intfc);
+			return true;
+		}
+		else return false;
+	}
+	
+	/**
+	 * This is a method for removing interface with a specified number in the interfaces list
+	 * @param number int with the number of the interface to be removed
+	 * @return true if successful, false if not able to remove
+	 */
+	public boolean removeInterface(int number) {
+		Interface intfaceToRemove= interfaces.elementAt(number);
+		if( routing.removeRoute(intfaceToRemove) ) {
+			interfaces.removeElementAt(number);
+			return true;
+		}
+		return false;		
 	}
 	
 	/**
@@ -134,7 +151,19 @@ public class Server {
 	public int getInterfacesNumber() {
 		return this.interfaces.size();
 	}
-
+	
+	/**
+	 * This is the method for retrieving Vector of Interfaces that this server has
+	 * @return Vector<Interface> that this server has
+	 */
+	public Vector<Interface> getInterfaces() {
+		return this.interfaces;
+	}
+	
+	/**
+	 * This is the method for retrieving Routing Table of this server
+	 * @return RoutingTable of this server
+	 */
 	public RoutingTable getRoutingTable() {
 		return routing;
 	}
