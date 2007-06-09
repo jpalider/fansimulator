@@ -30,7 +30,7 @@ public class RaportPrinter {
 		Vector<RoutingTable.Route> routing = s.getRoutingTable().getRouting();
 		for(int i = 0; i < s.getRoutingTable().getRouting().size(); i++) {
 			System.out.println("Interface " + (i+1) + " pointing to: " +
-							routing.elementAt(i).getServerInterface().getPeer().getName() +
+							routing.elementAt(i).getServerInterface().getServer().getName() +
 							", with the probability of: " + routing.elementAt(i).getProbability()
 							); 
 			System.out.println("The bandwidth of this interface is: " + 

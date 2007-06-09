@@ -116,12 +116,6 @@ public class Interface{
 		this.localhost = locahost;
 	}
 
-	/** Getter for the peer
-	 * @return Server that is a pointed by this interface
-	 */
-	public Server getPeer() {
-		return peer;
-	}
 	
 	
 }

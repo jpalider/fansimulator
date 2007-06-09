@@ -79,6 +79,21 @@ public class RoutingTable {
 	}
 	
 	/**
+	 * This is the method for removing a route from a RoutingTable
+	 * @param interfaceToRemove Interface, which route should be removed 
+	 * @return true if successful, flase if interfaceToRemove isn't in the routing table 
+	 */
+	public boolean removeRoute(Interface interfaceToRemove) {
+		for(int i =0; i < routing.size(); i++) {
+			if( routing.elementAt(i).serverInterface == interfaceToRemove ) {
+				routing.removeElementAt(i);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
 	 * Method for getting the server for specified random result
 	 * @param result float from 0 to 1
 	 * @return Server for this random value
