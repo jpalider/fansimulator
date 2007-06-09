@@ -1,5 +1,7 @@
 package fan;
 
+import java.util.Vector;
+
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -11,6 +13,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
@@ -26,18 +29,21 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.*;
 
+import fan.RoutingTable.Route;
+
 public class GUI {
 	
 	private Shell shell;
 	private Display display;
 	private Label numberOfServers;
 	private TabFolder tabs;
+	private Vector<Server> serversVector;
 	
 	public GUI(){
+		serversVector = new Vector<Server>();
 		display = new Display();
 		shell = new Shell(display,SWT.DIALOG_TRIM);
 		shell.setLayout( new FillLayout());
-	    
 	    shell.setSize(500, 600);
 	    shell.setText("FAN simulator");
 	    shell.setLayout(null);
@@ -56,10 +62,15 @@ public class GUI {
 	
 	private void addServerTab(TabFolder tabs) {
 		
+		
 		final TabItem serverTab = new TabItem(tabs,SWT.BORDER);
 		int next = Integer.parseInt(numberOfServers.getText())+1;
 		numberOfServers.setText(String.valueOf(next));
 		serverTab.setText("Server nr " + String.valueOf(next));
+		
+		final Server server = new Server( "Server nr " + String.valueOf(next) );
+		serversVector.add(server);
+		
 		Composite serverTabComp = new Composite(tabs,SWT.BORDER);
 		serverTabComp.setLayout(null);
 		serverTabComp.setSize(300, 300);
@@ -81,10 +92,13 @@ public class GUI {
 		addInterfaceBut.addSelectionListener(new SelectionAdapter() {
 
 			public void widgetSelected(SelectionEvent arg0) {
-				TreeItem interfaceItem = new TreeItem(serverTree,SWT.NONE);
 				AddInterfaceDialog interfaceDialog = new AddInterfaceDialog(shell,SWT.APPLICATION_MODAL);
 				interfaceDialog.setText(serverTab.getText());
-				interfaceDialog.open(interfaceItem);
+				interfaceDialog.open(server);
+				Event refreshEvent = new Event();
+				refreshEvent.text = "refresh";
+				serverTab.notifyListeners(100, refreshEvent);
+				
 			}
 			
 		});
@@ -98,14 +112,39 @@ public class GUI {
 		removeInterfaceBut.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent arg0) {
 				if( serverTree.getSelectionCount() == 1 ) {
-					if( serverTree.getSelection()[0].getParentItem() == null)
+					if( serverTree.getSelection()[0].getParentItem() == null) {
+						server.removeInterface( serverTree.indexOf(serverTree.getSelection()[0]) );
 						serverTree.getSelection()[0].dispose();
-					else
-						serverTree.getSelection()[0].getParentItem().dispose();
+					}
+					else {
+						server.removeInterface( serverTree.indexOf(serverTree.getSelection()[0].getParentItem()) );
+						serverTree.getSelection()[0].getParentItem().dispose();						
+					}
+						
 				}
 			}
 		});
 		
+		serverTab.addListener(100, new Listener(){
+
+			public void handleEvent(Event e) {
+				if(e.text != null)
+					if(e.text.equals("refresh")) {
+						serverTree.removeAll();
+						Vector<Route> routes = server.getRoutingTable().getRouting();
+						for(int i =0; i < routes.size(); i++) {
+							TreeItem interfaceItem = new TreeItem(serverTree,SWT.NONE);
+							interfaceItem.setText("Interface to: " + routes.elementAt(i).getServerInterface().getServer().getName());
+							TreeItem probabilityItem = new TreeItem(interfaceItem,SWT.NONE);
+							probabilityItem.setText("Probability: " + routes.elementAt(i).getProbability());
+							TreeItem bandwidthItem = new TreeItem(interfaceItem,SWT.NONE);
+							bandwidthItem.setText("Bandwidth: " + routes.elementAt(i).getServerInterface().getBandwidth());
+						}
+					}
+		
+			}
+			
+		});
 		serverTab.setControl(serverTabComp);
 	}
 	
@@ -114,6 +153,19 @@ public class GUI {
 			tabs.getItems()[tabs.getItemCount()-1].dispose();
 			int next = Integer.parseInt(numberOfServers.getText())-  1;
 			numberOfServers.setText(String.valueOf(next));
+			for(int i = 0; i < serversVector.size(); i++) {
+				for(int j = 0; j < serversVector.elementAt(i).getInterfaces().size(); j++) {
+					if(serversVector.elementAt(i).getInterfaces().elementAt(j).getServer() == serversVector.elementAt(next)) {
+						serversVector.elementAt(i).removeInterface(j);
+					}
+				}
+			}
+			serversVector.removeElementAt(next);
+		}
+		for(int i = 0; i < tabs.getItemCount(); i++) {
+			Event newEvent = new Event();
+			newEvent.text = "refresh";
+			tabs.getItem(i).notifyListeners(100, newEvent);
 		}
 	}
 	
@@ -121,10 +173,19 @@ public class GUI {
 		tabs = new TabFolder(shell, SWT.TOP|SWT.NO_REDRAW_RESIZE);
 	    tabs.setSize(400, 300);
 	    tabs.setLocation(30,80);
+	    tabs.addListener(100, new Listener(){
+
+			public void handleEvent(Event e) {
+				for(int i =0; i < tabs.getItemCount(); i++ ){
+					tabs.getItem(i).notifyListeners(100, e);
+				}
+			}
+	    });
 	}
 	
-	private void validateConfiguration() {
 		
+	private void validateConfiguration() {
+
 	}
 	
 	private void runSimulation() {
@@ -270,7 +331,7 @@ public class GUI {
 			super(arg0, arg1);
 		}
 		
-		public void open(final TreeItem interfaceItem) {
+		public void open(final Server server) {
 			Shell parent = getParent();
             final Shell shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
             shell.setText("Add Interface To " + getText());
@@ -283,9 +344,9 @@ public class GUI {
             serverList.setHeaderVisible(true);
             TableColumn serverColumn = new TableColumn(serverList,SWT.NONE);
             serverColumn.setText("Select Server");
-            for(int i =0; i < tabs.getItemCount(); i++) {
+            for(int i =0; i < serversVector.size(); i++) {
             	TableItem serverItem = new TableItem(serverList,SWT.NONE);
-            	serverItem.setText(0, tabs.getItems()[i].getText());
+            	serverItem.setText(0, serversVector.elementAt(i).getName());
             }
             
             serverColumn.pack();
@@ -316,11 +377,10 @@ public class GUI {
             addInterfaceBut.addSelectionListener(new SelectionAdapter() {
             	public void widgetSelected(SelectionEvent arg0) {
             		if(serverList.getSelectionCount() == 1) {
-            			interfaceItem.setText("Interface to: " + serverList.getSelection()[0].getText());
-            			TreeItem bandwidthItem = new TreeItem(interfaceItem,SWT.NONE);
-            			bandwidthItem.setText("Bandwidth: " + bandwidthText.getText());
-            			TreeItem probabilityItem = new TreeItem(interfaceItem,SWT.NONE);
-            			probabilityItem.setText("Probability: " + probabilityText.getText());
+            			server.addInterface(
+            					serversVector.elementAt(serverList.getSelectionIndex()),
+            					Double.parseDouble( probabilityText.getText() ), 
+            					Integer.parseInt(bandwidthText.getText()) );
             			shell.close();
             		}
             			
