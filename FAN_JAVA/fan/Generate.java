@@ -19,4 +19,8 @@ public class Generate extends Event {
 		Time newEventTime = Monitor.clock.add( new Time(0.0008) );
 		Monitor.agenda.schedule(new Generate(newEventTime, place) );
 	}
+	
+	public Server getServer() {
+		return place;
+	}
 }

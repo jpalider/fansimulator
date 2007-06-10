@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
@@ -38,13 +39,15 @@ public class GUI {
 	private Label numberOfServers;
 	private TabFolder tabs;
 	private Vector<Server> serversVector;
+	private Vector<Generate> generatorsVector;
 	
 	public GUI(){
 		serversVector = new Vector<Server>();
+		generatorsVector = new Vector<Generate>();
 		display = new Display();
 		shell = new Shell(display,SWT.DIALOG_TRIM);
 		shell.setLayout( new FillLayout());
-	    shell.setSize(500, 600);
+	    shell.setSize(750, 600);
 	    shell.setText("FAN simulator");
 	    shell.setLayout(null);
 	    this.addMenu(shell);
@@ -60,7 +63,7 @@ public class GUI {
 		display.dispose();
 	}
 	
-	private void addServerTab(TabFolder tabs) {
+	private void addServerTab(final TabFolder tabs) {
 		
 		
 		final TabItem serverTab = new TabItem(tabs,SWT.BORDER);
@@ -75,19 +78,20 @@ public class GUI {
 		serverTabComp.setLayout(null);
 		serverTabComp.setSize(300, 300);
 		
-		//Label with server name
-		Label serverNameLbl = new Label(serverTabComp,SWT.NONE);
-		serverNameLbl.setText("Server nr " + String.valueOf(next));
-		serverNameLbl.setBounds(10, 20, 200, 20);
-		
 		//Tree with interfaces
 		final Tree serverTree = new Tree(serverTabComp,SWT.SINGLE|SWT.BORDER);
 		serverTree.setBounds(10, 50, 200, 200);
 		
+		//Label with interfaces
+		Label interfacesLbl = new Label(serverTabComp,SWT.NONE);
+		interfacesLbl.setText("Server's interfaces:");
+		interfacesLbl.setSize(interfacesLbl.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		interfacesLbl.setLocation(serverTree.getLocation().x, serverTree.getLocation().y - 20);
+		
 		//Button to add interface
 		Button addInterfaceBut = new Button(serverTabComp,SWT.NONE);
 		addInterfaceBut.setText("Add Interface");
-		addInterfaceBut.setLocation(serverTree.getLocation().x + serverTree.getSize().x + 10, serverTree.getLocation().y);
+		addInterfaceBut.setLocation(serverTree.getLocation().x + serverTree.getSize().x + 5, serverTree.getLocation().y);
 		addInterfaceBut.setSize(addInterfaceBut.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		addInterfaceBut.addSelectionListener(new SelectionAdapter() {
 
@@ -106,7 +110,7 @@ public class GUI {
 		//Button to remove interface
 		Button removeInterfaceBut = new Button(serverTabComp,SWT.NONE);
 		removeInterfaceBut.setText("Remove Interface");
-		removeInterfaceBut.setLocation(serverTree.getLocation().x + serverTree.getSize().x + 10, addInterfaceBut.getLocation().y + addInterfaceBut.getSize().y + 5);
+		removeInterfaceBut.setLocation(serverTree.getLocation().x + serverTree.getSize().x + 5, addInterfaceBut.getLocation().y + addInterfaceBut.getSize().y + 5);
 		removeInterfaceBut.setSize(removeInterfaceBut.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		addInterfaceBut.setSize(removeInterfaceBut.getSize().x, addInterfaceBut.getSize().y);
 		removeInterfaceBut.addSelectionListener(new SelectionAdapter() {
@@ -125,6 +129,53 @@ public class GUI {
 			}
 		});
 		
+		//Tree with traffic generators
+		final Tree generatorTree = new Tree(serverTabComp,SWT.SINGLE|SWT.BORDER);
+		generatorTree.setSize(serverTree.getSize());
+		generatorTree.setLocation(removeInterfaceBut.getLocation().x + removeInterfaceBut.getSize().x + 15, serverTree.getLocation().y);
+		
+		//Generators label
+		Label generatorsLabel = new Label(serverTabComp, SWT.NONE);
+		generatorsLabel.setText("Server's traffic generators:");
+		generatorsLabel.setSize(generatorsLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		generatorsLabel.setLocation(generatorTree.getLocation().x, generatorTree.getLocation().y - 20);
+		
+		//Add Generator button
+		Button addGeneratorBut = new Button(serverTabComp, SWT.NONE);
+		addGeneratorBut.setText("Add Generator");
+		addGeneratorBut.setLocation(generatorTree.getLocation().x + generatorTree.getSize().x + 5, generatorTree.getLocation().y);
+		addGeneratorBut.setSize(addGeneratorBut.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		addGeneratorBut.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent arg0) {
+				generatorsVector.add( new Generate(new Time(0),server) );
+				TreeItem generatorItem = new TreeItem(generatorTree,SWT.NONE);
+				generatorItem.setText("Generator nr " + generatorsVector.size());
+			}
+		});
+		
+		//Remove Generator Button
+		Button removeGeneratorBut = new Button(serverTabComp, SWT.NONE);
+		removeGeneratorBut.setText("Remove Generator");
+		removeGeneratorBut.setLocation(addGeneratorBut.getLocation().x, addGeneratorBut.getLocation().y + addGeneratorBut.getSize().y + 5);
+		removeGeneratorBut.setSize(removeGeneratorBut.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		addGeneratorBut.setSize(removeGeneratorBut.getSize().x, addGeneratorBut.getSize().y);
+		removeGeneratorBut.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent arg0) {
+				if( generatorTree.getSelectionCount() == 1 ) {
+					int j = 0;
+					for(int i =0; i <= generatorTree.indexOf(generatorTree.getSelection()[0]); i++ ) {
+						while(generatorsVector.elementAt(j).getServer() != server)
+							j++;
+					}
+					generatorsVector.removeElementAt(j);
+					Event newEvent = new Event();
+					newEvent.text = "refresh";
+					tabs.notifyListeners(100, newEvent);
+				}
+			}
+		});
+		
+		//Listener for refresh events
 		serverTab.addListener(100, new Listener(){
 
 			public void handleEvent(Event e) {
@@ -140,11 +191,20 @@ public class GUI {
 							TreeItem bandwidthItem = new TreeItem(interfaceItem,SWT.NONE);
 							bandwidthItem.setText("Bandwidth: " + routes.elementAt(i).getServerInterface().getBandwidth());
 						}
+						generatorTree.removeAll();
+						for(int i = 0; i < generatorsVector.size(); i++) {
+							if( generatorsVector.elementAt(i).getServer() == server) {
+								TreeItem generatorItem = new TreeItem(generatorTree,SWT.NONE);
+								generatorItem.setText("Generator nr " + (i+1));
+							}
+						}
 					}
 		
 			}
 			
 		});
+		
+		//adding composite to server tab
 		serverTab.setControl(serverTabComp);
 	}
 	
@@ -162,16 +222,15 @@ public class GUI {
 			}
 			serversVector.removeElementAt(next);
 		}
-		for(int i = 0; i < tabs.getItemCount(); i++) {
-			Event newEvent = new Event();
-			newEvent.text = "refresh";
-			tabs.getItem(i).notifyListeners(100, newEvent);
-		}
+		Event newEvent = new Event();
+		newEvent.text = "refresh";
+		tabs.notifyListeners(100, newEvent);
+		
 	}
 	
 	private void addServerTabFolder(Shell shell) {
 		tabs = new TabFolder(shell, SWT.TOP|SWT.NO_REDRAW_RESIZE);
-	    tabs.setSize(400, 300);
+	    tabs.setSize(650, 300);
 	    tabs.setLocation(30,80);
 	    tabs.addListener(100, new Listener(){
 
@@ -185,7 +244,21 @@ public class GUI {
 	
 		
 	private void validateConfiguration() {
-
+		//Check if the sum of probability of all routes in each servers equals 1
+		for(int i = 0; i < serversVector.size(); i++ ) {
+			if( serversVector.elementAt(i).getRoutingTable().getProbabilitySum() != 1 ) {
+				MessageBox errorMsgBox = new MessageBox(shell,SWT.ICON_ERROR|SWT.OK);
+				errorMsgBox.setText("Error in configuration");
+				errorMsgBox.setMessage("It seems that server nr " + (i+1) + " has wrong routing. Please check the configuration.");
+				errorMsgBox.open();
+				return;
+			}				
+		}
+		MessageBox correctMsgBox = new MessageBox(shell, SWT.ICON_INFORMATION|SWT.OK);
+		correctMsgBox.setMessage("The configuration is set properly.");
+		correctMsgBox.setText("Good configuration");
+		correctMsgBox.open();
+		return;
 	}
 	
 	private void runSimulation() {
