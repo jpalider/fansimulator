@@ -55,26 +55,39 @@ public class Configurator {
 		NodeList xmlListOfServers = document.getElementsByTagName("server");
         int totalServers = xmlListOfServers.getLength();
 
-        // for each server defined in config.xml create it in simulator
+        // for each server defined in config.xml create it in application
+        // that must be done at the very beginning, mere, before interface configuration
         for (int i = 0; i < totalServers; i++) {
         	NamedNodeMap serverAttributes = xmlListOfServers.item(i).getAttributes();
         	System.out.println( "ServerNames : " + serverAttributes.getNamedItem("n").getTextContent() );
         	serverVector.add( new Server(serverAttributes.getNamedItem("n").getTextContent()) );
 		}
-        
-        // for each server defined in config.xml setup its interface
+
+        // for each server defined in config.xml setup its interfaces
         for (int i = 0; i < totalServers; i++) {
-        	// for each interface in config.xml add that interface to server;
-        	NodeList interfaces = xmlListOfServers.item(i).getChildNodes();
-        	for (int j = 0; j < interfaces.getLength(); j++){
-        		NamedNodeMap interfaceAttributes = interfaces.item(j).getAttributes();        		
-        		String peerName = interfaceAttributes.getNamedItem("peer").getTextContent();
-        		Server destServ = findServerByName(serverVector, peerName);
-        		if (destServ == null)
-        			System.out.println( "Dest server : no such server ");	
-        		double probability = Double.parseDouble( interfaceAttributes.getNamedItem("probability").getTextContent() );
-        		int bandwidth = Integer.parseInt( interfaceAttributes.getNamedItem("bandwidth").getTextContent() );
-        		serverVector.get(i).addInterface(destServ, probability, bandwidth);
+        	// for each <server> tag
+        	Node serverNode = xmlListOfServers.item(i);
+        	if(serverNode.getNodeType() == Node.ELEMENT_NODE){
+        		Element serverElement = (Element)serverNode;
+        		// get its <interfaces> 
+        		NodeList interfaceList = serverElement.getElementsByTagName("interface");
+        		for (int j = 0; j < interfaceList.getLength(); j++ ){
+        			// and for each interface retrieve its parameters
+        			Element interfaceElement = (Element)interfaceList.item(j);
+            		// 1. find server that the interface ic connected to
+        			String peerName = new String( interfaceElement.getAttributes().getNamedItem("peer").getTextContent() );
+            		Server destServ = findServerByName(serverVector, peerName);
+            		if (destServ == null){
+            			System.out.println( "fan.Configurator: no such destination server for interface " + (j+1) + ".");
+            			continue;
+            		}
+            		// 2. routing probability
+            		double probability = Double.parseDouble( interfaceElement.getAttributes().getNamedItem("probability").getTextContent() );
+            		// 3. interface bandwidth 
+            		int bandwidth = Integer.parseInt( interfaceElement.getAttributes().getNamedItem("bandwidth").getTextContent() );
+            		// finally create such interface            		
+            		serverVector.get(i).addInterface(destServ, probability, bandwidth);     
+        		}
         	}
         }
         
@@ -84,10 +97,10 @@ public class Configurator {
 	public Server findServerByName(Vector<Server> serverVector, String peerName){
 		for (int i = 0; i < serverVector.size(); i++) {
 			if ( serverVector.get(i).getName().compareTo(peerName) == 0 ){
-				System.out.println( "findServerByName : no such server ");	
 				return serverVector.get(i);
 			}
 		}
+//		System.out.println( "fan.Configurator.findServerByName : search failed!");	
 		return null;
 	}
 }
