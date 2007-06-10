@@ -243,26 +243,45 @@ public class GUI {
 	}
 	
 		
-	private void validateConfiguration() {
+	private boolean validateConfiguration(boolean showMessage) {
 		//Check if the sum of probability of all routes in each servers equals 1
 		for(int i = 0; i < serversVector.size(); i++ ) {
 			if( serversVector.elementAt(i).getRoutingTable().getProbabilitySum() != 1 ) {
-				MessageBox errorMsgBox = new MessageBox(shell,SWT.ICON_ERROR|SWT.OK);
-				errorMsgBox.setText("Error in configuration");
-				errorMsgBox.setMessage("It seems that server nr " + (i+1) + " has wrong routing. Please check the configuration.");
-				errorMsgBox.open();
-				return;
+				if(showMessage) {
+					MessageBox errorMsgBox = new MessageBox(shell,SWT.ICON_ERROR|SWT.OK);
+					errorMsgBox.setText("Error in configuration");
+					errorMsgBox.setMessage("It seems that server nr " + (i+1) + " has wrong routing. Please check the configuration.");
+					errorMsgBox.open();
+				}
+				return false;
 			}				
 		}
-		MessageBox correctMsgBox = new MessageBox(shell, SWT.ICON_INFORMATION|SWT.OK);
-		correctMsgBox.setMessage("The configuration is set properly.");
-		correctMsgBox.setText("Good configuration");
-		correctMsgBox.open();
-		return;
+		if(showMessage) {
+			MessageBox correctMsgBox = new MessageBox(shell, SWT.ICON_INFORMATION|SWT.OK);
+			correctMsgBox.setMessage("The configuration is set properly.");
+			correctMsgBox.setText("Good configuration");
+			correctMsgBox.open();
+		}
+		return true;
 	}
 	
 	private void runSimulation() {
-		
+		if(validateConfiguration(false)) {
+			double simulationTime = 200;
+			Monitor.clock = new Time(-1);
+			for(int i = 0; i < generatorsVector.size(); i++) {
+				Monitor.agenda.schedule(generatorsVector.elementAt(i));
+			}
+			while( !Monitor.agenda.isEmpty() && Monitor.clock.compareTo(new Time(simulationTime)) <= 0 ) {
+				fan.Event now = Monitor.agenda.removeFirst();
+				Monitor.clock = now.time;
+				now.run();
+				//System.out.println("The time is now: " + Monitor.clock);
+			}
+			for(int i = 0; i < serversVector.size(); i++) {
+				RaportPrinter.printResultsForServer(serversVector.elementAt(i));
+			}
+		}
 	}
 	
 	private void addMenu(final Shell shell) {
@@ -279,7 +298,7 @@ public class GUI {
 				}
 				//Validate Configuration
 				else if( ((MenuItem)se.widget).getText().equals("Validate Configuration") ) {
-					validateConfiguration();
+					validateConfiguration(true);
 				}
 				//Run Simulation
 				else if( ((MenuItem)se.widget).getText().equals("Run Simulation") ) {
@@ -382,7 +401,7 @@ public class GUI {
 		validateConfigButton.setLocation(30,400);
 		validateConfigButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent arg0) {
-				validateConfiguration();
+				validateConfiguration(true);
 			}
 		});
 		
