@@ -1,6 +1,9 @@
 package fan;
 
-
+/**
+ * This is the class to implement Generator with uniform time distribution
+ * 
+ */
 public class UniformGenerate extends Generate {
 	private Time range;
 	public UniformGenerate(Time t, Server s, Time range) {
