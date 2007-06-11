@@ -1,5 +1,10 @@
 package fan;
 
+/**
+ * This is the class to implement generation of packets with 
+ * normal (gauss) distribution
+ * 
+ */
 public class NormalGenerate extends Generate {
 	private Time mean, variance;
 	
