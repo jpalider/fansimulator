@@ -2,9 +2,8 @@ package fan;
 
 /**
  * This is the class to implement Generator, which generates new packets,
- * with the same, constant inteval specified in constructor
- * @author dodek
- *
+ * with the same, constant interval specified in constructor
+ * 
  */
 public class ConstantGenerate extends Generate {
 	private Time interval;
