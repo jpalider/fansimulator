@@ -11,7 +11,7 @@ public class UniformGenerate extends Generate {
 	public void run() {
 		Packet p = new Packet( new FlowIdentifier((int)Monitor.generator.getNumber(5)), Packet.FlowType.STREAM  );
 		place.recieve(p);
-		Time newEventTime = Monitor.clock.add( new Time( new Random().getNumber(range.toDouble()) ) );
+		Time newEventTime = Monitor.clock.add( new Time( Monitor.generator.getNumber(range.toDouble()) ) );
 		Monitor.agenda.schedule(new ConstantGenerate(newEventTime, place, range) );
 	}
 	
