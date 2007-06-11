@@ -5,10 +5,13 @@ package fan;
  * @author  dodek
  */
 public class Generate extends Event {
-	private Server place;
+	protected Server place;
+	public static enum GenerateType {basic, normal, constant, uniform};
+	protected GenerateType type;
 	public Generate(Time t, Server s) {
 		super(t);
 		place = s;
+		type = GenerateType.basic;
 	}
 	
 	public void run() {
