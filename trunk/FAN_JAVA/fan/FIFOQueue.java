@@ -36,5 +36,9 @@ public class FIFOQueue implements Queue {
 	public int getSize() {
 		return fifo.size();
 	}
+	
+	public void setSize(int packetNumber) {
+		this.maxSize = packetNumber;
+	}
 
 }
