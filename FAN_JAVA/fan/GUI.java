@@ -10,6 +10,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
@@ -30,6 +31,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.*;
 
+import fan.Generate.GenerateType;
 import fan.RoutingTable.Route;
 
 public class GUI {
@@ -151,9 +153,15 @@ public class GUI {
 		addGeneratorBut.setSize(addGeneratorBut.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		addGeneratorBut.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent arg0) {
-				generatorsVector.add( new Generate(new Time(0),server) );
-				TreeItem generatorItem = new TreeItem(generatorTree,SWT.NONE);
-				generatorItem.setText("Generator nr " + generatorsVector.size());
+//				generatorsVector.add( new Generate(new Time(0),server) );
+//				TreeItem generatorItem = new TreeItem(generatorTree,SWT.NONE);
+//				generatorItem.setText("Generator nr " + generatorsVector.size());
+				AddGeneratorDialog generatorDialog = new AddGeneratorDialog(shell,SWT.APPLICATION_MODAL);
+				generatorDialog.setText(serverTab.getText());
+				generatorDialog.open(server);
+				Event newEvent = new Event();
+				newEvent.text = "refresh";
+				tabs.notifyListeners(100, newEvent);
 			}
 		});
 		
@@ -494,4 +502,149 @@ public class GUI {
 		
 	}
 
+	private class AddGeneratorDialog extends Dialog {
+
+		public AddGeneratorDialog(Shell shell, int style) {
+			super(shell, style);
+		}
+		
+		public void open(final Server server) {
+			Shell parent = getParent();
+            final Shell shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+            shell.setText("Add Generator To " + getText());
+            shell.setSize(250, 300);
+            
+            
+            
+            //Combo with the list of possible generator types
+            final Combo generatorTypeCombo = new Combo(shell,SWT.DROP_DOWN);
+            for (Generate.GenerateType types : GenerateType.values()) {
+				generatorTypeCombo.add(types.name());
+			}
+            generatorTypeCombo.setSize(100,25);
+            generatorTypeCombo.setLocation(10,40);
+            
+            //Generator combo label
+            Label generatorTypeLabel = new Label(shell,SWT.NONE);
+            generatorTypeLabel.setText("Generator type:");
+            generatorTypeLabel.setSize(generatorTypeLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+            generatorTypeLabel.setLocation(generatorTypeCombo.getLocation().x, generatorTypeCombo.getLocation().y - generatorTypeLabel.getSize().y - 5);
+            
+            //Start Time Text box
+            final Text startTimeText = new Text(shell, SWT.SINGLE|SWT.BORDER);
+            startTimeText.setSize(generatorTypeCombo.getSize().x,generatorTypeCombo.getSize().y);
+            startTimeText.setLocation(generatorTypeCombo.getLocation().x, generatorTypeCombo.getLocation().y + generatorTypeCombo.getSize().y + 40);
+            
+            //Start time label
+            Label startTimeLabel = new Label(shell,SWT.NONE);
+            startTimeLabel.setText("Start time:");
+            startTimeLabel.setSize(startTimeLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+            startTimeLabel.setLocation(startTimeText.getLocation().x, startTimeText.getLocation().y - startTimeLabel.getSize().y - 5);
+            
+            //Interval text box
+            final Text intervalText = new Text(shell,SWT.SINGLE|SWT.BORDER);
+            intervalText.setSize(100, 25);
+            intervalText.setLocation(generatorTypeCombo.getLocation().x + generatorTypeCombo.getSize().x + 10, generatorTypeCombo.getLocation().y);
+            intervalText.setVisible(false);
+            
+            //Interval text box label
+            final Label intervalLabel = new Label(shell,SWT.NONE);
+            intervalLabel.setText("Interval:");
+            intervalLabel.setSize(intervalLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+            intervalLabel.setLocation(intervalText.getLocation().x, intervalText.getLocation().y - intervalLabel.getSize().y - 5);
+            intervalLabel.setVisible(false);
+            
+            //Variance text box
+            final Text varianceText = new Text(shell,SWT.SINGLE|SWT.BORDER);
+            varianceText.setSize(intervalText.getSize().x, intervalText.getSize().y);
+            varianceText.setLocation(intervalText.getLocation().x,intervalText.getLocation().y + intervalText.getSize().y + 30);
+            varianceText.setVisible(false);
+            
+            //Variance text box label
+            final Label varianceLabel = new Label(shell,SWT.NONE);
+            varianceLabel.setText("Variance:");
+            varianceLabel.setSize(varianceLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+            varianceLabel.setLocation(varianceText.getLocation().x, varianceText.getLocation().y - varianceLabel.getSize().y - 5);
+            varianceLabel.setVisible(false);
+            
+            //Add generator button
+            Button addGeneratorBut = new Button(shell, SWT.NONE);
+            addGeneratorBut.setText("Add this generator");
+            addGeneratorBut.setSize(addGeneratorBut.computeSize( SWT.DEFAULT, SWT.DEFAULT) );
+            addGeneratorBut.setLocation(generatorTypeCombo.getLocation().x + generatorTypeCombo.getSize().x + 10, generatorTypeCombo.getLocation().y + 100);
+            
+            //GeneratorType Combo selection listener
+            generatorTypeCombo.addSelectionListener(new SelectionAdapter(){
+            	public void widgetSelected(SelectionEvent arg0) {
+            		if( generatorTypeCombo.getText().equals(GenerateType.basic.name()) ) {
+            			intervalText.setVisible(false);
+            			intervalLabel.setVisible(false);
+            			varianceLabel.setVisible(false);
+            			varianceText.setVisible(false);
+            		}
+            		else if( generatorTypeCombo.getText().equals(GenerateType.constant.name()) ) {
+            			intervalText.setVisible(true);
+            			intervalLabel.setText("Interval:");
+            			intervalLabel.setVisible(true);
+            			
+            			varianceLabel.setVisible(false);
+            			varianceText.setVisible(false);
+            		}
+            		else if( generatorTypeCombo.getText().equals(GenerateType.normal.name()) ) {
+            			intervalLabel.setText("Mean:");
+            			intervalText.setVisible(true);
+            			intervalLabel.setVisible(true);
+            			
+            			varianceLabel.setVisible(true);
+            			varianceText.setVisible(true);
+            		}
+            		else if( generatorTypeCombo.getText().equals(GenerateType.uniform.name()) ) {
+            			intervalText.setVisible(true);
+            			intervalLabel.setText("Range:");
+            			intervalLabel.setVisible(true);
+            			
+            			varianceLabel.setVisible(false);
+            			varianceText.setVisible(false);
+            		}
+            	}
+            });
+            
+            //Add generator button listener
+            addGeneratorBut.addSelectionListener(new SelectionAdapter() {
+            	public void widgetSelected(SelectionEvent arg0) {
+            		if( generatorTypeCombo.getText().equals(GenerateType.basic.name()) ) {
+            			Time startTime = new Time( Double.valueOf( startTimeText.getText() ) );
+            			generatorsVector.add( new Generate(startTime,server) );
+            		}
+            		else if( generatorTypeCombo.getText().equals(GenerateType.constant.name()) ) {
+            			Time intervalTime = new Time( Double.valueOf(intervalText.getText()) );
+            			Time startTime = new Time( Double.valueOf( startTimeText.getText() ) );
+            			generatorsVector.add( new ConstantGenerate(startTime, server, intervalTime) );
+            		}
+            		else if( generatorTypeCombo.getText().equals(GenerateType.normal.name()) ) {
+            			Time meanTime = new Time( Double.valueOf(intervalText.getText()) );
+            			Time startTime = new Time( Double.valueOf( startTimeText.getText() ) );
+            			Time varianceTime = new Time( Double.valueOf( varianceText.getText() ) );
+            			generatorsVector.add( new NormalGenerate(startTime,server,meanTime,varianceTime) );
+            		}
+            		else if( generatorTypeCombo.getText().equals(GenerateType.uniform.name()) ) {
+            			Time rangeTime = new Time( Double.valueOf(intervalText.getText()) );
+            			Time startTime = new Time( Double.valueOf( startTimeText.getText() ) );
+            			generatorsVector.add( new UniformGenerate(startTime,server,rangeTime) );
+            		}
+            		shell.close();
+            	}
+            });
+            
+            
+            shell.open();
+            Display display = parent.getDisplay();
+            while (!shell.isDisposed()) {
+                    if (!display.readAndDispatch()) display.sleep();
+            }
+            return;
+
+		}
+		
+	}
 }
