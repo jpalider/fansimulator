@@ -39,6 +39,10 @@ public class GUI {
 	private Label numberOfServers;
 	private TabFolder tabs;
 	private Vector<Server> serversVector;
+	/**
+	 * @uml.property   name="generatorsVector"
+	 * @uml.associationEnd   multiplicity="(0 -1)" elementType="fan.ConstaGenerate"
+	 */
 	private Vector<Generate> generatorsVector;
 	
 	public GUI(){
