@@ -68,6 +68,15 @@ public class Interface{
 	}
 	
 	/**
+	 * Getter for interface probability
+	 * @return  int bandwidth of the server
+	 * @uml.property  name="probability"
+	 */
+	public int getProbability() {
+		return 0;
+	}
+	
+	/**
 	 * Called by Depart event. send() makes a call to recieve(Packet p)
 	 * method of the next Server. Besides that it takes the first packet
 	 * from the interface queue and sets Depart event for it.

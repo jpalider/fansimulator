@@ -9,16 +9,21 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;  
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.DOMException;
 
-import java.io.File;
+//import java.io.File;
+import java.io.*;
 import org.w3c.dom.*;
 
 import java.util.Iterator;
 import java.util.Vector;
+
+import org.apache.xml.serialize.XMLSerializer;
+import org.apache.xml.serialize.OutputFormat;
 
 public class Configurator {
 	Document document;  
@@ -102,5 +107,61 @@ public class Configurator {
 		}
 //		System.out.println( "fan.Configurator.findServerByName : search failed!");	
 		return null;
+	}
+	
+	public boolean saveConfiguration(Vector<Server> serverVector){
+
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        try {
+          DocumentBuilder builder = factory.newDocumentBuilder();
+          document = builder.newDocument();  // Create from whole cloth
+          Element root = (Element) document.createElement("root"); 
+	      document.appendChild(root);
+	      
+		for (int i = 0; i < serverVector.size(); i++) {
+			Element s = (Element) document.createElement("server");
+			s.setAttribute("n", serverVector.get(i).getName());
+			for (int k = 0; k < serverVector.get(i).getInterfacesNumber(); k++){
+				Element ifc = (Element) document.createElement("interface");
+				ifc.setAttribute("peer", serverVector.get(i).getInterfaces().get(k).getServer().getName());
+				ifc.setAttribute("bandwidth", String.valueOf(( serverVector.get(i).getInterfaces().get(k).getBandwidth() ) ));
+				ifc.setAttribute("probability", String.valueOf(( serverVector.get(i).getInterfaces().get(k).getProbability() ) ));
+				s.appendChild(ifc);
+			}
+			
+			root.appendChild( s );
+		}	      
+	      
+//	      Element e = null;
+//	      Node n = null;
+	      // Child i.
+//	      e = xmldoc.createElementNS(null, "USER");
+//	      e.setAttributeNS(null, "ID", id[i]);
+//	      e.setAttributeNS(null, "TYPE", type[i]);
+//	      n = xmldoc.createTextNode(desc[i]);
+//	      e.appendChild(n);
+//	      root.appendChild(e);
+//	      FileOutputStream fos = new FileOutputStream("test.xml");
+			
+	      OutputFormat format = new OutputFormat(document);
+	      format.setIndenting(true);
+
+			//to generate output to console use this serializer
+			//XMLSerializer serializer = new XMLSerializer(System.out, format);
+
+
+			//to generate a file output use fileoutputstream instead of system.out
+			XMLSerializer serializer = 
+							new XMLSerializer( new FileOutputStream(new File("test.xml")), format);
+
+			serializer.serialize(document);
+
+        } catch (ParserConfigurationException pce) {
+            // Parser with specified options can't be built
+            pce.printStackTrace();
+        } catch (Exception e){
+        	System.out.println("Exception caught!");
+        }
+		return true;
 	}
 }
