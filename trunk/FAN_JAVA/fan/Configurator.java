@@ -109,7 +109,7 @@ public class Configurator {
 		return null;
 	}
 	
-	public boolean saveConfiguration(Vector<Server> serverVector){
+	public boolean saveConfiguration(Vector<Server> serverVector, Vector<Generate> generatorVector){
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
