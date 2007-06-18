@@ -116,6 +116,14 @@ public class Interface{
 		this.localhost = locahost;
 	}
 
-	
+	/**
+	 * This is the method responsible for clearing interface data. It doesn't change
+	 * configuration of interface, the aim of this method is to clear interface after
+	 * simulation.
+	 */
+	public void clearInterface() {
+		this.queue = new FIFOQueue(50);
+		this.setNotBusy();
+	}
 	
 }
