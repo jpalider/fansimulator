@@ -1,4 +1,5 @@
 package fan;
+import java.util.Iterator;
 import java.util.Vector;
 
 /**
@@ -173,6 +174,10 @@ public class Server {
 	 */
 	public void clearResults() {
 		results = new ResultsCollector();
+		for (Iterator iter = interfaces.iterator(); iter.hasNext();) {
+			Interface element = (Interface) iter.next();
+			element.clearInterface();
+		}
 	}
 	
 }
