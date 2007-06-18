@@ -18,4 +18,8 @@ public class UniformGenerate extends Generate {
 		Monitor.agenda.schedule(new ConstantGenerate(newEventTime, place, range) );
 	}
 	
+	public Time getRange() {
+		return range;
+	}
+	
 }
