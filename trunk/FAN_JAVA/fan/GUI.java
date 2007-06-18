@@ -175,12 +175,15 @@ public class GUI {
 			public void widgetSelected(SelectionEvent arg0) {
 				if( generatorTree.getSelectionCount() == 1 ) {
 					TreeItem selectedItem;
+					//Check if the top level element was selected in the tree. If not use parent tree item as selected
 					if(generatorTree.getSelection()[0].getParentItem() != null) {
 						selectedItem = generatorTree.getSelection()[0].getParentItem();
 					}
 					else {
 						selectedItem = generatorTree.getSelection()[0];
 					}
+					
+					//finding selected generator inside the generatorsVector
 					int i = 0;
 					int j = 0;
 					do {
@@ -192,7 +195,10 @@ public class GUI {
 						}
 						i++;						
 					} while( i <= generatorsVector.size());
-					System.out.println("final i = " + i + ", j = " + j);
+					
+					//removing selected generator and sending refresh so the servers 
+					//and generators tree will be refreshed, and without removed 
+					//elements
 					generatorsVector.removeElementAt(i);
 					Event newEvent = new Event();
 					newEvent.text = "refresh";
@@ -207,6 +213,7 @@ public class GUI {
 			public void handleEvent(Event e) {
 				if(e.text != null)
 					if(e.text.equals("refresh")) {
+						//refresh server tree
 						serverTree.removeAll();
 						Vector<Route> routes = server.getRoutingTable().getRouting();
 						for(int i =0; i < routes.size(); i++) {
@@ -217,6 +224,7 @@ public class GUI {
 							TreeItem bandwidthItem = new TreeItem(interfaceItem,SWT.NONE);
 							bandwidthItem.setText("Bandwidth: " + routes.elementAt(i).getServerInterface().getBandwidth());
 						}
+						//refresh generator Tree
 						generatorTree.removeAll();
 						for(int i = 0; i < generatorsVector.size(); i++) {
 							if( generatorsVector.elementAt(i).getServer() == server) {
@@ -351,7 +359,16 @@ public class GUI {
 				}
 				//Close Program
 				else if( ((MenuItem)se.widget).getText().equals("Close Program") )
-					closeGUI();			
+					closeGUI();	
+				
+				//Save config file
+				else if( ((MenuItem)se.widget).getText().equals("Save Configuration in File") ) {
+					//TO BE ADDED after Kuba finishes Configurator
+				}
+				//Open config file
+				else if( ((MenuItem)se.widget).getText().equals("Open Configuration from File") ) {
+					//TO BE ADDED after Kuba finishes Configurator
+				}
 			}
 			
 			private void closeGUI() {
@@ -374,6 +391,16 @@ public class GUI {
 		MenuItem closeProgramItem = new MenuItem(fileMenu,SWT.PUSH);
 		closeProgramItem.setText("Close Program");
 		closeProgramItem.addSelectionListener(menuSelection);
+		
+		MenuItem saveConfigItem = new MenuItem(fileMenu,SWT.PUSH);
+		saveConfigItem.setText("Save Configuration in File");
+		saveConfigItem.addSelectionListener(menuSelection);
+
+		MenuItem openConfigItem = new MenuItem(fileMenu,SWT.PUSH);
+		openConfigItem.setText("Open Configuration from File");
+		openConfigItem.addSelectionListener(menuSelection);
+		
+		
 		
 		//SERVERS Menu
 		MenuItem serverMenuHeader = new MenuItem( appMenu, SWT.CASCADE );
