@@ -174,7 +174,6 @@ public class GUI {
 		removeGeneratorBut.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent arg0) {
 				if( generatorTree.getSelectionCount() == 1 ) {
-					int j = 0;
 					TreeItem selectedItem;
 					if(generatorTree.getSelection()[0].getParentItem() != null) {
 						selectedItem = generatorTree.getSelection()[0].getParentItem();
@@ -182,11 +181,19 @@ public class GUI {
 					else {
 						selectedItem = generatorTree.getSelection()[0];
 					}
-					for(int i =0; i <= generatorTree.indexOf(selectedItem); i++ ) {
-						while(generatorsVector.elementAt(j).getServer() != server)
-							j++;
-					}
-					generatorsVector.removeElementAt(j);
+					int i = 0;
+					int j = 0;
+					do {
+						if(generatorsVector.elementAt(i).getServer() == server) {
+							if(j >= generatorTree.indexOf(selectedItem) )
+								break;
+							else
+								j++;
+						}
+						i++;						
+					} while( i <= generatorsVector.size());
+					System.out.println("final i = " + i + ", j = " + j);
+					generatorsVector.removeElementAt(i);
 					Event newEvent = new Event();
 					newEvent.text = "refresh";
 					tabs.notifyListeners(100, newEvent);
@@ -217,6 +224,23 @@ public class GUI {
 								generatorItem.setText("Generator nr " + (i+1));
 								TreeItem generatorTypeItem = new TreeItem(generatorItem,SWT.NONE);
 								generatorTypeItem.setText( generatorsVector.elementAt(i).type.name() );
+								generatorTypeItem = new TreeItem(generatorItem,SWT.NONE);
+								generatorTypeItem.setText( "Start: " + String.valueOf( generatorsVector.elementAt(i).getTime().toDouble() ) );
+								if( generatorsVector.elementAt(i).type.equals(GenerateType.constant) ) {
+									generatorTypeItem = new TreeItem(generatorItem,SWT.NONE);
+									generatorTypeItem.setText( "Interval: " + String.valueOf(((ConstantGenerate)generatorsVector.elementAt(i)).getInterval().toDouble()) );
+								}
+								else if( generatorsVector.elementAt(i).type.equals(GenerateType.normal) ) {
+									generatorTypeItem = new TreeItem(generatorItem,SWT.NONE);
+									generatorTypeItem.setText( "Mean: " + String.valueOf(((NormalGenerate)generatorsVector.elementAt(i)).getMean().toDouble()) );
+									generatorTypeItem = new TreeItem(generatorItem,SWT.NONE);
+									generatorTypeItem.setText( "Variance: " + String.valueOf(((NormalGenerate)generatorsVector.elementAt(i)).getVariance().toDouble()) );
+								}
+								else if( generatorsVector.elementAt(i).type.equals(GenerateType.uniform) ) {
+									generatorTypeItem = new TreeItem(generatorItem,SWT.NONE);
+									generatorTypeItem.setText( "Range: " + String.valueOf(((UniformGenerate)generatorsVector.elementAt(i)).getRange().toDouble()) );
+								}
+									
 							}
 						}
 					}

@@ -18,4 +18,8 @@ public class ConstantGenerate extends Generate {
 		Time newEventTime = Monitor.clock.add( interval );
 		Monitor.agenda.schedule(new ConstantGenerate(newEventTime, place, interval) );
 	}
+	
+	public Time getInterval() {
+		return interval;
+	}
 }

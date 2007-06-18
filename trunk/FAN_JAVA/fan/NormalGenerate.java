@@ -22,4 +22,11 @@ public class NormalGenerate extends Generate {
 		Monitor.agenda.schedule(new NormalGenerate(newEventTime, place, mean, variance) );
 	}
 
+	public Time getMean() {
+		return mean;
+	}
+	
+	public Time getVariance() {
+		return variance;
+	}
 }
