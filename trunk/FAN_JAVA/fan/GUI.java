@@ -175,7 +175,14 @@ public class GUI {
 			public void widgetSelected(SelectionEvent arg0) {
 				if( generatorTree.getSelectionCount() == 1 ) {
 					int j = 0;
-					for(int i =0; i <= generatorTree.indexOf(generatorTree.getSelection()[0]); i++ ) {
+					TreeItem selectedItem;
+					if(generatorTree.getSelection()[0].getParentItem() != null) {
+						selectedItem = generatorTree.getSelection()[0].getParentItem();
+					}
+					else {
+						selectedItem = generatorTree.getSelection()[0];
+					}
+					for(int i =0; i <= generatorTree.indexOf(selectedItem); i++ ) {
 						while(generatorsVector.elementAt(j).getServer() != server)
 							j++;
 					}
@@ -208,6 +215,8 @@ public class GUI {
 							if( generatorsVector.elementAt(i).getServer() == server) {
 								TreeItem generatorItem = new TreeItem(generatorTree,SWT.NONE);
 								generatorItem.setText("Generator nr " + (i+1));
+								TreeItem generatorTypeItem = new TreeItem(generatorItem,SWT.NONE);
+								generatorTypeItem.setText( generatorsVector.elementAt(i).type.name() );
 							}
 						}
 					}
