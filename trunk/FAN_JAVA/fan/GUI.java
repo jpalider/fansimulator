@@ -1,5 +1,9 @@
 package fan;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.util.Iterator;
 import java.util.Vector;
 
 import org.eclipse.swt.events.SelectionAdapter;
@@ -320,7 +324,7 @@ public class GUI {
 	
 	private void runSimulation() {
 		if(validateConfiguration(false)) {
-			double simulationTime = 200;
+			double simulationTime = 2000;
 			Monitor.clock = new Time(-1);
 			for(int i = 0; i < generatorsVector.size(); i++) {
 				Monitor.agenda.schedule(generatorsVector.elementAt(i));
@@ -331,8 +335,12 @@ public class GUI {
 				now.run();
 				//System.out.println("The time is now: " + Monitor.clock);
 			}
-			for(int i = 0; i < serversVector.size(); i++) {
-				RaportPrinter.printResultsForServer(serversVector.elementAt(i));
+			
+			DisplayResultsDialog sumUpDialog = new DisplayResultsDialog(shell,SWT.NONE);
+			sumUpDialog.open();
+			for (Iterator iter = serversVector.iterator(); iter.hasNext();) {
+				Server element = (Server) iter.next();
+				element.clearResults();
 			}
 		}
 	}
@@ -706,5 +714,44 @@ public class GUI {
 
 		}
 		
+	}
+
+	private class DisplayResultsDialog extends Dialog {
+		private Text outputText;
+		
+		public DisplayResultsDialog(Shell arg0, int arg1) {
+			super(arg0, arg1);
+		}
+		
+		public void open() {
+			Shell parent = getParent();
+            final Shell shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+            shell.setText("The Simulation Results");
+            shell.setSize(700, 550);
+            
+            //Text box for displaying output
+            outputText = new Text(shell,SWT.BORDER|SWT.MULTI|SWT.WRAP|SWT.V_SCROLL);
+            outputText.setSize(shell.getSize().x - 10, shell.getSize().y - 20);
+            outputText.setLocation(5,5);
+            
+            System.setOut(new PrintStream( new TextBoxOutputStream() ) );
+            for(int i = 0; i < serversVector.size(); i++) {
+				RaportPrinter.printResultsForServer(serversVector.elementAt(i));
+			}
+            
+            shell.open();
+            Display display = parent.getDisplay();
+            while (!shell.isDisposed()) {
+                    if (!display.readAndDispatch()) display.sleep();
+            }
+            return;
+
+		}
+		private class TextBoxOutputStream extends OutputStream {
+
+			public void write(int b) throws IOException {
+				outputText.append(String.valueOf((char)b));				
+			}	
+		}
 	}
 }
