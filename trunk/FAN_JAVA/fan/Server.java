@@ -168,5 +168,11 @@ public class Server {
 		return routing;
 	}
 	
+	/**
+	 * This is the method for clearing results already collected for this server
+	 */
+	public void clearResults() {
+		results = new ResultsCollector();
+	}
 	
 }
