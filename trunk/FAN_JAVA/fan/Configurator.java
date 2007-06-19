@@ -141,6 +141,10 @@ public class Configurator {
 	}
 	
 	public boolean saveConfiguration(Vector<Server> serverVector, Vector<Generate> generatorVector){
+		return saveConfiguration("test.xml", serverVector, generatorVector);		
+	}
+	
+	public boolean saveConfiguration(String filename, Vector<Server> serverVector, Vector<Generate> generatorVector){
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
@@ -215,7 +219,7 @@ public class Configurator {
 
 			//to generate a file output use fileoutputstream instead of system.out
 			XMLSerializer serializer = 
-							new XMLSerializer( new FileOutputStream(new File("test.xml")), format);
+							new XMLSerializer( new FileOutputStream(new File(filename)), format);
 
 			serializer.serialize(document);
 
