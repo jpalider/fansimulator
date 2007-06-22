@@ -1,6 +1,7 @@
 package fan;
 
 import java.util.HashMap;
+import java.util.*;
 
 public class FlowList {
 	
@@ -30,6 +31,7 @@ public class FlowList {
 		return timeout;		
 	}
 	
+	// If possible, register a new flow if flow is new or update its time of occurance
 	public boolean registerFlow(FlowIdentifier identifier, Time currentTime){
 		if (getLength() == getMaxLength())
 			return false;
@@ -42,12 +44,16 @@ public class FlowList {
 		return true;
 	}
 	
-	public void unregisterInactiveFlows(Time currentTime){
-		
-	}
-	
+	//that needs some fix as it won't work fast
+	// mayby by value not key??
 	public void unregisterInactiveFlows(Time currentTime, Time timeout){
-		
+		// For each Flow in PFL we check wheather it is outdated or not. If that flow 
+		// expands (not this word) timeout it is discarded.
+		for (Iterator<FlowIdentifier> it = protectedList.keySet().iterator(); it.hasNext(); ){			
+			if ( currentTime.substract( protectedList.get(it) ).compareTo(timeout) > 0 ){		
+				protectedList.remove(it);
+		    }
+		}
 	}
 
 	
