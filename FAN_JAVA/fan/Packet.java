@@ -116,12 +116,12 @@ public class Packet {
 	/**
 	 * Constructor.
 	 * @param id Flow identifier. In early stages od deveopment they are
-	 * explicitly assigned in generation procedure. TODO: Flow identifier
-	 * should be replaced by typical IP packet header and on that basis 
-	 * Servers will generate packets' identifiers
+	 * explicitly assigned in generation procedure.
+	 * TODO: Flow identifier should be replaced by typical IP packet header
+	 * and on that basis Servers will generate packets' identifiers
 	 * @param ftype Flow type. In early stages od deveopment they are
-	 * explicitly assigned in generation procedure. TODO: Flow types should
-	 * be discovered by Servers.
+	 * explicitly assigned in generation procedure.
+	 * TODO: Flow types should be discovered by Servers.
 	 * @param l Definition of packet length 
 	 */
 	public Packet(FlowIdentifier id, FlowType ftype, int l) {
