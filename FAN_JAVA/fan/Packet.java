@@ -145,5 +145,9 @@ public class Packet {
 	public Time getServiceStartTime() {
 		return serviceStartTime;
 	}
+	
+	public FlowIdentifier getFlowIdentifier(){
+		return flowID;
+	}
 }
 
