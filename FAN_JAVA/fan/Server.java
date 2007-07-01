@@ -72,16 +72,14 @@ public class Server {
 			results.addQueueLength(0);
 		}
 		
-//		//If the interface is busy then check if queue for interface has any free places
-//		else if( choiceIntface.getQueue().isFull() ) {
-//			//reject packet
-//		}
-		
+		//If interface is not free (has any packets waiting in the queue)
 		else {
-			
+			//if the queue is not full
 			if( choiceIntface.getQueue().putPacket(p) ) {
 				p.setServiceStartTime(Monitor.clock);
 				results.addQueueLength(choiceIntface.getQueue().getSize() );
+			
+			//if the queue is full
 			} else
 				results.addRejectedPacket();
 		}
