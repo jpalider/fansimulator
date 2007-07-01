@@ -52,18 +52,6 @@ public class FlowList {
 		return true;
 	}
 	
-	//that needs some fix as it won't work fast
-	// mayby by value not key??
-	public void unregisterInactiveFlows(Flow flow){
-		// For each Flow in PFL we check wheather it is outdated or not. If that flow 
-		// exceeds timeout it is discarded.
-		for (Iterator<Flow> it = protectedList.iterator(); it.hasNext(); ){			
-			if ( it.next().compareTo(flow) > 0 ){		
-				protectedList.remove(it);
-		    }
-		}
-	}
-
 	public boolean contains(FlowIdentifier flowID){
 		for (Iterator iter = protectedList.iterator(); iter.hasNext();) {
 			Flow element = (Flow) iter.next();

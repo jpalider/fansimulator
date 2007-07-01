@@ -4,10 +4,11 @@ public class Flow {
 	private FlowIdentifier flowID;
 	private long finishTag;
 	
-	public int compareTo(Flow flow){
-		//if (flow_id == flow.getFlowId()) return true;
-		return 1;
-	}
+//	public int compareTo(Flow flow){
+//		if (flowID == flow.getFlowID()) return 0;
+////		if (flowID > flow.getFlowID()) return 1;
+////		if (flowID < flow.getFlowID()) return -1;		
+//	}
 	
 	public FlowIdentifier getFlowID() {
 		return flowID;
