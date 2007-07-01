@@ -119,7 +119,7 @@ public class PFQQueue implements Queue {
 		virtualTime = packetQueue.peek().startTag;
 		
 		//Remove all queues which finishTag is smaller than virtualTime
-		flowList.cleanFlows(virtualTime);
+//		flowList.cleanFlows(virtualTime);
 		
 		return packet.p;
 	}
