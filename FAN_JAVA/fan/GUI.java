@@ -238,6 +238,10 @@ public class GUI {
 								generatorTypeItem.setText( generatorsVector.elementAt(i).type.name() );
 								generatorTypeItem = new TreeItem(generatorItem,SWT.NONE);
 								generatorTypeItem.setText( "Start: " + String.valueOf( generatorsVector.elementAt(i).getTime().toDouble() ) );
+								if( !generatorsVector.elementAt(i).isLooped() ) {
+									generatorTypeItem = new TreeItem(generatorItem, SWT.NONE);
+									generatorTypeItem.setText( "Finish: " + String.valueOf( generatorsVector.elementAt(i).getFinishTime().toDouble() ) );
+								}
 								if( generatorsVector.elementAt(i).type.equals(GenerateType.constant) ) {
 									generatorTypeItem = new TreeItem(generatorItem,SWT.NONE);
 									generatorTypeItem.setText( "Interval: " + String.valueOf(((ConstantGenerate)generatorsVector.elementAt(i)).getInterval().toDouble()) );
@@ -609,6 +613,23 @@ public class GUI {
             startTimeLabel.setSize(startTimeLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
             startTimeLabel.setLocation(startTimeText.getLocation().x, startTimeText.getLocation().y - startTimeLabel.getSize().y - 5);
             
+            //Finish time label
+            Label finishTimeLabel = new Label(shell, SWT.NONE);
+            finishTimeLabel.setText("Finish time:");
+            finishTimeLabel.setSize(finishTimeLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+            finishTimeLabel.setLocation(startTimeText.getLocation().x, startTimeText.getLocation().y + startTimeText.getSize().y + 5);
+            
+            //Finish time Text box
+            final Text finishTimeText = new Text(shell, SWT.SINGLE|SWT.BORDER);
+            finishTimeText.setSize(startTimeText.getSize());
+            finishTimeText.setLocation(finishTimeLabel.getLocation().x, finishTimeLabel.getLocation().y + finishTimeLabel.getSize().y + 5);
+            
+            //Finish time note
+            Label finishTimeNoteLabel = new Label(shell, SWT.NONE|SWT.WRAP);
+            finishTimeNoteLabel.setText("Note:\nWhen finish time is empty, the generator is turned on till the end of the simulation");
+            finishTimeNoteLabel.setSize(finishTimeNoteLabel.computeSize(finishTimeText.getSize().x , SWT.DEFAULT));
+            finishTimeNoteLabel.setLocation(finishTimeText.getLocation().x, finishTimeText.getLocation().y + finishTimeText.getSize().y + 5);
+            
             //Interval text box
             final Text intervalText = new Text(shell,SWT.SINGLE|SWT.BORDER);
             intervalText.setSize(100, 25);
@@ -680,26 +701,43 @@ public class GUI {
             //Add generator button listener
             addGeneratorBut.addSelectionListener(new SelectionAdapter() {
             	public void widgetSelected(SelectionEvent arg0) {
+            		Time startTime = new Time( Double.valueOf( startTimeText.getText() ) );
+            		Time finishTime = null;
+            		if(finishTimeText.getText().length() > 0)
+            			finishTime = new Time( Double.valueOf( finishTimeText.getText() ) );
+
             		if( generatorTypeCombo.getText().equals(GenerateType.basic.name()) ) {
-            			Time startTime = new Time( Double.valueOf( startTimeText.getText() ) );
-            			generatorsVector.add( new Generate(startTime,server) );
+            			if(finishTime != null)
+            				generatorsVector.add(new Generate(startTime, server, finishTime) );
+            			else
+            				generatorsVector.add( new Generate(startTime,server) );
             		}
+            		
             		else if( generatorTypeCombo.getText().equals(GenerateType.constant.name()) ) {
             			Time intervalTime = new Time( Double.valueOf(intervalText.getText()) );
-            			Time startTime = new Time( Double.valueOf( startTimeText.getText() ) );
-            			generatorsVector.add( new ConstantGenerate(startTime, server, intervalTime) );
+            			if(finishTime != null)
+            				generatorsVector.add( new ConstantGenerate(startTime, server, intervalTime, finishTime) );
+            			else
+            				generatorsVector.add( new ConstantGenerate(startTime, server, intervalTime) );
             		}
+            		
             		else if( generatorTypeCombo.getText().equals(GenerateType.normal.name()) ) {
             			Time meanTime = new Time( Double.valueOf(intervalText.getText()) );
-            			Time startTime = new Time( Double.valueOf( startTimeText.getText() ) );
             			Time varianceTime = new Time( Double.valueOf( varianceText.getText() ) );
-            			generatorsVector.add( new NormalGenerate(startTime,server,meanTime,varianceTime) );
+            			if(finishTime != null)
+            				generatorsVector.add( new NormalGenerate(startTime, server, meanTime, varianceTime, finishTime) );
+            			else
+            				generatorsVector.add( new NormalGenerate(startTime, server, meanTime, varianceTime) );
             		}
+            		
             		else if( generatorTypeCombo.getText().equals(GenerateType.uniform.name()) ) {
             			Time rangeTime = new Time( Double.valueOf(intervalText.getText()) );
-            			Time startTime = new Time( Double.valueOf( startTimeText.getText() ) );
-            			generatorsVector.add( new UniformGenerate(startTime,server,rangeTime) );
+            			if(finishTime != null)
+            				generatorsVector.add( new UniformGenerate(startTime, server, rangeTime, finishTime) );
+            			else
+            				generatorsVector.add( new UniformGenerate(startTime, server, rangeTime) );
             		}
+            		
             		shell.close();
             	}
             });
