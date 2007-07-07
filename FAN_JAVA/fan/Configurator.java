@@ -26,17 +26,25 @@ import org.apache.xml.serialize.XMLSerializer;
 import org.apache.xml.serialize.OutputFormat;
 
 public class Configurator {
-	Document document;  
+	private Document document;
+	
+	/**
+	 * String to hold the filename where the configuration is saved
+	 */
+	private String filename;
 	
 	public Configurator(String configFile){
+		this.filename = configFile;  
+	} 
 	
-	    DocumentBuilderFactory factory =
+	public boolean configure( Vector<Server> serverVector, Vector<Generate> generatorVector){
+		DocumentBuilderFactory factory =
 	        DocumentBuilderFactory.newInstance();
 	    //factory.setValidating(true);   
 	    //factory.setNamespaceAware(true);
 	    try {
 	       DocumentBuilder builder = factory.newDocumentBuilder();
-	       document = builder.parse( new File(configFile) );
+	       document = builder.parse( new File(filename) );
 	
 	    } catch (SAXException sxe) {
 	       // Error generated during parsing)
@@ -53,10 +61,7 @@ public class Configurator {
 	       // I/O error
 	       ioe.printStackTrace();
 	    }
-	} 
-	
-	public boolean configure( Vector<Server> serverVector, Vector<Generate> generatorVector){
-
+		
 		NodeList xmlListOfServers = document.getElementsByTagName("server");
         int totalServers = xmlListOfServers.getLength();
 
@@ -98,28 +103,83 @@ public class Configurator {
         		for (int j = 0; j < generatorList.getLength(); j++ ){
         			Element generatorElement = (Element)generatorList.item(j);
         			String generatorType = new String( generatorElement.getAttributes().getNamedItem("type").getTextContent() );
-        			if (generatorType.compareTo("basic") == 0){			
-        				generatorVector.add(new Generate(new Time(0), serverVector.get(i)));
-        			}else if (generatorType.compareTo("normal") == 0){			
-			        	NodeList meanList = generatorElement.getElementsByTagName("mean");	   	
-        				NodeList varianceList = generatorElement.getElementsByTagName("variance");
-        				Element meanElement = (Element)meanList.item(0);
-        				Element varianceElement = (Element)varianceList.item(0);
-        				double mean = Double.parseDouble( meanElement.getTextContent() );
-        				double variance = Double.parseDouble( varianceElement.getTextContent() );
-        				generatorVector.add(new NormalGenerate(new Time(0), serverVector.get(i), new Time(mean), new Time(variance)));
-        			}else if (generatorType.compareTo("constant") == 0){					
-        				NodeList intervalList = generatorElement.getElementsByTagName("interval");  
-        				Element intervalElement = (Element)intervalList.item(0);  
-        				double interval = Double.parseDouble( intervalElement.getTextContent() );
-        				generatorVector.add(new ConstantGenerate(new Time(0), serverVector.get(i), new Time(interval)));
-        			}else if (generatorType.compareTo("uniform") == 0){
-        				NodeList rangeList = generatorElement.getElementsByTagName("range");  
-        				Element rangeElement = (Element)rangeList.item(0);  
-        				double range = Double.parseDouble( rangeElement.getTextContent() );
-        				generatorVector.add(new UniformGenerate(new Time(0), serverVector.get(i), new Time(range)));
-        			} else{
-            			System.out.println( "fan.Configurator: wrong generator type!");
+        			
+        			//Load start time
+        			Element startTime = (Element)( 
+        							generatorElement.getElementsByTagName("startTime").item(0) );
+        			Time start = new Time( 
+        								Double.valueOf (startTime.getTextContent()) 
+        								);
+        			
+        			//Load looped
+        			Element looped = (Element)(
+        							generatorElement.getElementsByTagName("looped").item(0) );
+        			boolean loop = Boolean.valueOf (looped.getTextContent());
+        			if (!loop) {
+        				Element finishTime = (Element)( 
+    							generatorElement.getElementsByTagName("finishTime").item(0) );
+            			Time finish = new Time( 
+            								Double.valueOf (finishTime.getTextContent()) 
+            								);
+            			
+            			if (generatorType.compareTo("basic") == 0){			
+	        				generatorVector.add(new Generate(start, serverVector.get(i), finish));
+	        				
+	        			}else if (generatorType.compareTo("normal") == 0){			
+				        	NodeList meanList = generatorElement.getElementsByTagName("mean");	   	
+	        				NodeList varianceList = generatorElement.getElementsByTagName("variance");
+	        				Element meanElement = (Element)meanList.item(0);
+	        				Element varianceElement = (Element)varianceList.item(0);
+	        				double mean = Double.parseDouble( meanElement.getTextContent() );
+	        				double variance = Double.parseDouble( varianceElement.getTextContent() );
+	        				generatorVector.add(new NormalGenerate(start, serverVector.get(i), new Time(mean), new Time(variance), finish));
+	        				
+	        			}else if (generatorType.compareTo("constant") == 0){					
+	        				NodeList intervalList = generatorElement.getElementsByTagName("interval");  
+	        				Element intervalElement = (Element)intervalList.item(0);  
+	        				double interval = Double.parseDouble( intervalElement.getTextContent() );
+	        				generatorVector.add(new ConstantGenerate(start, serverVector.get(i), new Time(interval), finish));
+	        				
+	        			}else if (generatorType.compareTo("uniform") == 0){
+	        				NodeList rangeList = generatorElement.getElementsByTagName("range");  
+	        				Element rangeElement = (Element)rangeList.item(0);  
+	        				double range = Double.parseDouble( rangeElement.getTextContent() );
+	        				generatorVector.add(new UniformGenerate(start, serverVector.get(i), new Time(range), finish));
+	        				
+	        			} else{
+	            			System.out.println( "fan.Configurator: wrong generator type!");
+	        			}
+        			}
+        			
+        			else {
+	        			
+	        			if (generatorType.compareTo("basic") == 0){			
+	        				generatorVector.add(new Generate(start, serverVector.get(i)));
+	        				
+	        			}else if (generatorType.compareTo("normal") == 0){			
+				        	NodeList meanList = generatorElement.getElementsByTagName("mean");	   	
+	        				NodeList varianceList = generatorElement.getElementsByTagName("variance");
+	        				Element meanElement = (Element)meanList.item(0);
+	        				Element varianceElement = (Element)varianceList.item(0);
+	        				double mean = Double.parseDouble( meanElement.getTextContent() );
+	        				double variance = Double.parseDouble( varianceElement.getTextContent() );
+	        				generatorVector.add(new NormalGenerate(start, serverVector.get(i), new Time(mean), new Time(variance)));
+	        				
+	        			}else if (generatorType.compareTo("constant") == 0){					
+	        				NodeList intervalList = generatorElement.getElementsByTagName("interval");  
+	        				Element intervalElement = (Element)intervalList.item(0);  
+	        				double interval = Double.parseDouble( intervalElement.getTextContent() );
+	        				generatorVector.add(new ConstantGenerate(start, serverVector.get(i), new Time(interval)));
+	        				
+	        			}else if (generatorType.compareTo("uniform") == 0){
+	        				NodeList rangeList = generatorElement.getElementsByTagName("range");  
+	        				Element rangeElement = (Element)rangeList.item(0);  
+	        				double range = Double.parseDouble( rangeElement.getTextContent() );
+	        				generatorVector.add(new UniformGenerate(start, serverVector.get(i), new Time(range)));
+	        				
+	        			} else{
+	            			System.out.println( "fan.Configurator: wrong generator type!");
+	        			}
         			}
         		}        		
         	}
@@ -140,11 +200,11 @@ public class Configurator {
 		return null;
 	}
 	
-	public boolean saveConfiguration(Vector<Server> serverVector, Vector<Generate> generatorVector){
-		return saveConfiguration("test.xml", serverVector, generatorVector);		
-	}
+//	public boolean saveConfiguration(Vector<Server> serverVector, Vector<Generate> generatorVector){
+//		return saveConfiguration("test.xml", serverVector, generatorVector);		
+//	}
 	
-	public boolean saveConfiguration(String filename, Vector<Server> serverVector, Vector<Generate> generatorVector){
+	public boolean saveConfiguration(Vector<Server> serverVector, Vector<Generate> generatorVector){
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
@@ -174,6 +234,30 @@ public class Configurator {
 				Generate.GenerateType generatorType = generatorVector.get(k).type;
 				if (generatorVector.get(k).getServer() == serverVector.get(i)){
 					Element g = (Element) document.createElement("generator");
+					Element start = (Element) document.createElement("startTime");
+					
+					//add information about start time of generator
+					start.setTextContent( 	String.valueOf(
+											generatorVector.get(k).getTime().toDouble()
+											) );
+					g.appendChild(start);
+					
+					//add information about the fact if generator is looped, or has some specified
+					//finish time before end of simulation
+					Element looped = (Element) document.createElement("looped");
+					looped.setTextContent(	String.valueOf(
+											generatorVector.get(k).isLooped()
+											) );
+					g.appendChild(looped);
+					
+					//add information about finish time of generator
+					if( !generatorVector.get(k).isLooped() ) {
+						Element finish = (Element) document.createElement("finishTime");
+						finish.setTextContent(	String.valueOf(
+												generatorVector.get(k).getFinishTime().toDouble()
+												) );
+						g.appendChild(finish);
+					}
 					
 					if (generatorType == Generate.GenerateType.basic){
 						g.setAttribute("type", "basic");

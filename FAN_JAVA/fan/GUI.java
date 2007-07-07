@@ -74,16 +74,19 @@ public class GUI {
 	}
 	
 	private void addServerTab(final TabFolder tabs) {
-		
-		
-		final TabItem serverTab = new TabItem(tabs,SWT.BORDER);
 		int next = Integer.parseInt(numberOfServers.getText())+1;
-		numberOfServers.setText(String.valueOf(next));
-		serverTab.setText("Server nr " + String.valueOf(next));
-		
-		final Server server = new Server( "Server nr " + String.valueOf(next) );
+		Server server = new Server( "Server nr " + String.valueOf(next) );
 		serversVector.add(server);
-		
+		addServerTab(tabs, server);
+	}
+	
+	private void addServerTab(final TabFolder tabs, final Server server) {
+				
+		final TabItem serverTab = new TabItem(tabs,SWT.BORDER);
+		int next = Integer.parseInt(numberOfServers.getText()) + 1;
+		numberOfServers.setText(String.valueOf(next));
+		serverTab.setText(server.getName());
+				
 		Composite serverTabComp = new Composite(tabs,SWT.BORDER);
 		serverTabComp.setLayout(null);
 		serverTabComp.setSize(300, 300);
@@ -303,7 +306,12 @@ public class GUI {
 	    });
 	}
 	
-		
+	/** 
+	 * Validates configuration of servers made by user inside GUI
+	 * @param showMessage if true the message is displayed when configuration has any errors. If false
+	 * 						then no message is displayed, even with wrong configuration.
+	 * @return true if configuration is proper, false when configuration is incorrect
+	 */	
 	private boolean validateConfiguration(boolean showMessage) {
 		//Check if the sum of probability of all routes in each servers equals 1
 		for(int i = 0; i < serversVector.size(); i++ ) {
@@ -326,9 +334,12 @@ public class GUI {
 		return true;
 	}
 	
-	private void runSimulation() {
+	/**
+	 * Method that runs simulation
+	 * @param simulationTime The time that simulation should be runned
+	 */
+	private void runSimulation(double simulationTime) {
 		if(validateConfiguration(false)) {
-			double simulationTime = 2000;
 			Monitor.clock = new Time(-1);
 			for(int i = 0; i < generatorsVector.size(); i++) {
 				Monitor.agenda.schedule(generatorsVector.elementAt(i));
@@ -349,6 +360,27 @@ public class GUI {
 		}
 	}
 	
+	private void saveConfig() {
+		Configurator conf = new Configurator("ServerConfig.xml");
+		conf.saveConfiguration(serversVector, generatorsVector);
+	}
+	
+	private void loadConfig() {
+		serversVector.clear();
+		generatorsVector.clear();
+		//numberOfServers.setText("0");
+		while(!numberOfServers.getText().equals("0"))
+			removeServerTab(tabs);
+		Configurator conf = new Configurator("ServerConfig.xml");
+		conf.configure(serversVector, generatorsVector);
+		for(int i = 0; i < serversVector.size(); i ++) {
+			addServerTab(tabs, serversVector.elementAt(i));
+		}
+		Event newEvent = new Event();
+		newEvent.text = "refresh";
+		tabs.notifyListeners(100, newEvent);
+	}
+	
 	private void addMenu(final Shell shell) {
 		class MenuListener extends SelectionAdapter {
 
@@ -367,7 +399,7 @@ public class GUI {
 				}
 				//Run Simulation
 				else if( ((MenuItem)se.widget).getText().equals("Run Simulation") ) {
-					runSimulation();
+					runSimulation(2000);
 				}
 				//Close Program
 				else if( ((MenuItem)se.widget).getText().equals("Close Program") )
@@ -375,11 +407,11 @@ public class GUI {
 				
 				//Save config file
 				else if( ((MenuItem)se.widget).getText().equals("Save Configuration in File") ) {
-					//TO BE ADDED after Kuba finishes Configurator
+					saveConfig();
 				}
 				//Open config file
 				else if( ((MenuItem)se.widget).getText().equals("Open Configuration from File") ) {
-					//TO BE ADDED after Kuba finishes Configurator
+					loadConfig();
 				}
 			}
 			
@@ -477,8 +509,14 @@ public class GUI {
 		removeServerBut.addSelectionListener(buttonListener);
 	}
 
+	/**
+	 * Method that adds Validate Configuration and Run Simulation buttons and 
+	 * surrounding components
+	 * @param shell The shell where the components should be added
+	 */
 	private void addRunSimulationButton(Shell shell) {
 		
+		//Validate configuration button
 		Button validateConfigButton = new Button(shell,SWT.NONE);
 		validateConfigButton.setText("Validate Configuration");
 		validateConfigButton.setSize(200,50);
@@ -489,15 +527,43 @@ public class GUI {
 			}
 		});
 		
+		//Run Simulation button
 		Button runSimulationButton = new Button(shell,SWT.NONE);
 		runSimulationButton.setText("Run Simulation");
 		runSimulationButton.setSize(validateConfigButton.getSize());
-		runSimulationButton.setLocation(validateConfigButton.getLocation().x + validateConfigButton.getSize().x + 10, validateConfigButton.getLocation().y);
+		runSimulationButton.setLocation(validateConfigButton.getLocation().x + 
+										validateConfigButton.getSize().x + 10, 
+										validateConfigButton.getLocation().y);
+		
+		
+		//Simulation Time Label
+		Label simulationTimeLabel = new Label(shell, SWT.NONE);
+		simulationTimeLabel.setText("Simulations Time [s]:");
+		simulationTimeLabel.setFont(new Font(display,"System",12,SWT.NONE) );
+		simulationTimeLabel.setSize(simulationTimeLabel.computeSize(
+									SWT.DEFAULT, 
+									SWT.DEFAULT));
+		simulationTimeLabel.setLocation(runSimulationButton.getLocation().x + 
+										runSimulationButton.getSize().x + 5,
+										runSimulationButton.getLocation().y + 10);
+		
+		//Simulation Time Text
+		final Text simulationTimeText = new Text(shell,SWT.BORDER|SWT.SINGLE);
+		simulationTimeText.setLocation(	simulationTimeLabel.getLocation().x +
+										simulationTimeLabel.getSize().x + 5,
+										simulationTimeLabel.getLocation().y);
+		simulationTimeText.setSize( 50, simulationTimeLabel.getSize().y);
+		simulationTimeText.setText("2000");
+		
+		//Run Simulation button listener
 		runSimulationButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent arg0) {
-				runSimulation();
+				runSimulation( 	Double.valueOf( 
+								simulationTimeText.getText() )
+								);
 			}
 		});
+		
 	}
 	
 	
