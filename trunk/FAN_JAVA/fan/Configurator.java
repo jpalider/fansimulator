@@ -106,7 +106,7 @@ public class Configurator {
         			
         			//Load packetSize
         			Element packetSize = (Element) (
-        									generatorElement.getElementsByTagName("packetSize")	);
+        									generatorElement.getElementsByTagName("packetSize").item(0)	);
         			int packetS = Integer.parseInt (packetSize.getTextContent());
         			
         			//Load start time
