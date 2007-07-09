@@ -228,10 +228,17 @@ public class GUI {
 						for(int i =0; i < routes.size(); i++) {
 							TreeItem interfaceItem = new TreeItem(serverTree,SWT.NONE);
 							interfaceItem.setText("Interface to: " + routes.elementAt(i).getServerInterface().getServer().getName());
+							
 							TreeItem probabilityItem = new TreeItem(interfaceItem,SWT.NONE);
 							probabilityItem.setText("Probability: " + routes.elementAt(i).getProbability());
+							
 							TreeItem bandwidthItem = new TreeItem(interfaceItem,SWT.NONE);
 							bandwidthItem.setText("Bandwidth [B/s]: " + routes.elementAt(i).getServerInterface().getBandwidth());
+							
+							TreeItem queueSizeItem = new TreeItem(interfaceItem, SWT.NONE);
+							queueSizeItem.setText(	"Queue size [B]: " + 
+													routes.elementAt(i).getServerInterface().getQueue().getMaxSize());
+							
 						}
 						//refresh generator Tree
 						generatorTree.removeAll();
@@ -622,18 +629,31 @@ public class GUI {
             probabilityText.setSize(bandwidthText.getSize());
             probabilityText.setLocation(probabilityLabel.getLocation().x,probabilityLabel.getLocation().y + probabilityLabel.getSize().y + 5);
             
+            //Queue size label/text creation
+            Label queueSizeLabel = new Label(shell, SWT.NONE);
+            queueSizeLabel.setText("Enter queue size [B]");
+            queueSizeLabel.setSize ( probabilityLabel.computeSize (SWT.DEFAULT, SWT.DEFAULT) );
+            queueSizeLabel.setLocation(	probabilityText.getLocation().x, 
+            							probabilityText.getLocation().y + probabilityText.getSize().y + 5);
+            final Text queueSizeText = new Text( shell, SWT.SINGLE|SWT.BORDER );
+            queueSizeText.setSize ( probabilityText.getSize() );
+            queueSizeText.setLocation ( queueSizeLabel.getLocation().x,
+            							queueSizeLabel.getLocation().y + queueSizeLabel.getSize().y + 5);
+            queueSizeText.setText("1000");
+            
             //Add Interface Button creation
             Button addInterfaceBut = new Button(shell,SWT.NONE);
             addInterfaceBut.setText("Add This Interface");
-            addInterfaceBut.setLocation(probabilityText.getLocation().x,probabilityText.getLocation().y + probabilityText.getSize().y + 5);
+            addInterfaceBut.setLocation(queueSizeText.getLocation().x,queueSizeText.getLocation().y + queueSizeText.getSize().y + 5);
             addInterfaceBut.setSize(bandwidthText.getSize().x, bandwidthText.getSize().y * 2);
             addInterfaceBut.addSelectionListener(new SelectionAdapter() {
             	public void widgetSelected(SelectionEvent arg0) {
             		if(serverList.getSelectionCount() == 1) {
             			server.addInterface(
-            					serversVector.elementAt(serverList.getSelectionIndex()),
-            					Double.parseDouble( probabilityText.getText() ), 
-            					Integer.parseInt(bandwidthText.getText()) );
+            					serversVector.elementAt ( serverList.getSelectionIndex() ),
+            					Double.parseDouble ( probabilityText.getText() ), 
+            					Integer.parseInt ( bandwidthText.getText() ),
+            					Integer.parseInt ( queueSizeText.getText() ) );
             			shell.close();
             		}
             			

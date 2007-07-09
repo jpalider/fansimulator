@@ -122,6 +122,23 @@ public class Server {
 	}
 	
 	/**
+	 * Method for adding new interface to server, with specified queue size of the interface
+	 * @param destServ Server that is a destination
+	 * @param probability Float with probability of packet going that server
+	 * @param bandwidth Int with the bandwidth of this interface
+	 * @param queueSize size of the queue that interface has (in bytes)
+	 * @return
+	 */
+	public boolean addInterface(Server destServ, double probability, int bandwidth, int queueSize) {
+		Interface intfc = new Interface( bandwidth, destServ,this, queueSize );
+		if(routing.addRoute(intfc, probability)) {
+			interfaces.add(intfc);
+			return true;
+		}
+		else return false;
+	}
+	
+	/**
 	 * This is a method for removing interface with a specified number in the interfaces list
 	 * @param number int with the number of the interface to be removed
 	 * @return true if successful, false if not able to remove

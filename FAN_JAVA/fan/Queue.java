@@ -38,5 +38,11 @@ public interface Queue {
 	 * @return int with number of elements
 	 */
 	public int getSize();
+	
+	/**
+	 * Returns the maximum queue length
+	 * @return
+	 */
+	public int getMaxSize();
 }
 

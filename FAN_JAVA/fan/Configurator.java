@@ -93,10 +93,16 @@ public class Configurator {
             		}
             		// 2. routing probability
             		double probability = Double.parseDouble( interfaceElement.getAttributes().getNamedItem("probability").getTextContent() );
+            		
             		// 3. interface bandwidth 
             		int bandwidth = Integer.parseInt( interfaceElement.getAttributes().getNamedItem("bandwidth").getTextContent() );
+            		
+            		// 4. queue size
+            		int queueSize = Integer.parseInt( 
+            							interfaceElement.getAttributes().getNamedItem("queueSize").getTextContent() );
+            		
             		// finally create such interface            		
-            		serverVector.get(i).addInterface(destServ, probability, bandwidth);     
+            		serverVector.get(i).addInterface(destServ, probability, bandwidth, queueSize);     
         		}
         		// get its <generators> 
         		NodeList generatorList = serverElement.getElementsByTagName("generator");
@@ -251,8 +257,10 @@ public class Configurator {
 			// append interfaces tags
 			for (int k = 0; k < serverVector.get(i).getInterfacesNumber(); k++){
 				Element ifc = (Element) document.createElement("interface");
-				ifc.setAttribute("peer", serverVector.get(i).getInterfaces().get(k).getServer().getName());
-				ifc.setAttribute("bandwidth", String.valueOf(( serverVector.get(i).getInterfaces().get(k).getBandwidth() ) ));
+				ifc.setAttribute ("peer", serverVector.get(i).getInterfaces().get(k).getServer().getName());
+				ifc.setAttribute ("bandwidth", String.valueOf(( serverVector.get(i).getInterfaces().get(k).getBandwidth() ) ));
+				ifc.setAttribute (	"queueSize", 
+									String.valueOf( serverVector.get(i).getInterfaces().get(k).getQueue().getMaxSize() ) );
 				// for all routes on particular server...
 				for (int m = 0; m < serverVector.get(i).getRoutingTable().getRouting().size() ; m++){
 					if ( serverVector.get(i).getInterfaces().get(k) == serverVector.get(i).getRoutingTable().getRouting().get(m).getServerInterface() ){

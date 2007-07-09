@@ -87,16 +87,20 @@ public class Interface{
 			Monitor.agenda.schedule( new Depart(Monitor.clock.add(sendTime),this) );
 		}
 	}
-
+	
 	public Interface(int bandwidth, Server peer, Server local) {
-		this(bandwidth);
+		this (bandwidth, peer, local, 50);
+	}
+	
+	public Interface(int bandwidth, Server peer, Server local, int size) {
+		this (bandwidth,size);
 		this.peer = peer;
 		this.localhost = local;
 	}
 
-	public Interface(int bandwidth) {
+	public Interface(int bandwidth, int size) {
 		this.bandwidth = bandwidth;
-		this.queue = new FIFOQueue(50);
+		this.queue = new FifoQueueBytes(size);
 		this.setNotBusy();
 	}
 
