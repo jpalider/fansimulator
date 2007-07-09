@@ -103,8 +103,10 @@ public class Generate extends Event {
 		if(!looped) {
 			if (newEventTime.compareTo(finishTime) > 0)
 				return;
+			Monitor.agenda.schedule( new Generate(newEventTime, place, finishTime, packetSize) );
 		}
-		Monitor.agenda.schedule(new Generate(newEventTime, place) );
+		else
+			Monitor.agenda.schedule( new Generate(newEventTime, place, packetSize) );
 			
 	}
 	

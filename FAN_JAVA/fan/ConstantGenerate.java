@@ -79,8 +79,17 @@ public class ConstantGenerate extends Generate {
 		if(!looped) {
 			if (newEventTime.compareTo(finishTime) > 0)
 				return;
+			Monitor.agenda.schedule(new ConstantGenerate(	newEventTime, 
+															place, 
+															interval, 
+															finishTime, 
+															packetSize ) );
 		}
-		Monitor.agenda.schedule(new ConstantGenerate(newEventTime, place, interval) );
+		else
+			Monitor.agenda.schedule(new ConstantGenerate(	newEventTime, 
+															place, 
+															interval, 
+															packetSize ) );
 	}
 	
 	/**

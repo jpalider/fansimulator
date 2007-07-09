@@ -1,5 +1,7 @@
 package fan;
 
+import java.io.FileDescriptor;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -229,7 +231,7 @@ public class GUI {
 							TreeItem probabilityItem = new TreeItem(interfaceItem,SWT.NONE);
 							probabilityItem.setText("Probability: " + routes.elementAt(i).getProbability());
 							TreeItem bandwidthItem = new TreeItem(interfaceItem,SWT.NONE);
-							bandwidthItem.setText("Bandwidth: " + routes.elementAt(i).getServerInterface().getBandwidth());
+							bandwidthItem.setText("Bandwidth [B]: " + routes.elementAt(i).getServerInterface().getBandwidth());
 						}
 						//refresh generator Tree
 						generatorTree.removeAll();
@@ -372,11 +374,14 @@ public class GUI {
 	}
 	
 	private void loadConfig() {
+		//numberOfServers.setText("0");
+		while(!numberOfServers.getText().equals("0")) {
+			System.out.println(numberOfServers.getText());
+			removeServerTab(tabs);
+		}
 		serversVector.clear();
 		generatorsVector.clear();
-		//numberOfServers.setText("0");
-		while(!numberOfServers.getText().equals("0"))
-			removeServerTab(tabs);
+			
 		Configurator conf = new Configurator("ServerConfig.xml");
 		conf.configure(serversVector, generatorsVector);
 		for(int i = 0; i < serversVector.size(); i ++) {
@@ -601,7 +606,7 @@ public class GUI {
             
             //Bandwith text box creation
             Label bandwidthLabel = new Label(shell,SWT.NONE);
-            bandwidthLabel.setText("Enter bandwidth");
+            bandwidthLabel.setText("Enter bandwidth [B]");
             bandwidthLabel.setSize(bandwidthLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
             final Text bandwidthText = new Text(shell,SWT.SINGLE|SWT.BORDER);
             bandwidthText.setSize(100, 20);
@@ -675,7 +680,7 @@ public class GUI {
             generatorTypeLabel.setLocation(generatorTypeCombo.getLocation().x, generatorTypeCombo.getLocation().y - generatorTypeLabel.getSize().y - 5);
             
             //Packet Size Text box
-            Text packetSizeText = new Text(shell, SWT.SINGLE|SWT.BORDER);
+            final Text packetSizeText = new Text(shell, SWT.SINGLE|SWT.BORDER);
             packetSizeText.setSize(generatorTypeCombo.getSize());
             packetSizeText.setLocation(generatorTypeCombo.getLocation().x, generatorTypeCombo.getLocation().y + generatorTypeCombo.getSize().y + 40);
             packetSizeText.setText("1500");
@@ -791,39 +796,41 @@ public class GUI {
             	public void widgetSelected(SelectionEvent arg0) {
             		Time startTime = new Time( Double.valueOf( startTimeText.getText() ) );
             		Time finishTime = null;
+            		int packetSize = Integer.parseInt (packetSizeText.getText());
+            		
             		if(finishTimeText.getText().length() > 0)
             			finishTime = new Time( Double.valueOf( finishTimeText.getText() ) );
 
             		if( generatorTypeCombo.getText().equals(GenerateType.basic.name()) ) {
             			if(finishTime != null)
-            				generatorsVector.add(new Generate(startTime, server, finishTime) );
+            				generatorsVector.add(new Generate(startTime, server, finishTime, packetSize) );
             			else
-            				generatorsVector.add( new Generate(startTime,server) );
+            				generatorsVector.add( new Generate(startTime,server, packetSize) );
             		}
             		
             		else if( generatorTypeCombo.getText().equals(GenerateType.constant.name()) ) {
             			Time intervalTime = new Time( Double.valueOf(intervalText.getText()) );
             			if(finishTime != null)
-            				generatorsVector.add( new ConstantGenerate(startTime, server, intervalTime, finishTime) );
+            				generatorsVector.add( new ConstantGenerate(startTime, server, intervalTime, finishTime, packetSize) );
             			else
-            				generatorsVector.add( new ConstantGenerate(startTime, server, intervalTime) );
+            				generatorsVector.add( new ConstantGenerate(startTime, server, intervalTime, packetSize) );
             		}
             		
             		else if( generatorTypeCombo.getText().equals(GenerateType.normal.name()) ) {
             			Time meanTime = new Time( Double.valueOf(intervalText.getText()) );
             			Time varianceTime = new Time( Double.valueOf( varianceText.getText() ) );
             			if(finishTime != null)
-            				generatorsVector.add( new NormalGenerate(startTime, server, meanTime, varianceTime, finishTime) );
+            				generatorsVector.add( new NormalGenerate(startTime, server, meanTime, varianceTime, finishTime, packetSize) );
             			else
-            				generatorsVector.add( new NormalGenerate(startTime, server, meanTime, varianceTime) );
+            				generatorsVector.add( new NormalGenerate(startTime, server, meanTime, varianceTime, packetSize) );
             		}
             		
             		else if( generatorTypeCombo.getText().equals(GenerateType.uniform.name()) ) {
             			Time rangeTime = new Time( Double.valueOf(intervalText.getText()) );
             			if(finishTime != null)
-            				generatorsVector.add( new UniformGenerate(startTime, server, rangeTime, finishTime) );
+            				generatorsVector.add( new UniformGenerate(startTime, server, rangeTime, finishTime, packetSize) );
             			else
-            				generatorsVector.add( new UniformGenerate(startTime, server, rangeTime) );
+            				generatorsVector.add( new UniformGenerate(startTime, server, rangeTime, packetSize) );
             		}
             		
             		shell.close();
@@ -864,6 +871,8 @@ public class GUI {
             for(int i = 0; i < serversVector.size(); i++) {
 				RaportPrinter.printResultsForServer(serversVector.elementAt(i));
 			}
+            
+            System.setOut ( new PrintStream ( new FileOutputStream ( FileDescriptor.out )  )  ) ; 
             
             shell.open();
             Display display = parent.getDisplay();
