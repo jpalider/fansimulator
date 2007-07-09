@@ -632,7 +632,7 @@ public class GUI {
             //Queue size label/text creation
             Label queueSizeLabel = new Label(shell, SWT.NONE);
             queueSizeLabel.setText("Enter queue size [B]");
-            queueSizeLabel.setSize ( probabilityLabel.computeSize (SWT.DEFAULT, SWT.DEFAULT) );
+            queueSizeLabel.setSize ( queueSizeLabel.computeSize (SWT.DEFAULT, SWT.DEFAULT) );
             queueSizeLabel.setLocation(	probabilityText.getLocation().x, 
             							probabilityText.getLocation().y + probabilityText.getSize().y + 5);
             final Text queueSizeText = new Text( shell, SWT.SINGLE|SWT.BORDER );
