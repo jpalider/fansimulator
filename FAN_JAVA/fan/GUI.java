@@ -231,7 +231,7 @@ public class GUI {
 							TreeItem probabilityItem = new TreeItem(interfaceItem,SWT.NONE);
 							probabilityItem.setText("Probability: " + routes.elementAt(i).getProbability());
 							TreeItem bandwidthItem = new TreeItem(interfaceItem,SWT.NONE);
-							bandwidthItem.setText("Bandwidth [B]: " + routes.elementAt(i).getServerInterface().getBandwidth());
+							bandwidthItem.setText("Bandwidth [B/s]: " + routes.elementAt(i).getServerInterface().getBandwidth());
 						}
 						//refresh generator Tree
 						generatorTree.removeAll();
@@ -606,7 +606,7 @@ public class GUI {
             
             //Bandwith text box creation
             Label bandwidthLabel = new Label(shell,SWT.NONE);
-            bandwidthLabel.setText("Enter bandwidth [B]");
+            bandwidthLabel.setText("Enter bandwidth [B/s]");
             bandwidthLabel.setSize(bandwidthLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
             final Text bandwidthText = new Text(shell,SWT.SINGLE|SWT.BORDER);
             bandwidthText.setSize(100, 20);
@@ -687,7 +687,7 @@ public class GUI {
             
             //Packet Size Label
             Label packetSizeLabel = new Label(shell, SWT.NONE);
-            packetSizeLabel.setText("Packet size [B]");
+            packetSizeLabel.setText("Packet size [B/s]");
             packetSizeLabel.setSize (packetSizeLabel.computeSize(	SWT.DEFAULT,
             														SWT.DEFAULT));
             packetSizeLabel.setLocation(	packetSizeText.getLocation().x, 
