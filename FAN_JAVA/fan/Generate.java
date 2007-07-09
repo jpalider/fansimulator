@@ -37,6 +37,35 @@ public class Generate extends Event {
 	protected boolean looped;
 	
 	/**
+	 * Integer to hold the size of the packet in Bytes
+	 */
+	protected int packetSize;
+	
+	/**
+	 * Constructor for the Generator event, specifing start, finish time and additionally packet size
+	 * @param t start time when the generator should be turned on
+	 * @param s server where the generator should be connected
+	 * @param fTime time when the generator should be turned off
+	 * @param packetSize the size of the packets created by generator
+	 */
+	public Generate(Time t, Server s, Time fTime, int packetSize) {
+		this(t, s, fTime);
+		this.packetSize = packetSize;
+	}
+	
+	/**
+	 * Constructor for the Generator event specifing only start time,
+	 * the Generator is turned on till the end of the simulation
+	 * @param t start time when the generator should be turned on
+	 * @param s server where the generator should be connected
+	 * @param packetSize the size of the packets created by generator
+	 */
+	public Generate(Time t, Server s, int packetSize) {
+		this(t, s);
+		this.packetSize = packetSize;
+	}
+	
+	/**
 	 * Constructor for the Generator event, specifing start and finish time. 
 	 * @param t start time when the generator should be turned on
 	 * @param s server where the generator should be connected
@@ -51,21 +80,24 @@ public class Generate extends Event {
 	/**
 	 * Constructor for the Generator event specifing only start time,
 	 * the Generator is turned on till the end of the simulation
-	 * @param t
-	 * @param s
+	 * @param t start time when the generator should be turned on
+	 * @param s server where the generator should be connected
 	 */
 	public Generate(Time t, Server s) {
 		super(t);
 		place = s;
 		type = GenerateType.basic;
 		this.looped = true;
+		this.packetSize = 1500;
 	}
 	
 	/**
 	 * Method runned when the generation event occurs
 	 */
 	public void run() {
-		Packet p = new Packet( new FlowIdentifier((int)Monitor.generator.getNumber(5)), Packet.FlowType.STREAM  );
+		Packet p = new Packet( 	new FlowIdentifier((int)Monitor.generator.getNumber(5)), 
+								Packet.FlowType.STREAM,
+								packetSize);
 		place.recieve(p);
 		Time newEventTime = Monitor.clock.add( new Time(0.0008) );
 		if(!looped) {
@@ -99,5 +131,13 @@ public class Generate extends Event {
 	 */
 	public boolean isLooped() {
 		return looped;
+	}
+	
+	/**
+	 * Returns the size of generated packets
+	 * @return packetSize in bytes
+	 */
+	public int getPacketSize() {
+		return packetSize;
 	}
 }
