@@ -104,6 +104,11 @@ public class Configurator {
         			Element generatorElement = (Element)generatorList.item(j);
         			String generatorType = new String( generatorElement.getAttributes().getNamedItem("type").getTextContent() );
         			
+        			//Load packetSize
+        			Element packetSize = (Element) (
+        									generatorElement.getElementsByTagName("packetSize")	);
+        			int packetS = Integer.parseInt (packetSize.getTextContent());
+        			
         			//Load start time
         			Element startTime = (Element)( 
         							generatorElement.getElementsByTagName("startTime").item(0) );
@@ -115,6 +120,7 @@ public class Configurator {
         			Element looped = (Element)(
         							generatorElement.getElementsByTagName("looped").item(0) );
         			boolean loop = Boolean.valueOf (looped.getTextContent());
+        			
         			if (!loop) {
         				Element finishTime = (Element)( 
     							generatorElement.getElementsByTagName("finishTime").item(0) );
@@ -123,7 +129,10 @@ public class Configurator {
             								);
             			
             			if (generatorType.compareTo("basic") == 0){			
-	        				generatorVector.add(new Generate(start, serverVector.get(i), finish));
+	        				generatorVector.add(new Generate(	start, 
+	        													serverVector.get(i), 
+	        													finish, 
+	        													packetS));
 	        				
 	        			}else if (generatorType.compareTo("normal") == 0){			
 				        	NodeList meanList = generatorElement.getElementsByTagName("mean");	   	
@@ -132,19 +141,32 @@ public class Configurator {
 	        				Element varianceElement = (Element)varianceList.item(0);
 	        				double mean = Double.parseDouble( meanElement.getTextContent() );
 	        				double variance = Double.parseDouble( varianceElement.getTextContent() );
-	        				generatorVector.add(new NormalGenerate(start, serverVector.get(i), new Time(mean), new Time(variance), finish));
+	        				generatorVector.add(new NormalGenerate(	start, 
+	        														serverVector.get(i), 
+	        														new Time(mean), 
+	        														new Time(variance), 
+	        														finish, 
+	        														packetS));
 	        				
 	        			}else if (generatorType.compareTo("constant") == 0){					
 	        				NodeList intervalList = generatorElement.getElementsByTagName("interval");  
 	        				Element intervalElement = (Element)intervalList.item(0);  
 	        				double interval = Double.parseDouble( intervalElement.getTextContent() );
-	        				generatorVector.add(new ConstantGenerate(start, serverVector.get(i), new Time(interval), finish));
+	        				generatorVector.add(new ConstantGenerate(	start, 
+	        															serverVector.get(i), 
+	        															new Time(interval), 
+	        															finish, 
+	        															packetS));
 	        				
 	        			}else if (generatorType.compareTo("uniform") == 0){
 	        				NodeList rangeList = generatorElement.getElementsByTagName("range");  
 	        				Element rangeElement = (Element)rangeList.item(0);  
 	        				double range = Double.parseDouble( rangeElement.getTextContent() );
-	        				generatorVector.add(new UniformGenerate(start, serverVector.get(i), new Time(range), finish));
+	        				generatorVector.add(new UniformGenerate(	start, 
+	        															serverVector.get(i), 
+	        															new Time(range), 
+	        															finish, 
+	        															packetS));
 	        				
 	        			} else{
 	            			System.out.println( "fan.Configurator: wrong generator type!");
@@ -154,7 +176,7 @@ public class Configurator {
         			else {
 	        			
 	        			if (generatorType.compareTo("basic") == 0){			
-	        				generatorVector.add(new Generate(start, serverVector.get(i)));
+	        				generatorVector.add(new Generate(start, serverVector.get(i), packetS));
 	        				
 	        			}else if (generatorType.compareTo("normal") == 0){			
 				        	NodeList meanList = generatorElement.getElementsByTagName("mean");	   	
@@ -163,19 +185,29 @@ public class Configurator {
 	        				Element varianceElement = (Element)varianceList.item(0);
 	        				double mean = Double.parseDouble( meanElement.getTextContent() );
 	        				double variance = Double.parseDouble( varianceElement.getTextContent() );
-	        				generatorVector.add(new NormalGenerate(start, serverVector.get(i), new Time(mean), new Time(variance)));
+	        				generatorVector.add(new NormalGenerate(	start, 
+	        														serverVector.get(i), 
+	        														new Time(mean), 
+	        														new Time(variance), 
+	        														packetS));
 	        				
 	        			}else if (generatorType.compareTo("constant") == 0){					
 	        				NodeList intervalList = generatorElement.getElementsByTagName("interval");  
 	        				Element intervalElement = (Element)intervalList.item(0);  
 	        				double interval = Double.parseDouble( intervalElement.getTextContent() );
-	        				generatorVector.add(new ConstantGenerate(start, serverVector.get(i), new Time(interval)));
+	        				generatorVector.add(new ConstantGenerate(	start, 
+	        															serverVector.get(i), 
+	        															new Time(interval), 
+	        															packetS));
 	        				
 	        			}else if (generatorType.compareTo("uniform") == 0){
 	        				NodeList rangeList = generatorElement.getElementsByTagName("range");  
 	        				Element rangeElement = (Element)rangeList.item(0);  
 	        				double range = Double.parseDouble( rangeElement.getTextContent() );
-	        				generatorVector.add(new UniformGenerate(start, serverVector.get(i), new Time(range)));
+	        				generatorVector.add(new UniformGenerate(	start, 
+	        															serverVector.get(i), 
+	        															new Time(range), 
+	        															packetS));
 	        				
 	        			} else{
 	            			System.out.println( "fan.Configurator: wrong generator type!");
@@ -234,9 +266,17 @@ public class Configurator {
 				Generate.GenerateType generatorType = generatorVector.get(k).type;
 				if (generatorVector.get(k).getServer() == serverVector.get(i)){
 					Element g = (Element) document.createElement("generator");
-					Element start = (Element) document.createElement("startTime");
+					
+
+					//add information about packetSize of generator
+					Element packetSize = (Element) document.createElement("packetSize");
+					packetSize.setTextContent( 	String.valueOf(
+												generatorVector.get(k).getPacketSize() 
+												) );
+					g.appendChild(packetSize);
 					
 					//add information about start time of generator
+					Element start = (Element) document.createElement("startTime");
 					start.setTextContent( 	String.valueOf(
 											generatorVector.get(k).getTime().toDouble()
 											) );
