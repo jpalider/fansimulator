@@ -242,30 +242,30 @@ public class GUI {
 								TreeItem generatorTypeItem = new TreeItem(generatorItem,SWT.NONE);
 								generatorTypeItem.setText( generatorsVector.elementAt(i).type.name() );
 								generatorTypeItem = new TreeItem(generatorItem,SWT.NONE);
-								generatorTypeItem.setText( "Start: " + String.valueOf( generatorsVector.elementAt(i).getTime().toDouble() ) );
+								generatorTypeItem.setText( "Start [s]: " + String.valueOf( generatorsVector.elementAt(i).getTime().toDouble() ) );
 								generatorTypeItem = new TreeItem(generatorItem, SWT.NONE);
-								generatorTypeItem.setText(	"Packet size: " + 
+								generatorTypeItem.setText(	"Packet size [B]: " + 
 														String.valueOf(
 																generatorsVector.elementAt(i).getPacketSize()
 																) );
 								
 								if( !generatorsVector.elementAt(i).isLooped() ) {
 									generatorTypeItem = new TreeItem(generatorItem, SWT.NONE);
-									generatorTypeItem.setText( "Finish: " + String.valueOf( generatorsVector.elementAt(i).getFinishTime().toDouble() ) );
+									generatorTypeItem.setText( "Finish [s]: " + String.valueOf( generatorsVector.elementAt(i).getFinishTime().toDouble() ) );
 								}
 								if( generatorsVector.elementAt(i).type.equals(GenerateType.constant) ) {
 									generatorTypeItem = new TreeItem(generatorItem,SWT.NONE);
-									generatorTypeItem.setText( "Interval: " + String.valueOf(((ConstantGenerate)generatorsVector.elementAt(i)).getInterval().toDouble()) );
+									generatorTypeItem.setText( "Interval [s]: " + String.valueOf(((ConstantGenerate)generatorsVector.elementAt(i)).getInterval().toDouble()) );
 								}
 								else if( generatorsVector.elementAt(i).type.equals(GenerateType.normal) ) {
 									generatorTypeItem = new TreeItem(generatorItem,SWT.NONE);
-									generatorTypeItem.setText( "Mean: " + String.valueOf(((NormalGenerate)generatorsVector.elementAt(i)).getMean().toDouble()) );
+									generatorTypeItem.setText( "Mean [s]: " + String.valueOf(((NormalGenerate)generatorsVector.elementAt(i)).getMean().toDouble()) );
 									generatorTypeItem = new TreeItem(generatorItem,SWT.NONE);
-									generatorTypeItem.setText( "Variance: " + String.valueOf(((NormalGenerate)generatorsVector.elementAt(i)).getVariance().toDouble()) );
+									generatorTypeItem.setText( "Variance [s]: " + String.valueOf(((NormalGenerate)generatorsVector.elementAt(i)).getVariance().toDouble()) );
 								}
 								else if( generatorsVector.elementAt(i).type.equals(GenerateType.uniform) ) {
 									generatorTypeItem = new TreeItem(generatorItem,SWT.NONE);
-									generatorTypeItem.setText( "Range: " + String.valueOf(((UniformGenerate)generatorsVector.elementAt(i)).getRange().toDouble()) );
+									generatorTypeItem.setText( "Range [s]: " + String.valueOf(((UniformGenerate)generatorsVector.elementAt(i)).getRange().toDouble()) );
 								}
 									
 							}
@@ -687,7 +687,7 @@ public class GUI {
             
             //Packet Size Label
             Label packetSizeLabel = new Label(shell, SWT.NONE);
-            packetSizeLabel.setText("Packet size [B/s]");
+            packetSizeLabel.setText("Packet size [B]");
             packetSizeLabel.setSize (packetSizeLabel.computeSize(	SWT.DEFAULT,
             														SWT.DEFAULT));
             packetSizeLabel.setLocation(	packetSizeText.getLocation().x, 
@@ -702,13 +702,13 @@ public class GUI {
             
             //Start time label
             Label startTimeLabel = new Label(shell,SWT.NONE);
-            startTimeLabel.setText("Start time:");
+            startTimeLabel.setText("Start time [s]:");
             startTimeLabel.setSize(startTimeLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
             startTimeLabel.setLocation(startTimeText.getLocation().x, startTimeText.getLocation().y - startTimeLabel.getSize().y - 5);
             
             //Finish time label
             Label finishTimeLabel = new Label(shell, SWT.NONE);
-            finishTimeLabel.setText("Finish time:");
+            finishTimeLabel.setText("Finish time [s]:");
             finishTimeLabel.setSize(finishTimeLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
             finishTimeLabel.setLocation(startTimeText.getLocation().x, startTimeText.getLocation().y + startTimeText.getSize().y + 5);
             
@@ -731,7 +731,7 @@ public class GUI {
             
             //Interval text box label
             final Label intervalLabel = new Label(shell,SWT.NONE);
-            intervalLabel.setText("Interval:");
+            intervalLabel.setText("Interval [s]:");
             intervalLabel.setSize(intervalLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
             intervalLabel.setLocation(intervalText.getLocation().x, intervalText.getLocation().y - intervalLabel.getSize().y - 5);
             intervalLabel.setVisible(false);
@@ -744,7 +744,7 @@ public class GUI {
             
             //Variance text box label
             final Label varianceLabel = new Label(shell,SWT.NONE);
-            varianceLabel.setText("Variance:");
+            varianceLabel.setText("Variance [s]:");
             varianceLabel.setSize(varianceLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
             varianceLabel.setLocation(varianceText.getLocation().x, varianceText.getLocation().y - varianceLabel.getSize().y - 5);
             varianceLabel.setVisible(false);
@@ -766,14 +766,14 @@ public class GUI {
             		}
             		else if( generatorTypeCombo.getText().equals(GenerateType.constant.name()) ) {
             			intervalText.setVisible(true);
-            			intervalLabel.setText("Interval:");
+            			intervalLabel.setText("Interval [s]:");
             			intervalLabel.setVisible(true);
             			
             			varianceLabel.setVisible(false);
             			varianceText.setVisible(false);
             		}
             		else if( generatorTypeCombo.getText().equals(GenerateType.normal.name()) ) {
-            			intervalLabel.setText("Mean:");
+            			intervalLabel.setText("Mean [s]:");
             			intervalText.setVisible(true);
             			intervalLabel.setVisible(true);
             			
@@ -782,7 +782,7 @@ public class GUI {
             		}
             		else if( generatorTypeCombo.getText().equals(GenerateType.uniform.name()) ) {
             			intervalText.setVisible(true);
-            			intervalLabel.setText("Range:");
+            			intervalLabel.setText("Range [s]:");
             			intervalLabel.setVisible(true);
             			
             			varianceLabel.setVisible(false);
