@@ -83,8 +83,19 @@ public class NormalGenerate extends Generate {
 		if(!looped) {
 			if (newEventTime.compareTo(finishTime) > 0)
 				return;
+			Monitor.agenda.schedule(new NormalGenerate(	newEventTime, 
+														place, 
+														mean, 
+														variance, 
+														finishTime, 
+														packetSize ) );
 		}
-		Monitor.agenda.schedule(new NormalGenerate(newEventTime, place, mean, variance) );
+		else
+			Monitor.agenda.schedule(new NormalGenerate(	newEventTime, 
+														place, 
+														mean, 
+														variance, 
+														finishTime ) );
 	}
 
 	/**

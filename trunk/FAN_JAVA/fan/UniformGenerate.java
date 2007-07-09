@@ -82,8 +82,17 @@ public class UniformGenerate extends Generate {
 		if(!looped) {
 			if (newEventTime.compareTo(finishTime) > 0)
 				return;
+			Monitor.agenda.schedule(new ConstantGenerate(	newEventTime, 
+															place, 
+															range,
+															finishTime,
+															packetSize ) );
 		}
-		Monitor.agenda.schedule(new ConstantGenerate(newEventTime, place, range) );
+		else 
+			Monitor.agenda.schedule(new ConstantGenerate(	newEventTime, 
+														place, 
+														range,
+														packetSize ) );
 	}
 	
 	/**
