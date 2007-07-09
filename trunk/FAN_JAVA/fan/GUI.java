@@ -241,6 +241,12 @@ public class GUI {
 								generatorTypeItem.setText( generatorsVector.elementAt(i).type.name() );
 								generatorTypeItem = new TreeItem(generatorItem,SWT.NONE);
 								generatorTypeItem.setText( "Start: " + String.valueOf( generatorsVector.elementAt(i).getTime().toDouble() ) );
+								generatorTypeItem = new TreeItem(generatorItem, SWT.NONE);
+								generatorTypeItem.setText(	"Packet size: " + 
+														String.valueOf(
+																generatorsVector.elementAt(i).getPacketSize()
+																) );
+								
 								if( !generatorsVector.elementAt(i).isLooped() ) {
 									generatorTypeItem = new TreeItem(generatorItem, SWT.NONE);
 									generatorTypeItem.setText( "Finish: " + String.valueOf( generatorsVector.elementAt(i).getFinishTime().toDouble() ) );
@@ -650,7 +656,7 @@ public class GUI {
 			Shell parent = getParent();
             final Shell shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
             shell.setText("Add Generator To " + getText());
-            shell.setSize(250, 300);
+            shell.setSize(250, 400);
             
             
             
@@ -668,10 +674,26 @@ public class GUI {
             generatorTypeLabel.setSize(generatorTypeLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
             generatorTypeLabel.setLocation(generatorTypeCombo.getLocation().x, generatorTypeCombo.getLocation().y - generatorTypeLabel.getSize().y - 5);
             
+            //Packet Size Text box
+            Text packetSizeText = new Text(shell, SWT.SINGLE|SWT.BORDER);
+            packetSizeText.setSize(generatorTypeCombo.getSize());
+            packetSizeText.setLocation(generatorTypeCombo.getLocation().x, generatorTypeCombo.getLocation().y + generatorTypeCombo.getSize().y + 40);
+            packetSizeText.setText("1500");
+            
+            //Packet Size Label
+            Label packetSizeLabel = new Label(shell, SWT.NONE);
+            packetSizeLabel.setText("Packet size [B]");
+            packetSizeLabel.setSize (packetSizeLabel.computeSize(	SWT.DEFAULT,
+            														SWT.DEFAULT));
+            packetSizeLabel.setLocation(	packetSizeText.getLocation().x, 
+            								packetSizeText.getLocation().y - 
+            								packetSizeLabel.getSize().y - 5);
+            
+            
             //Start Time Text box
             final Text startTimeText = new Text(shell, SWT.SINGLE|SWT.BORDER);
             startTimeText.setSize(generatorTypeCombo.getSize().x,generatorTypeCombo.getSize().y);
-            startTimeText.setLocation(generatorTypeCombo.getLocation().x, generatorTypeCombo.getLocation().y + generatorTypeCombo.getSize().y + 40);
+            startTimeText.setLocation(packetSizeText.getLocation().x, packetSizeText.getLocation().y + packetSizeText.getSize().y + 40);
             
             //Start time label
             Label startTimeLabel = new Label(shell,SWT.NONE);
@@ -698,7 +720,7 @@ public class GUI {
             
             //Interval text box
             final Text intervalText = new Text(shell,SWT.SINGLE|SWT.BORDER);
-            intervalText.setSize(100, 25);
+            intervalText.setSize(100, generatorTypeCombo.getSize().y);
             intervalText.setLocation(generatorTypeCombo.getLocation().x + generatorTypeCombo.getSize().x + 10, generatorTypeCombo.getLocation().y);
             intervalText.setVisible(false);
             
@@ -712,7 +734,7 @@ public class GUI {
             //Variance text box
             final Text varianceText = new Text(shell,SWT.SINGLE|SWT.BORDER);
             varianceText.setSize(intervalText.getSize().x, intervalText.getSize().y);
-            varianceText.setLocation(intervalText.getLocation().x,intervalText.getLocation().y + intervalText.getSize().y + 30);
+            varianceText.setLocation(intervalText.getLocation().x, packetSizeText.getLocation().y);
             varianceText.setVisible(false);
             
             //Variance text box label
@@ -726,7 +748,7 @@ public class GUI {
             Button addGeneratorBut = new Button(shell, SWT.NONE);
             addGeneratorBut.setText("Add this generator");
             addGeneratorBut.setSize(addGeneratorBut.computeSize( SWT.DEFAULT, SWT.DEFAULT) );
-            addGeneratorBut.setLocation(generatorTypeCombo.getLocation().x + generatorTypeCombo.getSize().x + 10, generatorTypeCombo.getLocation().y + 100);
+            addGeneratorBut.setLocation(generatorTypeCombo.getLocation().x + generatorTypeCombo.getSize().x + 10, startTimeText.getLocation().y);
             
             //GeneratorType Combo selection listener
             generatorTypeCombo.addSelectionListener(new SelectionAdapter(){
