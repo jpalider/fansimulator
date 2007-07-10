@@ -56,7 +56,9 @@ public class Configurator {
 	    } catch (ParserConfigurationException pce) {
 	        // Parser with specified options can't be built
 	        pce.printStackTrace();
-	
+	        
+	    } catch (FileNotFoundException fnfe) {
+	    	return false;
 	    } catch (IOException ioe) {
 	       // I/O error
 	       ioe.printStackTrace();
