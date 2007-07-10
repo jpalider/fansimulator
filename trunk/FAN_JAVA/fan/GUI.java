@@ -390,10 +390,17 @@ public class GUI {
 		generatorsVector.clear();
 			
 		Configurator conf = new Configurator("ServerConfig.xml");
-		conf.configure(serversVector, generatorsVector);
-		for(int i = 0; i < serversVector.size(); i ++) {
-			addServerTab(tabs, serversVector.elementAt(i));
+		if( conf.configure(serversVector, generatorsVector) )
+			for(int i = 0; i < serversVector.size(); i ++) {
+				addServerTab(tabs, serversVector.elementAt(i));
+			}
+		else {
+			MessageBox errorMsgBox = new MessageBox(shell, SWT.ICON_ERROR|SWT.OK);
+			errorMsgBox.setMessage("Cannot read configuration file");
+			errorMsgBox.setText("Error while loading configuration");
+			errorMsgBox.open();
 		}
+			
 		Event newEvent = new Event();
 		newEvent.text = "refresh";
 		tabs.notifyListeners(100, newEvent);
