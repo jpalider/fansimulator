@@ -1,7 +1,12 @@
 package fan;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -36,6 +41,13 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.*;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartFrame;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.xy.XYDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
 import fan.Generate.GenerateType;
 import fan.RoutingTable.Route;
@@ -355,10 +367,19 @@ public class GUI {
 	 */
 	private void runSimulation(double simulationTime) {
 		if(validateConfiguration(false)) {
+			//Clear results of previous simulations
+			for (Iterator iter = serversVector.iterator(); iter.hasNext();) {
+				Server element = (Server) iter.next();
+				element.clearResults();
+			}
+
+			//Reset clock and schedule all generators attached to servers
 			Monitor.clock = new Time(-1);
 			for(int i = 0; i < generatorsVector.size(); i++) {
 				Monitor.agenda.schedule(generatorsVector.elementAt(i));
 			}
+			
+			//Run main simulation loop
 			while( !Monitor.agenda.isEmpty() && Monitor.clock.compareTo(new Time(simulationTime)) <= 0 ) {
 				fan.Event now = Monitor.agenda.removeFirst();
 				Monitor.clock = now.time;
@@ -366,13 +387,233 @@ public class GUI {
 				//System.out.println("The time is now: " + Monitor.clock);
 			}
 			
+			//Display the results of simulation
 			DisplayResultsDialog sumUpDialog = new DisplayResultsDialog(shell,SWT.NONE);
 			sumUpDialog.open();
-			for (Iterator iter = serversVector.iterator(); iter.hasNext();) {
-				Server element = (Server) iter.next();
-				element.clearResults();
-			}
 		}
+	}
+	
+	private void generateGraphs() {
+		
+		/**
+		 * Class responsible for filtering files so only files with results are displayed
+		 */
+		class ResultsFileFilter implements FilenameFilter {
+			private String type;
+			
+			/**
+			 * Creates specific results file filter for specified results type
+			 * @param type	Specifies the type of the results files to be filtered. The following options are
+			 * 				allowed:
+			 * 				<ul>
+			 * 				<li>SP 	- for serviced packets
+			 * 				<li>LP - for locally serviced packets
+			 * 				<li>RP 	- for rejected packets
+			 * 				<li>QL	- for queue length
+			 * 				</ul> 
+			 */
+			public ResultsFileFilter(String type) {
+				this.type = type;
+			}
+			
+			public boolean accept(File dir, String name) {
+				if ( name.contains(type + ".txt") ) {
+					return true;
+				} else
+					return false;
+			}
+			
+		}
+		
+		File localDir = new File("./");
+		File[] fileList;
+		int chartIndex = 0;
+		
+		//This is the part responsible for displaying charts of Serviced Packets
+		fileList = localDir.listFiles( new ResultsFileFilter("SP") );
+		
+		if ( fileList.length > 0 ) {
+			
+			for (int i = 0; i < fileList.length; i++) {
+				try {
+					//Get name of the server which this file belongs to
+					String name = fileList[i].getName().substring (	0,
+																	fileList[i].getName().indexOf("SP.txt") 
+																 	);
+					BufferedReader fReader = new BufferedReader ( new FileReader(fileList[i]) );
+					String buffer;
+					//Create series of data for chart
+					XYSeries servicedPacketSeries = new XYSeries ("Serviced Packets");
+					XYSeries avgServiceTimeSeries = new XYSeries ("Avg Packet Service Time");
+					
+					//Process the file until the end
+					while( (buffer = fReader.readLine()) != null ) {
+						String[] params = buffer.split(":");
+						System.out.println(params[0]);
+						servicedPacketSeries.add(	Double.parseDouble (params[0]), 
+													Double.parseDouble (params[1])
+												);
+						avgServiceTimeSeries.add( 	Double.parseDouble (params[0]),
+													Double.parseDouble (params[2])
+												);
+					}
+					
+					//Create chart
+					XYSeriesCollection servicedPacketCol = new XYSeriesCollection ( servicedPacketSeries );
+					XYSeriesCollection avgServTimeCol = new XYSeriesCollection ( avgServiceTimeSeries );
+					JFreeChart chartSP = ChartFactory.createXYLineChart(
+								"Total Number of Serviced Packets on " + name,  // Title
+								"Time",           								// X-Axis label
+								"Number of Serviced Packets",           			// Y-Axis label
+								servicedPacketCol,								// Dataset
+								PlotOrientation.VERTICAL,
+								true,				            	    		// Show legend
+								false,
+								false
+			        		);
+					
+					JFreeChart chartAST = ChartFactory.createXYLineChart(
+							"Average Packet Service Time on " + name,  // Title
+							"Time",           								// X-Axis label
+							"Average Packet Service Time",        			// Y-Axis label
+							avgServTimeCol,								// Dataset
+							PlotOrientation.VERTICAL,
+							true,				            	    		// Show legend
+							false,
+							false
+		        		);
+					
+					//Display chart frames
+					ChartFrame frame = new ChartFrame("SP " + name, chartSP);
+					frame.pack();
+					frame.setLocation(20 + chartIndex * 20, 20 + chartIndex * 20);
+					chartIndex++;
+					frame.setVisible(true);
+					
+					frame = new ChartFrame("AST " + name, chartAST);
+					frame.pack();
+					frame.setLocation(20 + chartIndex * 20, 20 + chartIndex * 20);
+					chartIndex++;
+					frame.setVisible(true);
+					
+				} catch (FileNotFoundException fnfe) {
+					fnfe.printStackTrace();
+					
+				} catch (IOException ioe) {
+					ioe.printStackTrace();
+				}
+ 			}
+		}
+		
+				
+		//This is the part responsible for displaying charts of Locally Serviced Packets
+		fileList = localDir.listFiles( new ResultsFileFilter("LP") );
+		
+		if ( fileList.length > 0 ) {
+			
+			for (int i = 0; i < fileList.length; i++) {
+				try {
+					//Get name of the server which this file belongs to
+					String name = fileList[i].getName().substring (	0,
+																	fileList[i].getName().indexOf("LP.txt") 
+																 	);
+					BufferedReader fReader = new BufferedReader ( new FileReader(fileList[i]) );
+					String buffer;
+					//Create series of data for chart
+					XYSeries locServicedPacketSeries = new XYSeries ("Locally Serviced Packets");
+										
+					//Process the file until the end
+					while( (buffer = fReader.readLine()) != null ) {
+						String[] params = buffer.split(":");
+						locServicedPacketSeries.add(	Double.parseDouble (params[0]), 
+														Double.parseDouble (params[1])
+													);
+					}
+					
+					//Create chart
+					XYSeriesCollection locServicedPacketCol = new XYSeriesCollection ( locServicedPacketSeries );
+					
+					JFreeChart chart = ChartFactory.createXYLineChart(
+								"Total Number of Locally Serviced Packets on " + name,  	// Title
+								"Time",           											// X-Axis label
+								"Number of Locally Serviced Packets",           						// Y-Axis label
+								locServicedPacketCol,										// Dataset
+								PlotOrientation.VERTICAL,
+								true,				            	    					// Show legend
+								false,
+								false
+			        		);
+					
+					//Display chart frame
+					ChartFrame frame = new ChartFrame("LSP " + name, chart);
+					frame.pack();
+					frame.setLocation(20 + chartIndex * 20, 20 + chartIndex * 20);
+					chartIndex++;
+					frame.setVisible(true);
+					
+				} catch (FileNotFoundException fnfe) {
+					fnfe.printStackTrace();
+					
+				} catch (IOException ioe) {
+					ioe.printStackTrace();
+				}
+ 			}
+		}
+		
+		//This is the part responsible for displaying charts of Rejected Packets
+		fileList = localDir.listFiles( new ResultsFileFilter("RP") );
+		
+		if ( fileList.length > 0 ) {
+			
+			for (int i = 0; i < fileList.length; i++) {
+				try {
+					//Get name of the server which this file belongs to
+					String name = fileList[i].getName().substring (	0,
+																	fileList[i].getName().indexOf("RP.txt") 
+																 	);
+					BufferedReader fReader = new BufferedReader ( new FileReader(fileList[i]) );
+					String buffer;
+					//Create series of data for chart
+					XYSeries rejectedPacketSeries = new XYSeries ("Rejected Packets");
+										
+					//Process the file until the end
+					while( (buffer = fReader.readLine()) != null ) {
+						String[] params = buffer.split(":");
+						rejectedPacketSeries.add(	Double.parseDouble (params[0]), 
+													Double.parseDouble (params[1])
+													);
+					}
+					
+					//Create chart
+					XYSeriesCollection rejectedServicedPacketCol = new XYSeriesCollection ( rejectedPacketSeries );
+					
+					JFreeChart chart = ChartFactory.createXYLineChart(
+								"Total Number of Rejected Packets on " + name,  	// Title
+								"Time",           									// X-Axis label
+								"Number of Rejected Packets",           			// Y-Axis label
+								rejectedServicedPacketCol,							// Dataset
+								PlotOrientation.VERTICAL,
+								true,				            	    			// Show legend
+								false,
+								false
+			        		);
+					
+					//Display chart frame
+					ChartFrame frame = new ChartFrame("RP " + name, chart);
+					frame.pack();
+					frame.setLocation(20 + chartIndex * 20, 20 + chartIndex * 20);
+					chartIndex++;
+					frame.setVisible(true);
+					
+				} catch (FileNotFoundException fnfe) {
+					fnfe.printStackTrace();
+					
+				} catch (IOException ioe) {
+					ioe.printStackTrace();
+				}
+ 			}
+		}
+		
 	}
 	
 	private void saveConfig() {
@@ -589,6 +830,19 @@ public class GUI {
 			}
 		});
 		
+		//Generate graphs button
+		Button genGraphsButton = new Button(shell,SWT.NONE);
+		genGraphsButton.setSize(runSimulationButton.getSize());
+		genGraphsButton.setText("Display graphs");
+		genGraphsButton.setLocation (	runSimulationButton.getLocation().x, 
+										runSimulationButton.getLocation().y + runSimulationButton.getSize().y + 5 );
+		
+		//Add Generate Graphs Button listener
+		genGraphsButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected( SelectionEvent arg0) {
+				generateGraphs();
+			}
+		});
 	}
 	
 	
