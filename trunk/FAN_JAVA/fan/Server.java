@@ -103,7 +103,7 @@ public class Server {
 		this.maxTrafficTypes = 2;
 		this.routing = new RoutingTable();
 		this.interfaces = new Vector<Interface>();
-		this.results = new ResultsCollector();
+		this.results = new TimeResultsCollector(name);
 	}
 	
 	/**
@@ -188,7 +188,7 @@ public class Server {
 	 * This is the method for clearing results already collected for this server
 	 */
 	public void clearResults() {
-		results = new ResultsCollector();
+		results = new TimeResultsCollector(name);
 		for (Iterator iter = interfaces.iterator(); iter.hasNext();) {
 			Interface element = (Interface) iter.next();
 			element.clearInterface();
