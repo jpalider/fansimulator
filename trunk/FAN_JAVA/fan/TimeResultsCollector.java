@@ -1,14 +1,11 @@
 package fan;
 
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
 
 public class TimeResultsCollector extends ResultsCollector {
 	
-	private String filename;
 	private FileWriter fileSP = null;
 	private FileWriter fileLP = null;
 	private FileWriter fileRP = null;
@@ -16,7 +13,7 @@ public class TimeResultsCollector extends ResultsCollector {
 	
 	public TimeResultsCollector(String filename) {
 		super();
-		this.filename = filename;
+		
 		try{
 			fileSP = new FileWriter (filename + "SP.txt");
 			fileLP = new FileWriter (filename + "LP.txt");
