@@ -142,4 +142,12 @@ public class Generate extends Event {
 	public int getPacketSize() {
 		return packetSize;
 	}
+	
+	/**
+	 * Returns the type of the generator
+	 * @return generator type
+	 */
+	public GenerateType getType() {
+		return type;
+	}
 }
