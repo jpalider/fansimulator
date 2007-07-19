@@ -24,7 +24,7 @@ public class Simulator {
 //		cfg.saveConfiguration(serverVector,generatorVector);
 //		if (true) return;
 
-		new GUI();
+		new gui.GUI();
 		
 /*		double simulationTime = 200;
 		Server server1 = new Server("Server1");
