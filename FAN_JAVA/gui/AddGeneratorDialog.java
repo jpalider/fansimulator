@@ -39,7 +39,7 @@ public class AddGeneratorDialog extends Dialog {
         
         
         //Combo with the list of possible generator types
-        final Combo generatorTypeCombo = new Combo(shell,SWT.DROP_DOWN);
+        final Combo generatorTypeCombo = new Combo(shell,SWT.DROP_DOWN|SWT.READ_ONLY);
         for (Generate.GenerateType types : GenerateType.values()) {
 			generatorTypeCombo.add(types.name());
 		}
