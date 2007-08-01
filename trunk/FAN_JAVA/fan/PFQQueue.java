@@ -63,16 +63,33 @@ public class PFQQueue implements Queue {
 	 * MTU definition
 	 */
 	private final int MTU = 1500;
+	/**
+	 * Variables needed to measure priority load
+	 */
+	private long bandwidth = 0;
+	private Time t2 = new Time(0.0);
+	private Time t1 = new Time(0.0);
+	private long pbt2 = 0;
+	private long pbt1 = 0;
+	/**
+	 * Variables needed to measure fair rate
+	 */
+//	private Time fpt2 = new Time(0.0);
+//	private Time fpt1 = new Time(0.0);
+	private long vt2 = 0;
+	private long vt1;
 	
 	/**
 	 * Constructor for PFQQueue class
+	 * @param intface Interface the PFQ is assigned to - needed to perform link measurements
 	 *
 	 */
-	public PFQQueue(int size, int flowListSize) {
+	public PFQQueue(int size, int flowListSize, Interface intface) {
 		packetQueue = new PriorityQueue<PacketTimestamped>(size);
 		maxSize = size;
 		virtualTime = 0;
 		flowList = new FlowList(flowListSize);
+		bandwidth = intface.getBandwidth();
 	}
 	
 	public int getSize() {
@@ -84,7 +101,7 @@ public class PFQQueue implements Queue {
 	}
 
 	public boolean isEmpty() {
-		return packetQueue.isEmpty();		
+		return packetQueue.isEmpty();
 	}
 
 	/**
@@ -165,6 +182,16 @@ public class PFQQueue implements Queue {
 				packetFlow.bytes = pTimestamped.p.getLength();				
 			}
 		}
+		// measurement operations
+		t1 = t2;
+		t2 = Monitor.clock; 
+		// - for priority load
+		pbt1 = pbt2;
+		pbt2 = priorityBytes;	
+		// - for fair rate
+		vt1 = vt2;
+		vt2 = virtualTime;
+		
 		return true;
 	}
 
@@ -201,11 +228,12 @@ public class PFQQueue implements Queue {
 	}
 	
 	public long getFairRate(){
-		return 0;
+		// max{ S*C, dvt(t)}/dt
+		return (long)(((vt2 - vt1)*8) / t2.substract(t1).toDouble());
 	}
 	
-	public long getPriorityBytes(){
-		return 0;
+	public long getPriorityLoad(){		
+		return (long)(((pbt2-pbt1)*8)/(bandwidth*(t2.substract(t1).toDouble())));
 	}
 
 }

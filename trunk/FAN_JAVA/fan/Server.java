@@ -46,27 +46,30 @@ public class Server {
 	public void recieve(Packet p){
 		//Choose the next server and its interface that will be a next destination for this packet
 		Interface choiceIntface = routing.getServerInterfaceForResult( Monitor.generator.getNumber(1) );
-//-- 
-// MBAC comes here
-	//...
-	//	if (MBAC.denied == true){
-	//		results.addRejectedPacket();
-	//		p = null;	
-	//	}
-//---
-		
 		//check if interface is pointing back to this server - if true than it means that the packet
 		//is leaving network - e.g. its final destination is this server or is leaving
 		//simulated network
+		
 		if( choiceIntface.getServer() == this ){
 			p = null;
 			results.addServicedPacket(0);
 			results.addLocallyServicedPacket();
-			results.addQueueLength(0);			
+			results.addQueueLength(0);
+			return;
 		}
+
+		//-- 
+		// MBAC comes here
+		//...
+		if ( new MBAC(choiceIntface, 100000, 100000).congestionOccured() == true){
+			results.addRejectedPacket();
+			p = null;	
+		}
+		//---
+		
 		
 		//Check if interface is free
-		else if( !choiceIntface.isBusy() ) {
+		if( !choiceIntface.isBusy() ) {
 			choiceIntface.getQueue().putPacket(p);
 			//sendTime is equal to: packet length / interface speed
 			Time sendTime = new Time( (double) p.getLength() / choiceIntface.getBandwidth() );

@@ -35,7 +35,7 @@ public class MBAC {
 	 * @return fair rate
 	 */
 	public long getPriorityLoad(){
-		return ((PFQQueue)queue).getPriorityBytes();
+		return ((PFQQueue)queue).getPriorityLoad();
 	}
 	/**
 	 * Measured fair rate in bits.
@@ -45,8 +45,16 @@ public class MBAC {
 		return ((PFQQueue)queue).getFairRate();
 	}
 	
+	/**
+	 * TODO: more sophisticated mbac protection
+	 * @return
+	 */
 	public boolean congestionOccured(){
-		return false;
+		if ( (getFairRate() < minFairRate) || (getPriorityLoad() > maxPriorityLoad) ){
+			return true;		
+		} else {
+			return false;
+		}
 	}
 
 }
