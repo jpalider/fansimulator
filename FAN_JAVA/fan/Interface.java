@@ -100,7 +100,9 @@ public class Interface{
 
 	public Interface(int bandwidth, int size) {
 		this.bandwidth = bandwidth;
-		this.queue = new FifoQueueBytes(size);
+		//this.queue = new FifoQueueBytes(size);	
+		// TODO: check and then test PFQQueue
+		this.queue = new PFQQueue(size, 100, this);
 		this.setNotBusy();
 	}
 
