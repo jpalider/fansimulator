@@ -10,7 +10,7 @@ import java.util.PriorityQueue;
 public class PFQQueue implements Queue {
 	
 	/**
-	 * This is the encapsulatoin class for Packet,
+	 * This is the encapsulation class for Packet,
 	 * to hold information about timestamp assigned to it
 	 * (according to PFQ algorithm)
 	 */
@@ -18,6 +18,20 @@ public class PFQQueue implements Queue {
 		public Packet p;
 		public long startTag;
 		public long finishTag;
+	}
+	
+	/**
+	 * This is the extended class for Flow, to hold information about current backlog size 
+	 * and received bytes.
+	 * According to:
+	 * xp-hpsr.pdf : "Cross-protect: implicit service differentiation and admission control"  (III.A)
+	 */
+	private class FlowPFQ extends Flow{
+		FlowPFQ(FlowIdentifier newFlowID){
+			super(newFlowID);			
+		}
+		public long backlog;
+		public long bytes;
 	}
 	
 	/**
@@ -41,6 +55,16 @@ public class PFQQueue implements Queue {
 	private FlowList flowList;
 	
 	/**
+	 * Counter that "keeps track of the total number of priority bytes for congestion measurements"
+	 */
+	private long priorityBytes;
+	
+	/**
+	 * MTU definition
+	 */
+	private final int MTU = 1500;
+	
+	/**
 	 * Constructor for PFQQueue class
 	 *
 	 */
@@ -60,50 +84,86 @@ public class PFQQueue implements Queue {
 	}
 
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
-		return false;
+		return packetQueue.isEmpty();		
 	}
 
+	/**
+	 * Counted in packets, if counted in bytes different action should be taken.
+	 */
 	public boolean isFull() {
-		// TODO Auto-generated method stub
-		return false;
+		return packetQueue.size() == maxSize;
+		//return ( (packetQueue.sizeInBytes+MTU) > maxSizeInBytes)
 	}
 
 	public Packet peekFirst() {
-		// TODO Auto-generated method stub
-		return null;
+		return packetQueue.peek().p;
 	}
 
 	/**
 	 * TODO: Check if packetQueue is not full<br>
-	 * TODO: Check if flowList is not full
+	 * TODO: Check if flowList is not full - this should be provided by MBAC.
+	 * According to:
+	 * xp-hpsr.pdf : "Cross-protect: implicit service differentiation and admission control"  (III.B)
 	 */		
 	public boolean putPacket(Packet p) {
-				
+		
 		//Create encapsulation for packet p
 		PacketTimestamped pTimestamped = new PacketTimestamped();
 		pTimestamped.p = p;
 				
-		//at first check if there are any free places at packet queue
+		// TODO: "reject packet at head of longest backlog
+		//at first check if there are any free places at packet queue		
 		if(packetQueue.size() >= maxSize)
 			return false;
 		
+		priorityBytes += p.getLength();
+		
 		//Check if this packet belongs to the flow registered in flowList
 		if( flowList.contains( pTimestamped.p.getFlowIdentifier() ) ) {
-			Flow packetFlow = flowList.getFlow(pTimestamped.p.getFlowIdentifier());
-			pTimestamped.startTag = packetFlow.getFinishTag();
-			pTimestamped.finishTag = pTimestamped.startTag + pTimestamped.p.getLength();
-			packetFlow.setFinishTag(pTimestamped.finishTag);
-			packetQueue.offer(pTimestamped);
+			FlowPFQ packetFlow = (FlowPFQ)flowList.getFlow(pTimestamped.p.getFlowIdentifier());
+			// (1)
+			packetFlow.backlog += pTimestamped.p.getLength();
+			// (2)
+			if ( packetFlow.bytes >= MTU ){				
+				pTimestamped.startTag = packetFlow.getFinishTag();
+				pTimestamped.finishTag = pTimestamped.startTag + pTimestamped.p.getLength();
+				packetQueue.offer(pTimestamped); // push { packet, flow_time_stamp } to PIFO
+			} else {
+				pTimestamped.finishTag = pTimestamped.startTag + pTimestamped.p.getLength();		
+				packetQueue.offer(pTimestamped);
+				priorityBytes += pTimestamped.p.getLength();
+				packetFlow.bytes += pTimestamped.p.getLength();		
+				
+			}
+			packetFlow.setFinishTag( packetFlow.getFinishTag() + pTimestamped.p.getLength() );
+//			packetFlow.setFinishTag(pTimestamped.finishTag); should be the same as the former one 
+		
+	
+//--old			
+//			//packetFlow.backlog += pTimestamped.p.getLength();
+//			Flow packetFlow = flowList.getFlow(pTimestamped.p.getFlowIdentifier());
+//			pTimestamped.startTag = packetFlow.getFinishTag();
+//			pTimestamped.finishTag = pTimestamped.startTag + pTimestamped.p.getLength();
+//			packetFlow.setFinishTag(pTimestamped.finishTag);
+//			packetQueue.offer(pTimestamped);
+//----			
 		}
 		//if this is the packet of new flow
 		else {
-			Flow packetFlow = new Flow( pTimestamped.p.getFlowIdentifier() );
-			flowList.registerNewFlow(packetFlow);
+
 			pTimestamped.startTag = virtualTime;
 			pTimestamped.finishTag = pTimestamped.startTag + pTimestamped.p.getLength();
-			packetFlow.setFinishTag(pTimestamped.finishTag);
-			packetQueue.offer(pTimestamped);
+			packetQueue.offer(pTimestamped);			
+
+			priorityBytes += pTimestamped.p.getLength();
+
+			if ( (flowList.getMaxLength() - flowList.getLength()) > 0 ){
+				FlowPFQ packetFlow = new FlowPFQ( pTimestamped.p.getFlowIdentifier() );
+				flowList.registerNewFlow(packetFlow);				
+				packetFlow.setFinishTag(pTimestamped.finishTag);		
+				packetFlow.backlog = pTimestamped.p.getLength();
+				packetFlow.bytes = pTimestamped.p.getLength();				
+			}
 		}
 		return true;
 	}
@@ -112,16 +172,40 @@ public class PFQQueue implements Queue {
 	 * TODO: Check if queue is not empty
 	 */
 	public Packet removeFirst() {
+		
+		if (packetQueue.isEmpty()){
+			// clear flow list (or will it timeout all its flows?)
+		}			
+		
 		//Remove first packet from queue
 		PacketTimestamped packet = packetQueue.remove();
+		if ( flowList.contains(packet.p.getFlowIdentifier()) ){
+			FlowPFQ flow = (FlowPFQ)flowList.getFlow(packet.p.getFlowIdentifier());
+			flow.backlog -= packet.p.getLength();
+			
+		} else {
+			System.out.println("Something gone wrong in PFQQueue.removeFirst()");
+		}
 		
 		//Set virtualTime to currently serviced packet
-		virtualTime = packetQueue.peek().startTag;
-		
-		//Remove all queues which finishTag is smaller than virtualTime
-//		flowList.cleanFlows(virtualTime);
-		
+		if (packetQueue.peek().startTag != virtualTime){
+			virtualTime = packetQueue.peek().startTag;
+			//Remove all queues which finishTag is smaller than virtualTime
+			flowList.cleanFlows(virtualTime);
+		}		
 		return packet.p;
+	}
+	
+	public FlowList getFlowList(){
+		return flowList;
+	}
+	
+	public long getFairRate(){
+		return 0;
+	}
+	
+	public long getPriorityBytes(){
+		return 0;
 	}
 
 }

@@ -17,12 +17,12 @@ public class Server {
 	private	int maxTrafficTypes;
 	
 	/**
-	 * The Vector holdling the list of output interfaces that the router has
+	 * The Vector holding the list of output interfaces that the router has
 	 */
 	private	Vector<Interface> interfaces;
 	
 	/**
-	 * The RoutingTable specifing the routing methods for this Server
+	 * The RoutingTable specifying the routing methods for this Server
 	 */
 	private	RoutingTable routing;
 	
@@ -32,21 +32,29 @@ public class Server {
 	private	FlowList flowList;
 	
 	/**
-	 * The ResultsCollector holding information about simultation times for this Server
+	 * The ResultsCollector holding information about simulation times for this Server
 	 */
 	public ResultsCollector results;
 	
 	/**
-	 * Method for recieving Packet. It rejects or accepts this packet.
+	 * Method for receiving Packet. It rejects or accepts this packet.
 	 * If it is accepted then it is added to the queue (interface is full,busy) 
 	 * or automatically creates the Depart event (after the time depending
 	 * on interface speed) and sets interface as busy
-	 * @param p Packet to be recieved by Server
+	 * @param p Packet to be received by Server
 	 */
 	public void recieve(Packet p){
 		//Choose the next server and its interface that will be a next destination for this packet
 		Interface choiceIntface = routing.getServerInterfaceForResult( Monitor.generator.getNumber(1) );
-			
+//-- 
+// MBAC comes here
+	//...
+	//	if (MBAC.denied == true){
+	//		results.addRejectedPacket();
+	//		p = null;	
+	//	}
+//---
+		
 		//check if interface is pointing back to this server - if true than it means that the packet
 		//is leaving network - e.g. its final destination is this server or is leaving
 		//simulated network
