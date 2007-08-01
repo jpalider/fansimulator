@@ -68,10 +68,10 @@ public class Interface{
 	}
 	
 	/**
-	 * Called by Depart event. send() makes a call to recieve(Packet p)
+	 * Called by Depart event. send() makes a call to receive(Packet p)
 	 * method of the next Server. Besides that it takes the first packet
 	 * from the interface queue and sets Depart event for it.
-	 * It sets inteface as free if there are no more waiting packets
+	 * It sets interface as free if there are no more waiting packets
 	 *
 	 */
 	public void send(){
