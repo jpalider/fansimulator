@@ -126,13 +126,13 @@ public class GenerateGraphsDialog extends Dialog {
         //Close graphs button selection listener
         closeGraphsBut.addSelectionListener( new SelectionAdapter() {
         	public void widgetSelected( SelectionEvent se ) {
-        		for ( Iterator iter = openedFrames.iterator(); iter.hasNext();) {
-					ChartFrame element = (ChartFrame) iter.next();
-					if ( element != null ) 
-						element.dispose();
-					openedFrames.remove( element );
-				}
-        	}
+        		while( openedFrames.size() > 0 ) {
+        			ChartFrame openedFrame = openedFrames.elementAt(0);
+        			if ( openedFrame != null ) 
+						openedFrame.dispose();
+        			openedFrames.remove( openedFrame );
+        		}
+           	}
         });
         
         
@@ -280,7 +280,6 @@ public class GenerateGraphsDialog extends Dialog {
 		
 			while( (buffer = fReader.readLine()) != null ) {
 				String[] params = buffer.split(":");
-				System.out.println(params[0]);
 				servicedPacketSeries.add(	Double.parseDouble (params[0]), 
 											Double.parseDouble (params[1])
 										);

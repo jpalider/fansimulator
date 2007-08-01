@@ -392,12 +392,35 @@ public class GUI {
 				Server element = (Server) iter.next();
 				element.clearResults();
 			}
+			
+			
+			//Remove files with results of previous simulations
+			File localDir = new File("./");
+			File[] fileList;
+			fileList = localDir.listFiles(new FilenameFilter() {
 
+				public boolean accept(File dir, String name) {
+					if( name.startsWith("Server nr") && name.contains(".txt") )
+						return true;
+					else
+						return false;
+				}
+				
+			});
+			System.out.println("filelist size is: " + fileList.length );
+			
+			for (int i = 0; i < fileList.length; i++) {
+				File file = fileList[i];
+				file.delete();
+			}
+
+			
 			//Reset clock and schedule all generators attached to servers
 			Monitor.clock = new Time(-1);
 			for(int i = 0; i < generatorsVector.size(); i++) {
 				Monitor.agenda.schedule(generatorsVector.elementAt(i));
 			}
+			
 			
 			//Run main simulation loop
 			while( !Monitor.agenda.isEmpty() && Monitor.clock.compareTo(new Time(simulationTime)) <= 0 ) {
