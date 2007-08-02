@@ -45,22 +45,22 @@ public class PFQQueue implements Queue {
 	/**
 	 * Holds internal queue of packets sorted by timestamp
 	 */
-	private PriorityQueue<PacketTimestamped> packetQueue;
+	protected PriorityQueue<PacketTimestamped> packetQueue;
 	
 	/**
 	 * Maximum size of the PFQQueue
 	 */
-	private int maxSize;
+	protected int maxSize;
 	
 	/**
 	 * Virtual Time for PFQ Queue
 	 */
-	private long virtualTime;
+	protected long virtualTime;
 	
 	/**
 	 * Active Flow List 
 	 */
-	private FlowList flowList;
+	protected FlowList flowList;
 	
 	/**
 	 * Counter that "keeps track of the total number of priority bytes for congestion measurements"
@@ -161,8 +161,9 @@ public class PFQQueue implements Queue {
 				
 			}
 			packetFlow.setFinishTag( packetFlow.getFinishTag() + pTimestamped.p.getLength() );
-//			packetFlow.setFinishTag(pTimestamped.finishTag); should be the same as the former one 
-		
+			
+
+			
 	
 //--old			
 //			//packetFlow.backlog += pTimestamped.p.getLength();
@@ -190,6 +191,8 @@ public class PFQQueue implements Queue {
 				packetFlow.bytes = pTimestamped.p.getLength();				
 			}
 		}
+		virtualTime = pTimestamped.finishTag;
+		
 		// measurement operations
 		t1 = t2;
 		t2 = Monitor.clock; 
@@ -217,10 +220,9 @@ public class PFQQueue implements Queue {
 		PacketTimestamped packet = packetQueue.remove();
 		if ( flowList.contains(packet.p.getFlowIdentifier()) ){
 			FlowPFQ flow = (FlowPFQ)flowList.getFlow(packet.p.getFlowIdentifier());
-			flow.backlog -= packet.p.getLength();
-			
+			flow.backlog -= packet.p.getLength();			
 		} else {
-			System.out.println("Something gone wrong in PFQQueue.removeFirst()");
+			System.out.println("Something has gone wrong in PFQQueue.removeFirst()");
 		}
 		
 		//Set virtualTime to currently serviced packet
