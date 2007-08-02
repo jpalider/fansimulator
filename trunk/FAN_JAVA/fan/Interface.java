@@ -128,7 +128,8 @@ public class Interface{
 	 * simulation.
 	 */
 	public void clearInterface() {
-		this.queue = new FIFOQueue(50);
+		//this.queue = new FIFOQueue(50);
+		this.queue = new PFQQueue(50, 100, this);
 		this.setNotBusy();
 	}
 	

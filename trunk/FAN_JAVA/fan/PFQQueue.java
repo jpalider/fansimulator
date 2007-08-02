@@ -14,10 +14,18 @@ public class PFQQueue implements Queue {
 	 * to hold information about timestamp assigned to it
 	 * (according to PFQ algorithm)
 	 */
-	private class PacketTimestamped {
+	private class PacketTimestamped implements Comparable<PacketTimestamped>{
 		public Packet p;
 		public long startTag;
 		public long finishTag;
+		public int compareTo(PacketTimestamped p){
+			if (this.startTag == p.startTag)
+	            return 0;
+	        else if ( this.startTag > p.startTag)
+	            return 1;
+	        else
+	            return -1;
+		}
 	}
 	
 	/**
@@ -57,7 +65,7 @@ public class PFQQueue implements Queue {
 	/**
 	 * Counter that "keeps track of the total number of priority bytes for congestion measurements"
 	 */
-	private long priorityBytes;
+	protected long priorityBytes;
 	
 	/**
 	 * MTU definition
@@ -66,18 +74,18 @@ public class PFQQueue implements Queue {
 	/**
 	 * Variables needed to measure priority load
 	 */
-	private long bandwidth = 0;
-	private Time t2 = Monitor.clock;	//new Time(0.0);
-	private Time t1 = Monitor.clock;	//new Time(0.0);
-	private long pbt2 = 0;
-	private long pbt1 = 0;
+	protected long bandwidth = 0;
+	protected Time t2 = Monitor.clock;	//new Time(0.0);
+	protected Time t1 = Monitor.clock;	//new Time(0.0);
+	protected long pbt2 = 0;
+	protected long pbt1 = 0;
 	/**
 	 * Variables needed to measure fair rate
 	 */
-//	private Time fpt2 = new Time(0.0);
-//	private Time fpt1 = new Time(0.0);
-	private long vt2 = 0;
-	private long vt1;
+//	protected Time fpt2 = new Time(0.0);
+//	protected Time fpt1 = new Time(0.0);
+	protected long vt2 = 0;
+	protected long vt1;
 	
 	/**
 	 * Constructor for PFQQueue class
@@ -123,17 +131,17 @@ public class PFQQueue implements Queue {
 	 * xp-hpsr.pdf : "Cross-protect: implicit service differentiation and admission control"  (III.B)
 	 */		
 	public boolean putPacket(Packet p) {
-		
+
 		//Create encapsulation for packet p
 		PacketTimestamped pTimestamped = new PacketTimestamped();
 		pTimestamped.p = p;
 				
 		// TODO: "reject packet at head of longest backlog
 		//at first check if there are any free places at packet queue		
-		if(packetQueue.size() >= maxSize)
+		if(packetQueue.size() >= maxSize){
+			p = null;
 			return false;
-		
-		priorityBytes += p.getLength();
+		}
 		
 		//Check if this packet belongs to the flow registered in flowList
 		if( flowList.contains( pTimestamped.p.getFlowIdentifier() ) ) {
@@ -170,7 +178,7 @@ public class PFQQueue implements Queue {
 
 			pTimestamped.startTag = virtualTime;
 			pTimestamped.finishTag = pTimestamped.startTag + pTimestamped.p.getLength();
-			packetQueue.offer(pTimestamped);			
+			packetQueue.offer(pTimestamped);
 
 			priorityBytes += pTimestamped.p.getLength();
 
@@ -202,6 +210,7 @@ public class PFQQueue implements Queue {
 		
 		if (packetQueue.isEmpty()){
 			// clear flow list (or will it timeout all its flows?)
+			//return null;
 		}			
 		
 		//Remove first packet from queue
@@ -215,7 +224,13 @@ public class PFQQueue implements Queue {
 		}
 		
 		//Set virtualTime to currently serviced packet
-		if (packetQueue.peek().startTag != virtualTime){
+		
+		PacketTimestamped p = packetQueue.peek();
+		if (p == null){
+			System.out.println("Packet is null " + packetQueue.size());
+			return packet.p;
+		}
+		if ( packetQueue.peek().startTag != virtualTime ){
 			virtualTime = packetQueue.peek().startTag;
 			//Remove all queues which finishTag is smaller than virtualTime
 			flowList.cleanFlows(virtualTime);
@@ -230,10 +245,14 @@ public class PFQQueue implements Queue {
 	public long getFairRate(){
 		// TODO
 		// max{ S*C, dvt(t)}/dt
+		if (t2.compareTo(t1) == 0)
+			return 0; //virtualTime*8 /;
 		return (long)(((vt2 - vt1)*8) / t2.substract(t1).toDouble());
 	}
 	
-	public long getPriorityLoad(){		
+	public long getPriorityLoad(){
+		if (t2.compareTo(t1) == 0)	// at startup... 
+			return (long)(priorityBytes*8)/bandwidth; 
 		return (long)(((pbt2-pbt1)*8)/(bandwidth*(t2.substract(t1).toDouble())));
 	}
 
