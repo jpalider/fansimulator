@@ -67,8 +67,8 @@ public class PFQQueue implements Queue {
 	 * Variables needed to measure priority load
 	 */
 	private long bandwidth = 0;
-	private Time t2 = new Time(0.0);
-	private Time t1 = new Time(0.0);
+	private Time t2 = Monitor.clock;	//new Time(0.0);
+	private Time t1 = Monitor.clock;	//new Time(0.0);
 	private long pbt2 = 0;
 	private long pbt1 = 0;
 	/**
@@ -228,6 +228,7 @@ public class PFQQueue implements Queue {
 	}
 	
 	public long getFairRate(){
+		// TODO
 		// max{ S*C, dvt(t)}/dt
 		return (long)(((vt2 - vt1)*8) / t2.substract(t1).toDouble());
 	}
