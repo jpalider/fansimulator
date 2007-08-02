@@ -1,5 +1,7 @@
 package fan;
 
+import java.util.LinkedList;
+
 /**
  * MBAC is an admission control block. Its tasks include measurement and optionally admission control.
  * In order perform its tasks MBAC has got to trace:
