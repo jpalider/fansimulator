@@ -80,7 +80,7 @@ public class FlowList {
 	public void cleanFlows(long virtualTime){
 		for (Iterator iter = protectedList.iterator(); iter.hasNext();) {
 			Flow element = (Flow) iter.next();
-			if( element.getFinishTag() < virtualTime ){
+			if( element.getFinishTag() <= virtualTime ){
 				protectedList.remove(element);
 			}			
 		}
