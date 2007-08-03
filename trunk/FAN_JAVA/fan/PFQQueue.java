@@ -215,15 +215,16 @@ public class PFQQueue implements Queue {
 		
 //		virtualTime = packet.finishTag;
 		
-		PacketTimestamped p = packetQueue.peek();
-		if (p != null){
-			virtualTime = p.finishTag;
-		}
-//		if ( packetQueue.peek().startTag != virtualTime ){
-//			virtualTime = packetQueue.peek().startTag;
-//			//Remove all queues which finishTag is smaller than virtualTime
-//			flowList.cleanFlows(virtualTime);
-//		}		
+//		PacketTimestamped p = packetQueue.peek();
+//		if (p != null){
+//			virtualTime = p.finishTag;
+//		}
+		if ( packet.startTag != virtualTime ){
+			FlowPFQ flow = (FlowPFQ)flowList.getFlow(packet.p.getFlowIdentifier());
+			virtualTime = flow.getFinishTag();
+			//Remove all queues which finishTag is smaller than virtualTime
+			flowList.cleanFlows(virtualTime);
+		}		
 		return packet.p;
 	}
 	
