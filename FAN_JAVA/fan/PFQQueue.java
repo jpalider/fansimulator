@@ -146,33 +146,22 @@ public class PFQQueue implements Queue {
 		//Check if this packet belongs to the flow registered in flowList
 		if( flowList.contains( pTimestamped.p.getFlowIdentifier() ) ) {
 			FlowPFQ packetFlow = (FlowPFQ)flowList.getFlow(pTimestamped.p.getFlowIdentifier());
-			// (1)
+
 			packetFlow.backlog += pTimestamped.p.getLength();
-			// (2)
+
 			if ( packetFlow.bytes >= MTU ){				
 				pTimestamped.startTag = packetFlow.getFinishTag();
 				pTimestamped.finishTag = pTimestamped.startTag + pTimestamped.p.getLength();
 				packetQueue.offer(pTimestamped); // push { packet, flow_time_stamp } to PIFO
 			} else {
-				pTimestamped.finishTag = pTimestamped.startTag + pTimestamped.p.getLength();		
+				pTimestamped.startTag = virtualTime;
+				pTimestamped.finishTag = pTimestamped.startTag + pTimestamped.p.getLength();
 				packetQueue.offer(pTimestamped);
 				priorityBytes += pTimestamped.p.getLength();
 				packetFlow.bytes += pTimestamped.p.getLength();		
 				
 			}
 			packetFlow.setFinishTag( packetFlow.getFinishTag() + pTimestamped.p.getLength() );
-			
-
-			
-	
-//--old			
-//			//packetFlow.backlog += pTimestamped.p.getLength();
-//			Flow packetFlow = flowList.getFlow(pTimestamped.p.getFlowIdentifier());
-//			pTimestamped.startTag = packetFlow.getFinishTag();
-//			pTimestamped.finishTag = pTimestamped.startTag + pTimestamped.p.getLength();
-//			packetFlow.setFinishTag(pTimestamped.finishTag);
-//			packetQueue.offer(pTimestamped);
-//----			
 		}
 		//if this is the packet of new flow
 		else {
@@ -191,7 +180,6 @@ public class PFQQueue implements Queue {
 				packetFlow.bytes = pTimestamped.p.getLength();				
 			}
 		}
-		virtualTime = pTimestamped.finishTag;
 		
 		// measurement operations
 		t1 = t2;
@@ -213,7 +201,7 @@ public class PFQQueue implements Queue {
 		
 		if (packetQueue.isEmpty()){
 			// clear flow list (or will it timeout all its flows?)
-			//return null;
+			return null;
 		}			
 		
 		//Remove first packet from queue
@@ -225,18 +213,17 @@ public class PFQQueue implements Queue {
 			System.out.println("Something has gone wrong in PFQQueue.removeFirst()");
 		}
 		
-		//Set virtualTime to currently serviced packet
+//		virtualTime = packet.finishTag;
 		
 		PacketTimestamped p = packetQueue.peek();
-		if (p == null){
-			System.out.println("Packet is null " + packetQueue.size());
-			return packet.p;
+		if (p != null){
+			virtualTime = p.finishTag;
 		}
-		if ( packetQueue.peek().startTag != virtualTime ){
-			virtualTime = packetQueue.peek().startTag;
-			//Remove all queues which finishTag is smaller than virtualTime
-			flowList.cleanFlows(virtualTime);
-		}		
+//		if ( packetQueue.peek().startTag != virtualTime ){
+//			virtualTime = packetQueue.peek().startTag;
+//			//Remove all queues which finishTag is smaller than virtualTime
+//			flowList.cleanFlows(virtualTime);
+//		}		
 		return packet.p;
 	}
 	

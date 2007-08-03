@@ -61,8 +61,8 @@ public class Server {
 		//-- 
 		// MBAC comes here
 		// TODO: It does not work as it should (or PFQ does not)
-		if ( new MBAC(choiceIntface, 100000, 100000).congestionOccured() == true){
-			results.addRejectedPacket();
+		if ( new MBAC(choiceIntface, 1, 100000).congestionOccured() == true){
+			//results.addRejectedPacket();
 			p = null;
 			return;
 		}

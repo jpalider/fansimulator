@@ -53,6 +53,8 @@ public class MBAC {
 	 */
 	public boolean congestionOccured(){
 		if ( (getFairRate() < minFairRate) || (getPriorityLoad() > maxPriorityLoad) ){
+			// TODO: check if belongs to AFL
+			
 			return true;		
 		} else {
 			return false;
