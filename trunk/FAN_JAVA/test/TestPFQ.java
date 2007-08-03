@@ -29,25 +29,45 @@ public class TestPFQ {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		final int FLOW_1 = 1;
+		final int FLOW_2 = 2;
 	
 		Monitor.clock = Monitor.clock.add(new Time(1));
 		ExtPFQQueue queue = new ExtPFQQueue(SIZE, FLOW_LIST_SIZE, new Interface(100, 50));
 		
-		queue.putPacket(new Packet(new FlowIdentifier(1), Packet.FlowType.ELASTIC, 250));
+		queue.putPacket(new Packet(new FlowIdentifier(FLOW_1), Packet.FlowType.ELASTIC, 250));
 		System.out.println(queue);
 		Monitor.clock = Monitor.clock.add(new Time(0.5));
 				
-		queue.putPacket(new Packet(new FlowIdentifier(1), Packet.FlowType.ELASTIC, 250));
+		queue.putPacket(new Packet(new FlowIdentifier(FLOW_1), Packet.FlowType.ELASTIC, 250));
 		System.out.println(queue);
 		Monitor.clock = Monitor.clock.add(new Time(1));
 		
-		queue.removeFirst();
 				
-		queue.putPacket(new Packet(new FlowIdentifier(1), Packet.FlowType.ELASTIC, 250));
+		queue.putPacket(new Packet(new FlowIdentifier(FLOW_1), Packet.FlowType.ELASTIC, 250));
 		System.out.println(queue);
 		Monitor.clock = Monitor.clock.add(new Time(1));
 		
 		queue.removeFirst();
+		queue.removeFirst();
+
+		queue.putPacket(new Packet(new FlowIdentifier(FLOW_1), Packet.FlowType.ELASTIC, 250));
+		System.out.println(queue);
+		Monitor.clock = Monitor.clock.add(new Time(1));
+
+		queue.putPacket(new Packet(new FlowIdentifier(FLOW_2), Packet.FlowType.ELASTIC, 250));
+		System.out.println(queue);
+		Monitor.clock = Monitor.clock.add(new Time(1));
+
+		queue.removeFirst();
+		queue.removeFirst();
+		queue.removeFirst();
+		
+		queue.putPacket(new Packet(new FlowIdentifier(FLOW_1), Packet.FlowType.ELASTIC, 250));
+		System.out.println(queue);
+		Monitor.clock = Monitor.clock.add(new Time(1));
+		
+		
 		
 	}
 
