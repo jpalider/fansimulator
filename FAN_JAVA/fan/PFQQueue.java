@@ -14,7 +14,7 @@ public class PFQQueue implements Queue {
 	 * to hold information about timestamp assigned to it
 	 * (according to PFQ algorithm)
 	 */
-	private class PacketTimestamped implements Comparable<PacketTimestamped>{
+	protected class PacketTimestamped implements Comparable<PacketTimestamped>{
 		public Packet p;
 		public long startTag;
 		public long finishTag;
@@ -34,7 +34,7 @@ public class PFQQueue implements Queue {
 	 * According to:
 	 * xp-hpsr.pdf : "Cross-protect: implicit service differentiation and admission control"  (III.A)
 	 */
-	private class FlowPFQ extends Flow{
+	protected class FlowPFQ extends Flow{
 		FlowPFQ(FlowIdentifier newFlowID){
 			super(newFlowID);			
 		}
@@ -220,8 +220,8 @@ public class PFQQueue implements Queue {
 //			virtualTime = p.finishTag;
 //		}
 		if ( packet.startTag != virtualTime ){
-			FlowPFQ flow = (FlowPFQ)flowList.getFlow(packet.p.getFlowIdentifier());
-			virtualTime = flow.getFinishTag();
+//			FlowPFQ flow = (FlowPFQ)flowList.getFlow(packet.p.getFlowIdentifier());
+			virtualTime = packet.startTag;
 			//Remove all queues which finishTag is smaller than virtualTime
 			flowList.cleanFlows(virtualTime);
 		}		
