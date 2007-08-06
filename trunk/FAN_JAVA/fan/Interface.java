@@ -98,6 +98,12 @@ public class Interface{
 		this.localhost = local;
 	}
 
+	/**
+	 * Constructor for Interface class. It creates interface with default queue type,
+	 * with selected bandwidth and selected queue size.
+	 * @param bandwidth The bandwidth of interface (in bytes per second)
+	 * @param size The size of the queue at the output of this interface
+	 */
 	public Interface(int bandwidth, int size) {
 		this.bandwidth = bandwidth;
 		//this.queue = new FifoQueueBytes(size);	
