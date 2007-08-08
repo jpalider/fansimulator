@@ -31,10 +31,10 @@ public class Server {
 	 */
 	private	FlowList flowList;
 	
-	/**
-	 * The ResultsCollector holding information about simulation times for this Server
-	 */
-	public ResultsCollector results;
+//	/**
+//	 * The ResultsCollector holding information about simulation times for this Server
+//	 */
+//	public ResultsCollector results;
 	
 	/**
 	 * Method for receiving Packet. It rejects or accepts this packet.
@@ -52,20 +52,20 @@ public class Server {
 		
 		if( choiceIntface.getServer() == this ){
 			p = null;
-			results.addServicedPacket(0);
-			results.addLocallyServicedPacket();
-			results.addQueueLength(0);
+			choiceIntface.results.addServicedPacket(0);
+			choiceIntface.results.addLocallyServicedPacket();
+			choiceIntface.results.addQueueLength(0);
 			return;
 		}
 
 		//-- 
 		// MBAC comes here
 		// TODO: It does not work as it should (or PFQ does not)
-		if ( new MBAC(choiceIntface, 1, 100000).congestionOccured() == true){
-			//results.addRejectedPacket();
-			p = null;
-			return;
-		}
+//		if ( new MBAC(choiceIntface, 1, 100000).congestionOccured() == true){
+//			//results.addRejectedPacket();
+//			p = null;
+//			return;
+//		}
 		//---
 		
 		
@@ -80,8 +80,8 @@ public class Server {
 			
 			//And set interface as busy
 			choiceIntface.setBusy();
-			results.addServicedPacket(0);
-			results.addQueueLength(0);
+			choiceIntface.results.addServicedPacket(0);
+			choiceIntface.results.addQueueLength(0);
 		}
 		
 		//If interface is not free (has any packets waiting in the queue)
@@ -89,11 +89,11 @@ public class Server {
 			//if the queue is not full
 			if( choiceIntface.getQueue().putPacket(p) ) {
 				p.setServiceStartTime(Monitor.clock);
-				results.addQueueLength(choiceIntface.getQueue().getSize() );
+				choiceIntface.results.addQueueLength(choiceIntface.getQueue().getSize() );
 			
 			//if the queue is full
 			} else
-				results.addRejectedPacket();
+				choiceIntface.results.addRejectedPacket();
 		}
 	}
 	
@@ -115,7 +115,7 @@ public class Server {
 		this.maxTrafficTypes = 2;
 		this.routing = new RoutingTable();
 		this.interfaces = new Vector<Interface>();
-		this.results = new TimeResultsCollector(name);
+//		this.results = new TimeResultsCollector(name);
 	}
 	
 	/**
@@ -200,9 +200,10 @@ public class Server {
 	 * This is the method for clearing results already collected for this server
 	 */
 	public void clearResults() {
-		results = new TimeResultsCollector(name);
+		
 		for (Iterator iter = interfaces.iterator(); iter.hasNext();) {
 			Interface element = (Interface) iter.next();
+			element.results = new TimeResultsCollector(element.getServer().getName());
 			element.clearInterface();
 		}
 	}
