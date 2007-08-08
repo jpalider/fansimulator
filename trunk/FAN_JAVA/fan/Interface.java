@@ -14,6 +14,9 @@ public class Interface{
 	
 	private boolean busy;
 	
+	private boolean virgin = true;
+	private Time firstPacketArrival = new Time(0);
+	private Time lastPacketDepart = new Time(0);
 //	/**
 //	 * The ResultsCollector holding information about simulation times for this Interface
 //	 */
@@ -37,6 +40,7 @@ public class Interface{
 	
 	public void setNotBusy() {
 		this.busy = false;
+		updateUpTime();
 	}
 	
 	/**
@@ -143,8 +147,23 @@ public class Interface{
 	 */
 	public void clearInterface() {
 		this.queue = new FIFOQueue(50);
-		//this.queue = new PFQQueue(50, 100, this);
+		//this.queue = new PFQQueue(50, 100, this); 
 		this.setNotBusy();
 	}
+
+	public Time getUpTime(){		
+		return lastPacketDepart.substract(firstPacketArrival);
+	}
+
+	public void updateUpTime(){
+		lastPacketDepart = Monitor.clock;
+	}
 	
+	public void markFirstArrival(){
+		// remembers when a packet appeared on this interface for the first time
+		if (this.virgin){
+			this.virgin = false;
+			this.firstPacketArrival = Monitor.clock;
+		}
+	}
 }
