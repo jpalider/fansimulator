@@ -14,6 +14,11 @@ public class Interface{
 	
 	private boolean busy;
 	
+//	/**
+//	 * The ResultsCollector holding information about simulation times for this Interface
+//	 */
+	public ResultsCollector results;
+	
 	/**
 	 * @return
 	 * @uml.property  name="busy"
@@ -82,22 +87,23 @@ public class Interface{
 			Packet p = queue.peekFirst();
 			
 			//Time used to send packet is not added to its service time
-			localhost.results.addServicedPacket( Monitor.clock.substract(p.getServiceStartTime()).toDouble() );
+			results.addServicedPacket( Monitor.clock.substract(p.getServiceStartTime()).toDouble() );
 			Time sendTime = new Time( (double) p.getLength() / (double)bandwidth );
 			Monitor.agenda.schedule( new Depart(Monitor.clock.add(sendTime),this) );
 		}
 	}
-	
+
 	public Interface(int bandwidth, Server peer, Server local) {
 		this (bandwidth, peer, local, 50);
+		this.results = new TimeResultsCollector(peer.getName());
 	}
 	
 	public Interface(int bandwidth, Server peer, Server local, int size) {
 		this (bandwidth,size);
 		this.peer = peer;
 		this.localhost = local;
+		this.results = new TimeResultsCollector(peer.getName());
 	}
-
 	/**
 	 * Constructor for Interface class. It creates interface with default queue type,
 	 * with selected bandwidth and selected queue size.
@@ -106,10 +112,12 @@ public class Interface{
 	 */
 	public Interface(int bandwidth, int size) {
 		this.bandwidth = bandwidth;
-		//this.queue = new FifoQueueBytes(size);	
+		this.queue = new FifoQueueBytes(100);	
+//		this.queue = new FifoQueueBytes(size);	
 		// TODO: check and then test PFQQueue
-		this.queue = new PFQQueue(size, 100, this);
+		//this.queue = new PFQQueue(size, 100, this);
 		this.setNotBusy();
+		
 	}
 
 	/**
@@ -134,8 +142,8 @@ public class Interface{
 	 * simulation.
 	 */
 	public void clearInterface() {
-		//this.queue = new FIFOQueue(50);
-		this.queue = new PFQQueue(50, 100, this);
+		this.queue = new FIFOQueue(50);
+		//this.queue = new PFQQueue(50, 100, this);
 		this.setNotBusy();
 	}
 	
