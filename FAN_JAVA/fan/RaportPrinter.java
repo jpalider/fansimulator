@@ -15,6 +15,8 @@ public class RaportPrinter {
 //		System.out.println("\nThe average packet service time is: " + format.format(s.results.getAvgPacketServiceTime()) + " s" );
 //		System.out.println("\nThe average queue length is: " + format.format(s.results.getAvgQueueLength()) + " packets");
 //		System.out.println("\nThe maximum queue length is: " + s.results.getMaxQueueLength() + " packets");
+	
+	// Calculations	
 		int serverPacketsTotal = 0;
 		int serverPacketsServiced = 0;
 		int serverPacketsServicedLocally = 0;
@@ -42,22 +44,32 @@ public class RaportPrinter {
 	// Data that might be interesting from the point of view of each interface	
 		System.out.println("\nThe average packet service time for interface pointing to: ");
 		for (int i = 0; i < s.getInterfaces().size(); i++) {
-			System.out.println("\t" + s.getInterfaces().elementAt(i).getServer().getName() + ":" + format.format(s.getInterfaces().elementAt(i).results.getAvgPacketServiceTime()) + " s" );
+			System.out.println("\t" + s.getInterfaces().elementAt(i).getServer().getName() + ": " + format.format(s.getInterfaces().elementAt(i).results.getAvgPacketServiceTime()) + " s" );
 		}		
 
-		System.out.println("\nThe average queue length for interface pointing to:");
+		System.out.println("\nThe average queue length for interface pointing to: ");
 		for (int i = 0; i < s.getInterfaces().size(); i++) {
-			System.out.println("\t" + s.getInterfaces().elementAt(i).getServer().getName() + ":" + format.format(s.getInterfaces().elementAt(i).results.getAvgQueueLength()) + " packets");
+			System.out.println("\t" + s.getInterfaces().elementAt(i).getServer().getName() + ": " + format.format(s.getInterfaces().elementAt(i).results.getAvgQueueLength()) + " packets");
 		}
 		
-		System.out.println("\nThe maximum queue length for interface pointing to:");
+		System.out.println("\nThe maximum queue length for interface pointing to: ");
 		for (int i = 0; i < s.getInterfaces().size(); i++) {		
-			System.out.println("\t" + s.getInterfaces().elementAt(i).getServer().getName() + ":" + s.getInterfaces().elementAt(i).results.getMaxQueueLength() + " packets");
+			System.out.println("\t" + s.getInterfaces().elementAt(i).getServer().getName() + ": " + s.getInterfaces().elementAt(i).results.getMaxQueueLength() + " packets");
 		}
 		
-		System.out.println("\nTheNumber of rejected packet for interface pointing to:");
+		System.out.println("\nTheNumber of rejected packet for interface pointing to: ");
 		for (int i = 0; i < s.getInterfaces().size(); i++) {		
-			System.out.println("\t" + s.getInterfaces().elementAt(i).getServer().getName() + ":" + format.format(s.getInterfaces().elementAt(i).results.getRejectedPackets()) + " packets");
+			System.out.println("\t" + s.getInterfaces().elementAt(i).getServer().getName() + ": " + format.format(s.getInterfaces().elementAt(i).results.getRejectedPackets()) + " packets");
+		}
+
+		System.out.println("\nChannel utilization of interface pointing to: ");
+	
+		for (int i = 0; i < s.getInterfaces().size(); i++) {
+			ResultsCollector r = s.getInterfaces().elementAt(i).results;
+			double upTime = s.getInterfaces().elementAt(i).getUpTime().toDouble();
+			double utilization = (r.getServicedPackets() - r.getLocallyServicedPackets())/upTime;		
+			System.out.println("\tUpTime = " + 	upTime );		
+			System.out.println("\t" + s.getInterfaces().elementAt(i).getServer().getName() + ": " + format.format(utilization*100) + " %");
 		}
 	}
 	

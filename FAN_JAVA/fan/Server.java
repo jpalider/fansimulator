@@ -57,7 +57,7 @@ public class Server {
 			choiceIntface.results.addQueueLength(0);
 			return;
 		}
-
+		
 		//-- 
 		// MBAC comes here
 		// TODO: It does not work as it should (or PFQ does not)
@@ -67,8 +67,8 @@ public class Server {
 //			return;
 //		}
 		//---
-		
-		
+		choiceIntface.markFirstArrival();
+		choiceIntface.updateUpTime();
 		//Check if interface is free
 		if( !choiceIntface.isBusy() ) {
 			choiceIntface.getQueue().putPacket(p);
