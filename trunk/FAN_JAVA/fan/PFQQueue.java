@@ -15,13 +15,21 @@ public class PFQQueue implements Queue {
 	 * to hold information about timestamp assigned to it
 	 * (according to PFQ algorithm)
 	 */
-	protected class PacketTimestamped implements Comparable<PacketTimestamped>{
+	public class PacketTimestamped implements Comparable<PacketTimestamped>{
 		public Packet p;
 		public long startTag;
 		public long finishTag;
+		public double clock;
 		public int compareTo(PacketTimestamped p){
-			if (this.startTag == p.startTag)
-	            return 0;
+			if (this.startTag == p.startTag) {
+				if ( this.clock == p.clock ) 
+					return 0;
+				else if ( this.clock > p.clock )
+					return 1;
+				else
+					return -1;
+			}
+	            
 	        else if ( this.startTag > p.startTag)
 	            return 1;
 	        else
@@ -137,6 +145,7 @@ public class PFQQueue implements Queue {
 		//Create encapsulation for packet p
 		PacketTimestamped pTimestamped = new PacketTimestamped();
 		pTimestamped.p = p;
+		pTimestamped.clock = Monitor.clock.toDouble();
 				
 		// TODO: "reject packet at head of longest backlog
 		//at first check if there are any free places at packet queue		
