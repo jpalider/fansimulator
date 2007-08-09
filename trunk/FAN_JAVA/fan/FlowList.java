@@ -78,12 +78,11 @@ public class FlowList {
 	}
 
 	public void cleanFlows(long virtualTime){
-		for (Iterator iter = protectedList.iterator(); iter.hasNext();) {
-			Flow element = (Flow) iter.next();
+		for (int i = 0; i < protectedList.size(); i++) {
+			Flow element = protectedList.get( i );
 			if( element.getFinishTag() <= virtualTime ){
 				protectedList.remove(element);
-			}			
-		}
-		
+			}
+		}		
 	}
 }
