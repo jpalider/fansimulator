@@ -44,5 +44,10 @@ public interface Queue {
 	 * @return
 	 */
 	public int getMaxSize();
+	
+	/**
+	 * Returns the queue type as String
+	 */
+	public String getType(); 
 }
 
