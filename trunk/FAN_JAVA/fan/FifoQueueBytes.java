@@ -4,10 +4,12 @@ import java.util.Iterator;
 
 public class FifoQueueBytes extends FIFOQueue {
 	private int totalSize;
+	private String type;
 	
-	public FifoQueueBytes(int size) {
-		super(size);
+	public FifoQueueBytes(int size, Interface intfce) {
+		super(size,intfce);
 		totalSize = 0;
+		type = "FIFOBytes";
 	}
 	
 	public boolean isFull() {
@@ -22,7 +24,7 @@ public class FifoQueueBytes extends FIFOQueue {
 			return true;
 	}
 	
-	private int getFreeBytes() {
+	public int getFreeBytes() {
 		return maxSize - totalSize;
 	}
 	
@@ -30,6 +32,7 @@ public class FifoQueueBytes extends FIFOQueue {
 		if ( getFreeBytes() - p.getLength() >= 0) {
 			fifo.offer(p);
 			totalSize += p.getLength();
+			recievedBytes += p.getLength();
 			return true;		
 		}
 		else
@@ -44,5 +47,9 @@ public class FifoQueueBytes extends FIFOQueue {
 	
 	public int getSize() {
 		return totalSize;
+	}
+	
+	public String getType(){
+		return type;
 	}
 }
