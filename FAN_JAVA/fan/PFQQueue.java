@@ -9,6 +9,7 @@ import java.util.PriorityQueue;
  */
 public class PFQQueue implements Queue {
 	
+	String type;
 	/**
 	 * This is the encapsulation class for Packet,
 	 * to hold information about timestamp assigned to it
@@ -98,6 +99,7 @@ public class PFQQueue implements Queue {
 		virtualTime = 0;
 		flowList = new FlowList(flowListSize);
 		bandwidth = intface.getBandwidth();
+		type = "PFQ";
 	}
 	
 	public int getSize() {
@@ -246,4 +248,7 @@ public class PFQQueue implements Queue {
 		return (long)(((pbt2-pbt1)*8)/(bandwidth*(t2.substract(t1).toDouble())));
 	}
 
+	public String getType(){
+		return type;
+	}
 }
