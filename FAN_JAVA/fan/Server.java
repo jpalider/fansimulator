@@ -61,11 +61,11 @@ public class Server {
 		//-- 
 		// MBAC comes here
 		// TODO: It does not work as it should (or PFQ does not)
-//		if ( new MBAC(choiceIntface, 1, 100000).congestionOccured() == true){
-//			//results.addRejectedPacket();
-//			p = null;
-//			return;
-//		}
+		if ( new MBAC(choiceIntface, 1, 100000).congestionOccured(p) == true){
+			choiceIntface.results.addRejectedPacket();
+			p = null;
+			return;
+		}
 		//---
 		choiceIntface.markFirstArrival();
 		choiceIntface.updateUpTime();

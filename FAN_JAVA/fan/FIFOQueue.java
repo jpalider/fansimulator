@@ -5,11 +5,17 @@ public class FIFOQueue implements Queue {
 	LinkedList<Packet> fifo;
 	int maxSize;
 	String type;
+	long recievedBytes = 0;
+	long recievedBytesPrev = 0;
+	Time lastTime = new Time(0);
+	double load = 0d;
+	Interface intfce;
 	
-	public FIFOQueue(int maxSize) {
+	public FIFOQueue(int maxSize, Interface intfce) {
 		fifo = new LinkedList<Packet>();
 		this.maxSize = maxSize;
 		type = "FIFO";
+		this.intfce = intfce;
 	}
 	
 	public boolean isFull() {
@@ -20,6 +26,7 @@ public class FIFOQueue implements Queue {
 		if ( this.isFull() )
 			return false;
 		fifo.offer(p);
+		recievedBytes += p.getLength();
 		return true;		
 	}
 
@@ -49,6 +56,15 @@ public class FIFOQueue implements Queue {
 	
 	public String getType(){
 		return type;
+	}
+	
+	public double getLoad(){
+		double dt = Monitor.clock.substract(lastTime).toDouble();
+		if (dt < 1.0)
+		load = ((recievedBytes-recievedBytesPrev)*8) / (dt*intfce.getBandwidth());
+		lastTime = Monitor.clock;
+		recievedBytesPrev = recievedBytes;
+		return load;
 	}
 	
 }

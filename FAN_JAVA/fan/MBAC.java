@@ -22,8 +22,9 @@ public class MBAC {
 	
 	MBAC(Interface intface, long minFairRate, long maxPriorityLoad){
 		queue = intface.getQueue();
-		if (queue != null){			
-			flowList = ((PFQQueue)queue).getFlowList();
+		if (queue != null){	
+			if (queue.getType().compareTo("PFQ") == 0)
+				flowList = ((PFQQueue)queue).getFlowList();
 		} else {
 			System.out.println("Initialization problem in MBAC.MBAC()");
 		}
@@ -59,18 +60,23 @@ public class MBAC {
 	 * TODO: more sophisticated mbac protection
 	 * @return
 	 */
-	public boolean congestionOccured(){
+	public boolean congestionOccured(Packet p){
 		
 		if ( queue.getType().compareTo("PFQ") == 0){
 			if ( (getFairRate() < minFairRate) || (getPriorityLoad() > maxPriorityLoad) ){
-				// TODO: check if belongs to AFL
-				
 				return true;		
-			} else {
+			} else if ( flowList.contains(p.getFlowIdentifier()) ) {
 				return false;
 			}
-		} else {			
-		}		
+		} else if ( queue.getType().compareTo("FIFOBytes") == 0) {
+//			System.out.println("FifoBytes");
+			if (((FifoQueueBytes)queue).getFreeBytes() >= p.getLength()){
+//				if ( priority load + AFL )
+				return false;
+			}
+		}	
+	//	System.out.println("CongestionOccured");
+		// as if there were no admission control
 		return false;
 	}
 }
