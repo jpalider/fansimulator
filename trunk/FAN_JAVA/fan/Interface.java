@@ -84,12 +84,14 @@ public class Interface{
 	 *
 	 */
 	public void send(){
-		peer.recieve(queue.removeFirst());
+		Packet pkt = queue.removeFirst();
+		peer.recieve(pkt);
+		results.addAvgpacketLength(pkt);
+		
 		if(queue.isEmpty())
 			this.setNotBusy();
 		else {
 			Packet p = queue.peekFirst();
-			
 			//Time used to send packet is not added to its service time
 			results.addServicedPacket( Monitor.clock.substract(p.getServiceStartTime()).toDouble() );
 			Time sendTime = new Time( (double) p.getLength() / (double)bandwidth );
@@ -164,6 +166,7 @@ public class Interface{
 		if (this.virgin){
 			this.virgin = false;
 			this.firstPacketArrival = Monitor.clock;
+			System.out.println("markFirstArrival -> " + peer.getName() + " " + Monitor.clock.toDouble());
 		}
 	}
 }

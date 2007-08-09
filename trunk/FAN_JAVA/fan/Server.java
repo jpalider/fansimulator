@@ -49,7 +49,7 @@ public class Server {
 		//check if interface is pointing back to this server - if true than it means that the packet
 		//is leaving network - e.g. its final destination is this server or is leaving
 		//simulated network
-		
+	
 		if( choiceIntface.getServer() == this ){
 			p = null;
 			choiceIntface.results.addServicedPacket(0);
@@ -80,8 +80,6 @@ public class Server {
 			
 			//And set interface as busy
 			choiceIntface.setBusy();
-			choiceIntface.results.addServicedPacket(0);
-			choiceIntface.results.addQueueLength(0);
 		}
 		
 		//If interface is not free (has any packets waiting in the queue)
@@ -90,7 +88,6 @@ public class Server {
 			if( choiceIntface.getQueue().putPacket(p) ) {
 				p.setServiceStartTime(Monitor.clock);
 				choiceIntface.results.addQueueLength(choiceIntface.getQueue().getSize() );
-			
 			//if the queue is full
 			} else
 				choiceIntface.results.addRejectedPacket();
