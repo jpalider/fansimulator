@@ -6,6 +6,7 @@ public class ResultsCollector {
 	private	double avgQueueLength;
 	private double avgPacketServiceTime;
 	private double avgRejectedPackets;
+	private double avgPacketLength;
 		
 	private int maxQueueLength;
 	
@@ -13,7 +14,7 @@ public class ResultsCollector {
 	private int rejectedPackets;
 	private int locallyServicedPackets;
 	private int queueLengthResults;
-	
+	private int checkedPacketsLength;
 	
 	public ResultsCollector(){
 		this.avgQueueLength = 0;
@@ -24,6 +25,8 @@ public class ResultsCollector {
 		this.servicedPackets = 0;
 		this.queueLengthResults = 0;
 		this.locallyServicedPackets = 0;
+		this.avgPacketLength = 0;
+		this.checkedPacketsLength = 0;
 	}
 	
 	public void addServicedPacket(double serviceTime) {
@@ -45,6 +48,11 @@ public class ResultsCollector {
 		if(length > maxQueueLength) {
 			maxQueueLength = length;
 		}
+	}
+	
+	public void addAvgpacketLength(Packet p){
+		avgPacketLength = (avgPacketLength*checkedPacketsLength + (double)p.getLength()) / (double)(checkedPacketsLength + 1);
+		checkedPacketsLength++;
 	}
 	
 	public double getAvgRejectedPackets() {
@@ -79,5 +87,10 @@ public class ResultsCollector {
 	public int getLocallyServicedPackets() {
 		return locallyServicedPackets;
 	}
-
+	public double getAvgPacketLength(){
+		return avgPacketLength;
+	}
+	public double getCheckedPacketsLength(){
+		return checkedPacketsLength;
+	}
 }

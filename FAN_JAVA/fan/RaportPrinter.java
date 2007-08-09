@@ -37,10 +37,11 @@ public class RaportPrinter {
 		}
 	 // Data that might be interesting from the server's point of view 
 		System.out.println("\nThe server has processed TOTAL: " + (serverPacketsTotal) + " packets");
-		System.out.println("\nThe number of serviced packets is: " + serverPacketsServiced);
-		System.out.println("\nThe number of locally serviced packets is: " + serverPacketsServicedLocally);
-		System.out.println("\nThe number of rejected packets is: " + serverPacketsRejected);		
-		System.out.println("\nThe percentage of rejected packets is: " + format.format(serverPacketsRejectedPercentage) );
+		System.out.println("The number of packets serviced: ");
+		System.out.println("\tforwarded: " + (serverPacketsServiced - serverPacketsServicedLocally));
+		System.out.println("\trejected: " + serverPacketsRejected + "\t (" + format.format(serverPacketsRejectedPercentage) + "%)");		
+		System.out.println("\tlocally: " + serverPacketsServicedLocally);
+		//System.out.println("\nThe percentage of rejected packets is: " + format.format(serverPacketsRejectedPercentage) );
 	// Data that might be interesting from the point of view of each interface	
 		System.out.println("\nThe average packet service time for interface pointing to: ");
 		for (int i = 0; i < s.getInterfaces().size(); i++) {
@@ -67,9 +68,13 @@ public class RaportPrinter {
 		for (int i = 0; i < s.getInterfaces().size(); i++) {
 			ResultsCollector r = s.getInterfaces().elementAt(i).results;
 			double upTime = s.getInterfaces().elementAt(i).getUpTime().toDouble();
-			double utilization = (r.getServicedPackets() - r.getLocallyServicedPackets())/upTime;		
-			System.out.println("\tUpTime = " + 	upTime );		
-			System.out.println("\t" + s.getInterfaces().elementAt(i).getServer().getName() + ": " + format.format(utilization*100) + " %");
+			double utilization = (r.getAvgPacketLength()*r.getCheckedPacketsLength())/s.getInterfaces().elementAt(i).getBandwidth()/upTime;
+			System.out.println("\t" + s.getInterfaces().elementAt(i).getServer().getName());
+			System.out.println("\t\tUpTime = " + upTime );		
+//			System.out.println("\t\tAPL= " + r.getAvgPacketLength() + " " + r.getCheckedPacketsLength());		
+//			System.out.println("\t\tSP = " + r.getServicedPackets() );		
+//			System.out.println("\t\tLSP = " + r.getLocallyServicedPackets() );		
+			System.out.println("\t\tUtilization: " + format.format(utilization*100) + " %");
 		}
 	}
 	
