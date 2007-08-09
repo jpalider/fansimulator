@@ -37,14 +37,22 @@ public class MBAC {
 	 * @return fair rate
 	 */
 	public long getPriorityLoad(){
-		return ((PFQQueue)queue).getPriorityLoad();
+		if ( queue.getType().compareTo("PFQ") == 0){
+			return ((PFQQueue)queue).getPriorityLoad();
+		} else {			
+		} 
+		return 0;
 	}
 	/**
 	 * Measured fair rate in bits.
 	 * @return fair rate
 	 */
 	public long getFairRate(){
-		return ((PFQQueue)queue).getFairRate();
+		if ( queue.getType().compareTo("PFQ") == 0){
+			return ((PFQQueue)queue).getFairRate();
+		} else {
+		}
+		return 0;
 	}
 	
 	/**
@@ -52,13 +60,17 @@ public class MBAC {
 	 * @return
 	 */
 	public boolean congestionOccured(){
-		if ( (getFairRate() < minFairRate) || (getPriorityLoad() > maxPriorityLoad) ){
-			// TODO: check if belongs to AFL
-			
-			return true;		
-		} else {
-			return false;
-		}
+		
+		if ( queue.getType().compareTo("PFQ") == 0){
+			if ( (getFairRate() < minFairRate) || (getPriorityLoad() > maxPriorityLoad) ){
+				// TODO: check if belongs to AFL
+				
+				return true;		
+			} else {
+				return false;
+			}
+		} else {			
+		}		
+		return false;
 	}
-
 }

@@ -4,10 +4,12 @@ import java.util.LinkedList;
 public class FIFOQueue implements Queue {
 	LinkedList<Packet> fifo;
 	int maxSize;
+	String type;
 	
 	public FIFOQueue(int maxSize) {
 		fifo = new LinkedList<Packet>();
 		this.maxSize = maxSize;
+		type = "FIFO";
 	}
 	
 	public boolean isFull() {
@@ -44,4 +46,9 @@ public class FIFOQueue implements Queue {
 	public int getMaxSize() {
 		return maxSize;
 	}
+	
+	public String getType(){
+		return type;
+	}
+	
 }
