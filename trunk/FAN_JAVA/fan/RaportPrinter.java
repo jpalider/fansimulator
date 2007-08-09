@@ -70,7 +70,7 @@ public class RaportPrinter {
 			double upTime = s.getInterfaces().elementAt(i).getUpTime().toDouble();
 			double utilization = (r.getAvgPacketLength()*r.getCheckedPacketsLength())/s.getInterfaces().elementAt(i).getBandwidth()/upTime;
 			System.out.println("\t" + s.getInterfaces().elementAt(i).getServer().getName());
-			System.out.println("\t\tUpTime = " + upTime );		
+			System.out.println("\t\tUpTime = " + format.format(upTime) );		
 //			System.out.println("\t\tAPL= " + r.getAvgPacketLength() + " " + r.getCheckedPacketsLength());		
 //			System.out.println("\t\tSP = " + r.getServicedPackets() );		
 //			System.out.println("\t\tLSP = " + r.getLocallyServicedPackets() );		
