@@ -1,0 +1,25 @@
+
+Simulation issues:
+
+ - adjusting parameters:
+ 	* link capacity
+ 	* AFL length
+ 	* PFQ length
+ 	* MBAC algorithm
+ 	* traffic generators
+ 	* FRmin, PLmax
+ 	* buffer length
+ - link utilization, packet loss and packet delay depending on PFQ length and/or MBAC algorithm
+ 	* the longer the buffer the more packets get transmitted (utilization increases) but suffer longer delay
+ 	* on the other hand elastic flow can wait longer - is it really a problem?
+ - test various thresholds for fair_rate and peak_rate
+ - proper traffic generation -> user traffic <-> PL <-> 1% link capacity
+ - Results collector should measure:
+ 	* no traffic periods
+ 	* if prioritized flows (of low peak rate) get dropped
+ - short term burst may no be added to PFL (10% probability of accepting a new flow)
+ - methods of checking whether streaming packets suffer delay
+ - showing differences between PFQ and FIF0 with and without MBAC each
+ - showing behaviour in  ???
+ - PFQ and MBAC configuration in config.xml
+ - FIFO and MBAC -> we do not want to restrict packets by queue size, those from AFL get into thanks to MBAC
