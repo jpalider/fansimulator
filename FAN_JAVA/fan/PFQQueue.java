@@ -10,6 +10,8 @@ import java.util.PriorityQueue;
 public class PFQQueue implements Queue {
 	
 	String type;
+	Time lastMeasureTime;
+	boolean measured = false;
 	/**
 	 * This is the encapsulation class for Packet,
 	 * to hold information about timestamp assigned to it
@@ -108,6 +110,7 @@ public class PFQQueue implements Queue {
 		flowList = new FlowList(flowListSize);
 		bandwidth = intface.getBandwidth();
 		type = "PFQ";
+		lastMeasureTime = Monitor.clock;
 	}
 	
 	public int getSize() {
@@ -192,16 +195,17 @@ public class PFQQueue implements Queue {
 			}
 		}
 		
-		// measurement operations
-		t1 = t2;
-		t2 = Monitor.clock; 
-		// - for priority load
-		pbt1 = pbt2;
-		pbt2 = priorityBytes;	
-		// - for fair rate
-		vt1 = vt2;
-		vt2 = virtualTime;
-		
+		// measurement operations every hundred of ms or more
+		if ( Monitor.clock.substract(lastMeasureTime).toDouble() > 0.1 ){
+			t1 = t2;
+			t2 = Monitor.clock; 
+			// - for priority load
+			pbt1 = pbt2;
+			pbt2 = priorityBytes;	
+			// - for fair rate
+			vt1 = vt2;
+			vt2 = virtualTime;
+		}
 		return true;
 	}
 

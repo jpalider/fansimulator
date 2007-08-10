@@ -119,10 +119,10 @@ public class Interface{
 	 */
 	public Interface(int bandwidth, int size) {
 		this.bandwidth = bandwidth;
-		this.queue = new FifoQueueBytes(100000, this);	
+//		this.queue = new FifoQueueBytes(100000, this);	
 //		this.queue = new FifoQueueBytes(size);	
 		// TODO: check and then test PFQQueue
-		//this.queue = new PFQQueue(size, 100, this);
+		this.queue = new PFQQueue(size, 100, this);
 		this.setNotBusy();
 		
 	}
@@ -149,8 +149,8 @@ public class Interface{
 	 * simulation.
 	 */
 	public void clearInterface() {
-		this.queue = new FifoQueueBytes(150000,this);
-		//this.queue = new PFQQueue(50, 100, this); 
+		//this.queue = new FifoQueueBytes(150000,this);
+		this.queue = new PFQQueue(50, 100, this); 
 		this.setNotBusy();
 	}
 
