@@ -20,8 +20,8 @@ class ExtPFQQueue extends PFQQueue {
 		s +=  "PFQ:\n FR = " + getFairRate() + "\n PL = " + getPriorityLoad() + "\n";
 		for (Iterator iter = this.packetQueue.iterator(); iter.hasNext();) {
 			PFQQueue.PacketTimestamped element = (PFQQueue.PacketTimestamped) iter.next();
-			s +=	"Packet startTag: " + element.startTag + ", finishTag: " + element.finishTag + 
-								", FlowID " + element.p.getFlowIdentifier().toInt() + ", length: " + element.p.getLength();
+			s += "Packet startTag: " + element.startTag + ", finishTag: " + element.finishTag + 
+					", FlowID " + element.p.getFlowIdentifier().toInt() + ", length: " + element.p.getLength();
 			s += "\n";
 		}
 		return s + "\n===";
@@ -46,23 +46,10 @@ public class TestPFQ {
 		queue.putPacket(new Packet(new FlowIdentifier(FLOW_1), Packet.FlowType.ELASTIC, 250));
 		System.out.println(queue);
 		Monitor.clock = Monitor.clock.add(new Time(0.5));
-				
-		queue.putPacket(new Packet(new FlowIdentifier(FLOW_1), Packet.FlowType.ELASTIC, 250));
-		System.out.println(queue);
-		Monitor.clock = Monitor.clock.add(new Time(1));
-		
-				
-		queue.putPacket(new Packet(new FlowIdentifier(FLOW_1), Packet.FlowType.ELASTIC, 250));
-		System.out.println(queue);
-		Monitor.clock = Monitor.clock.add(new Time(1));
-		
-		queue.putPacket(new Packet(new FlowIdentifier(FLOW_1), Packet.FlowType.ELASTIC, 250));
-		System.out.println(queue);
-		Monitor.clock = Monitor.clock.add(new Time(1));
-		
-		queue.putPacket(new Packet(new FlowIdentifier(FLOW_1), Packet.FlowType.ELASTIC, 250));
-		System.out.println(queue);
-		Monitor.clock = Monitor.clock.add(new Time(1));
+
+	for (int i = 0; i < 200; i++){		
+		queue.putPacket(new Packet(new FlowIdentifier(FLOW_1), Packet.FlowType.ELASTIC, 250));		
+	}
 		
 		queue.putPacket(new Packet(new FlowIdentifier(FLOW_1), Packet.FlowType.ELASTIC, 250));
 		System.out.println(queue);
