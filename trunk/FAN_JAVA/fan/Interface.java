@@ -87,7 +87,7 @@ public class Interface{
 		Packet pkt = queue.removeFirst();
 		peer.recieve(pkt);
 		results.addAvgpacketLength(pkt);
-		markFirstArrival();
+//		markFirstArrival();
 		updateUpTime();
 		if(queue.isEmpty())
 			this.setNotBusy();
