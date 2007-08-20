@@ -29,8 +29,8 @@ public class MBAC {
 	public MBAC(Interface intface, long minFairRate, long maxPriorityLoad){
 		queue = intface.getQueue();
 		if (queue != null){	
-			if (queue.getType().compareTo("PFQ") == 0)
-				flowList = ((PFQQueue)queue).getFlowList();
+			if (queue.getType().equals("PFQ"))
+				flowList = ( (PFQQueue) queue ).getFlowList();
 		} else {
 			System.out.println("Initialization problem in MBAC.MBAC()");
 		}
