@@ -157,13 +157,16 @@ public class Interface{
 	public Time getUpTime(){		
 		return lastPacketDepart.substract(firstPacketArrival);
 	}
-
+	
 	public void updateUpTime(){
 		lastPacketDepart = Monitor.clock;
 	}
 	
+	/**
+	 * Remembers when a packet appeared on this interface for the first time
+	 *
+	 */
 	public void markFirstArrival(){
-		// remembers when a packet appeared on this interface for the first time
 		if (this.virgin){
 			this.virgin = false;
 			this.firstPacketArrival = Monitor.clock;
