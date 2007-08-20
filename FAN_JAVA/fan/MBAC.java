@@ -20,7 +20,13 @@ public class MBAC {
 	long maxPriorityLoad;
 	long bandwidth;
 	
-	MBAC(Interface intface, long minFairRate, long maxPriorityLoad){
+	/**
+	 * Default constructor for MBAC
+	 * @param intface The interface which MBAC belongs to
+	 * @param minFairRate Minimum Fair Rate
+	 * @param maxPriorityLoad Maximum Priority Load
+	 */
+	public MBAC(Interface intface, long minFairRate, long maxPriorityLoad){
 		queue = intface.getQueue();
 		if (queue != null){	
 			if (queue.getType().compareTo("PFQ") == 0)
