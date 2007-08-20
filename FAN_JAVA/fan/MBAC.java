@@ -70,8 +70,8 @@ public class MBAC {
 		
 		if ( queue.getType().compareTo("PFQ") == 0){
 			if ( (getFairRate() < minFairRate) || (getPriorityLoad() > maxPriorityLoad) ){
-				System.out.println("FR = " + getFairRate());
-				System.out.println("PL = " + getPriorityLoad());
+//				System.out.println("FR = " + getFairRate());
+//				System.out.println("PL = " + getPriorityLoad());
 				return true;		
 			} else if ( flowList.contains(p.getFlowIdentifier()) ) {
 				return false;
