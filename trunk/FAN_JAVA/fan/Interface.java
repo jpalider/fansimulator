@@ -102,14 +102,13 @@ public class Interface{
 
 	public Interface(int bandwidth, Server peer, Server local) {
 		this (bandwidth, peer, local, 50);
-		this.results = new TimeResultsCollector(peer.getName());
 	}
 	
 	public Interface(int bandwidth, Server peer, Server local, int size) {
 		this (bandwidth,size);
 		this.peer = peer;
 		this.localhost = local;
-		this.results = new TimeResultsCollector(peer.getName());
+		this.results = new TimeResultsCollector(localhost.getName() + "_" + peer.getName());
 	}
 	/**
 	 * Constructor for Interface class. It creates interface with default queue type,

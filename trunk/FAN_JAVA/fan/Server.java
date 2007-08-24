@@ -53,7 +53,6 @@ public class Server {
 		if( choiceIntface.getServer() == this ){
 			p = null;
 			choiceIntface.results.addServicedPacket(0);
-			choiceIntface.results.addLocallyServicedPacket();
 			choiceIntface.results.addQueueLength(0);
 			return;
 		}
@@ -81,6 +80,8 @@ public class Server {
 			
 			//And set interface as busy
 			choiceIntface.setBusy();
+			choiceIntface.results.addServicedPacket(0);
+			choiceIntface.results.addQueueLength(0);
 		}
 		
 		//If interface is not free (has any packets waiting in the queue)
@@ -201,7 +202,7 @@ public class Server {
 		
 		for (Iterator iter = interfaces.iterator(); iter.hasNext();) {
 			Interface element = (Interface) iter.next();
-			element.results = new TimeResultsCollector(element.getServer().getName());
+			element.results = new TimeResultsCollector(element.getLocalhost().getName() + "_" + element.getServer().getName());
 			element.clearInterface();
 		}
 	}
