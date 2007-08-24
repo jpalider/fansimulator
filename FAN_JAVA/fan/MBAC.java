@@ -55,8 +55,8 @@ public class MBAC {
 	 * @return fair rate
 	 */
 	public long getFairRate(){
-		if ( queue.getType().compareTo("PFQ") == 0){
-			return ((PFQQueue)queue).getFairRate();
+		if ( queue.getType().equals("PFQ") ){
+			return ( (PFQQueue)queue ).getFairRate();
 		} else {
 		}
 		return 0;
@@ -68,7 +68,7 @@ public class MBAC {
 	 */
 	public boolean congestionOccured(Packet p){
 		
-		if ( queue.getType().compareTo("PFQ") == 0){
+		if ( queue.getType().equals("PFQ")){
 			if ( (getFairRate() < minFairRate) || (getPriorityLoad() > maxPriorityLoad) ){
 //				System.out.println("FR = " + getFairRate());
 //				System.out.println("PL = " + getPriorityLoad());
