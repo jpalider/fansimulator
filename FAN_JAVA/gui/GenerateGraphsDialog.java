@@ -72,7 +72,7 @@ public class GenerateGraphsDialog extends Dialog {
         
         //Label to combo box with servers' list
         final Label serverLabel = new Label (shell, SWT.NONE);
-        serverLabel.setText ( "Choose Results for Server" );
+        serverLabel.setText ( "Choose Results for Interface" );
         serverLabel.setSize ( serverLabel.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
         serverLabel.setLocation( 	serverCombo.getLocation().x, 
         							serverCombo.getLocation().y - serverLabel.getSize().y - 5 );
@@ -163,10 +163,14 @@ public class GenerateGraphsDialog extends Dialog {
         			
         			if ( fileList.length > 0 ) {
         				for (int i = 0; i < fileList.length; i++) {
-        					//Get name of the server which this file belongs to
-							String name = fileList[i].getName().substring (	0,
-																			fileList[i].getName().indexOf("SP.txt")	);
-							serverCombo.add( name );
+        					//Get name of the local server which this file belongs to
+							String localname = fileList[i].getName().substring (0,
+																				fileList[i].getName().indexOf("_") );
+							
+							//Get name of the remote server which was adressed by the outgoing packets
+							String remotename = fileList[i].getName().substring (	fileList[i].getName().indexOf("_") + 1,
+																					fileList[i].getName().indexOf("SP.txt")	); 
+							serverCombo.add( localname + "->" + remotename );
         	 			}
         				serverCombo.setVisible( true );
         				serverLabel.setVisible( true );
@@ -179,9 +183,13 @@ public class GenerateGraphsDialog extends Dialog {
         			if ( fileList.length > 0 ) {
         				for (int i = 0; i < fileList.length; i++) {
         					//Get name of the server which this file belongs to
-							String name = fileList[i].getName().substring (	0,
-																			fileList[i].getName().indexOf("LP.txt")	);
-							serverCombo.add( name );
+        					String localname = fileList[i].getName().substring (0,
+									fileList[i].getName().indexOf("_") );
+
+        					//Get name of the remote server which was adressed by the outgoing packets
+        					String remotename = fileList[i].getName().substring (	fileList[i].getName().indexOf("_") + 1,
+																					fileList[i].getName().indexOf("LP.txt")	); 
+							serverCombo.add( localname + "->" + remotename );
         	 			}
         				serverCombo.setVisible( true );
         				serverLabel.setVisible( true );
@@ -194,9 +202,13 @@ public class GenerateGraphsDialog extends Dialog {
         			if ( fileList.length > 0 ) {
         				for (int i = 0; i < fileList.length; i++) {
         					//Get name of the server which this file belongs to
-							String name = fileList[i].getName().substring (	0,
-																			fileList[i].getName().indexOf("RP.txt")	);
-							serverCombo.add( name );
+        					String localname = fileList[i].getName().substring (0,
+									fileList[i].getName().indexOf("_") );
+
+        					//Get name of the remote server which was adressed by the outgoing packets
+        					String remotename = fileList[i].getName().substring (	fileList[i].getName().indexOf("_") + 1,
+																					fileList[i].getName().indexOf("RP.txt")	); 
+        					serverCombo.add( localname + "->" + remotename );
         	 			}
         				serverCombo.setVisible( true );
         				serverLabel.setVisible( true );
@@ -209,9 +221,13 @@ public class GenerateGraphsDialog extends Dialog {
         			if ( fileList.length > 0 ) {
         				for (int i = 0; i < fileList.length; i++) {
         					//Get name of the server which this file belongs to
-							String name = fileList[i].getName().substring (	0,
-																			fileList[i].getName().indexOf("QL.txt")	);
-							serverCombo.add( name );
+        					String localname = fileList[i].getName().substring (0,
+									fileList[i].getName().indexOf("_") );
+
+							//Get name of the remote server which was adressed by the outgoing packets
+							String remotename = fileList[i].getName().substring (	fileList[i].getName().indexOf("_") + 1,
+																					fileList[i].getName().indexOf("QL.txt")	); 
+							serverCombo.add( localname + "->" + remotename );
         	 			}
         				serverCombo.setVisible( true );
         				serverLabel.setVisible( true );
@@ -268,7 +284,7 @@ public class GenerateGraphsDialog extends Dialog {
 	 */
 	public void generateSpGraphs( String name ) {
 		
-		String filename = name + "SP.txt";
+		String filename = name.replaceAll("->", "_") + "SP.txt";
 		try {
 			BufferedReader fReader = new BufferedReader ( new FileReader( filename ) );
 			String buffer;
@@ -341,7 +357,7 @@ public class GenerateGraphsDialog extends Dialog {
 	 */
 	public void generateLpGraphs( String name) {
 		
-		String filename = name + "LP.txt";
+		String filename = name.replaceAll("->", "_") + "LP.txt";
 		try {
 			BufferedReader fReader = new BufferedReader ( new FileReader( filename ) );
 			String buffer;
@@ -391,7 +407,7 @@ public class GenerateGraphsDialog extends Dialog {
 	 */
 	public void generateRpGraphs( String name) {
 		
-		String filename = name + "RP.txt";
+		String filename = name.replaceAll("->", "_") + "RP.txt";
 		try {
 			BufferedReader fReader = new BufferedReader ( new FileReader( filename ) );
 			String buffer;
@@ -441,7 +457,7 @@ public class GenerateGraphsDialog extends Dialog {
 	 */
 	public void generateQlGraphs( String name) {
 		
-		String filename = name + "QL.txt";
+		String filename = name.replaceAll("->", "_") + "QL.txt";
 		try {
 			BufferedReader fReader = new BufferedReader ( new FileReader( filename ) );
 			String buffer;
