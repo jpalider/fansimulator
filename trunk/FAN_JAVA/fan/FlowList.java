@@ -85,4 +85,8 @@ public class FlowList {
 			}
 		}		
 	}
+	
+	public void cleanAllFlows() {
+		protectedList.clear();
+	}
 }

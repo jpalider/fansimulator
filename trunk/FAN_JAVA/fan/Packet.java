@@ -18,6 +18,7 @@ public class Packet {
 	private int length;
 	private FlowType type;
 	private FlowIdentifier flowID;
+	
 	/**
 	 * Variable for holding information about the Time in which the Server registered this packet;
 	 */

@@ -84,8 +84,8 @@ public class Interface{
 	 *
 	 */
 	public void send(){
+		
 		Packet pkt = queue.removeFirst();
-		peer.recieve(pkt);
 		results.addAvgpacketLength(pkt);
 //		markFirstArrival();
 		updateUpTime();

@@ -87,16 +87,21 @@ public class PFQQueue implements Queue {
 	 */
 	protected long bandwidth = 0;
 	protected Time t2 = Monitor.clock;	//new Time(0.0);
-	protected Time t1 = Monitor.clock;	//new Time(0.0);
+//	protected Time t1  Monitor.clock;	//new Time(0.0);
 	protected long pbt2 = 0;
-	protected long pbt1 = 0;
+//	protected long pbt1 = 0;
+	
 	/**
 	 * Variables needed to measure fair rate
 	 */
 //	protected Time fpt2 = new Time(0.0);
 //	protected Time fpt1 = new Time(0.0);
 	protected long vt2 = 0;
-	protected long vt1;
+//	protected long vt1;
+	protected Time idleTime;
+	protected Time totalIdleTime;
+	protected long priorityLoad;
+	protected long fairRate;
 	
 	/**
 	 * Constructor for PFQQueue class
@@ -111,6 +116,11 @@ public class PFQQueue implements Queue {
 		bandwidth = intface.getBandwidth();
 		type = "PFQ";
 		lastMeasureTime = Monitor.clock;
+		priorityBytes = 0;
+		idleTime = new Time(0);
+		totalIdleTime = new Time(0);
+		priorityLoad = 0;
+		fairRate = bandwidth;
 	}
 	
 	public int getSize() {
@@ -144,7 +154,10 @@ public class PFQQueue implements Queue {
 	 * xp-hpsr.pdf : "Cross-protect: implicit service differentiation and admission control"  (III.B)
 	 */		
 	public boolean putPacket(Packet p) {
-
+		//measurement for idleTime
+		if ( getSize() == 0 )
+			totalIdleTime = totalIdleTime.add( Monitor.clock.substract( idleTime ) );
+		
 		//Create encapsulation for packet p
 		PacketTimestamped pTimestamped = new PacketTimestamped();
 		pTimestamped.p = p;
@@ -163,7 +176,7 @@ public class PFQQueue implements Queue {
 
 			packetFlow.backlog += pTimestamped.p.getLength();
 
-			if ( packetFlow.bytes >= MTU ){				
+			if ( packetFlow.bytes >= MTU ){		
 				pTimestamped.startTag = packetFlow.getFinishTag();
 				pTimestamped.finishTag = pTimestamped.startTag + pTimestamped.p.getLength();
 				packetQueue.offer(pTimestamped); // push { packet, flow_time_stamp } to PIFO
@@ -196,17 +209,39 @@ public class PFQQueue implements Queue {
 		}
 		
 		// measurement operations every hundred of ms or more
+		performMeasurements();
+		
+		
+		
+		return true;
+	}
+	
+	private void performMeasurements() {
+		
+		//measurement for idleTime
+		if ( getSize() == 0 )
+			totalIdleTime = totalIdleTime.add( Monitor.clock.substract( idleTime ) );
+		
 		if ( Monitor.clock.substract(lastMeasureTime).toDouble() > 0.1 ){
-			t1 = t2;
+			priorityLoad = (long)( (priorityBytes - pbt2) / (bandwidth * (Monitor.clock.substract(t2).toDouble()) ) );
+			
+			if ( totalIdleTime.toDouble() * bandwidth > virtualTime - vt2 )
+				fairRate = (long)( totalIdleTime.toDouble() * bandwidth / ( Monitor.clock.substract(t2).toDouble() ) );
+			else
+				fairRate = (long)( ( virtualTime - vt2 ) / ( Monitor.clock.substract(t2).toDouble() ) );
+			 
+//			t1 = t2;
 			t2 = Monitor.clock; 
 			// - for priority load
-			pbt1 = pbt2;
+//			pbt1 = pbt2;
 			pbt2 = priorityBytes;	
 			// - for fair rate
-			vt1 = vt2;
+//			vt1 = vt2;
 			vt2 = virtualTime;
+			
+			lastMeasureTime = Monitor.clock;
+			totalIdleTime = new Time( 0 );
 		}
-		return true;
 	}
 
 	/**
@@ -228,18 +263,21 @@ public class PFQQueue implements Queue {
 			System.out.println("Something has gone wrong in PFQQueue.removeFirst()");
 		}
 		
-//		virtualTime = packet.finishTag;
-		
-//		PacketTimestamped p = packetQueue.peek();
-//		if (p != null){
-//			virtualTime = p.finishTag;
-//		}
 		if ( packet.startTag != virtualTime ){
 //			FlowPFQ flow = (FlowPFQ)flowList.getFlow(packet.p.getFlowIdentifier());
 			virtualTime = packet.startTag;
 			//Remove all queues which finishTag is smaller than virtualTime
 			flowList.cleanFlows(virtualTime);
-		}		
+		}
+		
+		//if PIFO is now empty remove all flows from flowslist
+		if(packetQueue.isEmpty())
+			flowList.cleanAllFlows();
+		
+		//save the time so we may know how much time the queue will be idle (in case there are no
+		//more packets waiting in the queue
+		idleTime = Monitor.clock;
+		
 		return packet.p;
 	}
 	
@@ -250,18 +288,35 @@ public class PFQQueue implements Queue {
 	public long getFairRate(){
 		// TODO
 		// max{ S*C, dvt(t)}/dt
-		if (t2.compareTo(t1) == 0)
-			return 0; //virtualTime*8 /;
-		return (long)(((vt2 - vt1)*8) / t2.substract(t1).toDouble());
+		performMeasurements();
+//		if (t2.compareTo(t1) == 0)
+//			return bandwidth; //S*C /;
+//		else
+			return fairRate;
 	}
 	
 	public long getPriorityLoad(){
-		if (t2.compareTo(t1) == 0)	// at startup... 
-			return (long)(priorityBytes*8)/bandwidth; 
-		return (long)(((pbt2-pbt1)*8)/(bandwidth*(t2.substract(t1).toDouble())));
+		performMeasurements();
+//		if (t2.compareTo(t1) == 0)	// at startup... 
+//			return (long)0;
+//		else 
+			return priorityLoad;
 	}
 
 	public String getType(){
 		return type;
+	}
+	
+	public void printElements() {
+		System.out.println("\nThe Queue is:");
+		PacketTimestamped[] packetTable = new PacketTimestamped[packetQueue.size()];
+		packetQueue.toArray(packetTable);
+		for (int i = 0; i < packetTable.length; i++) {
+			System.out.println(	"Clock: " + packetTable[i].clock + 
+								", sTag: " +packetTable[i].startTag + 
+								", fTag: " + packetTable[i].finishTag +
+								", FlowID: " + packetTable[i].p.getFlowIdentifier().toInt());
+		}
+		System.out.println("");
 	}
 }
