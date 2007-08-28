@@ -27,6 +27,16 @@ public class PFQQueueBytes extends PFQQueue {
 	 * Counted in bytes.
 	 */
 	public boolean isFull() {
+		System.out.println("To powinno sie wyswietlic :-)");
 		return ( (sizeInBytes+MTU) > maxSizeInBytes);
 	}
+	
+	public boolean putPacket(Packet p){
+		if ( super.putPacket(p) ){
+			sizeInBytes += p.getLength();
+			return true;
+		}
+		return false;
+	}
+	
 }
