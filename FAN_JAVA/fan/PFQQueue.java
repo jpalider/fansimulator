@@ -81,7 +81,7 @@ public class PFQQueue implements Queue {
 	/**
 	 * MTU definition
 	 */
-	private final int MTU = 1500;
+	protected final int MTU = 1500;
 	/**
 	 * Variables needed to measure priority load
 	 */
@@ -162,10 +162,11 @@ public class PFQQueue implements Queue {
 		PacketTimestamped pTimestamped = new PacketTimestamped();
 		pTimestamped.p = p;
 		pTimestamped.clock = Monitor.clock.toDouble();
-				
+			
 		// TODO: "reject packet at head of longest backlog
 		//at first check if there are any free places at packet queue		
-		if(packetQueue.size() >= maxSize){
+//		if(packetQueue.size() >= maxSize){
+		if(isFull()){
 			p = null;
 			return false;
 		}
@@ -222,7 +223,7 @@ public class PFQQueue implements Queue {
 		if ( getSize() == 0 )
 			totalIdleTime = totalIdleTime.add( Monitor.clock.substract( idleTime ) );
 		
-		if ( Monitor.clock.substract(lastMeasureTime).toDouble() > 0.1 ){
+		if ( Monitor.clock.substract(lastMeasureTime).toDouble() > 0.5 ){
 			priorityLoad = (long)( (priorityBytes - pbt2) / (bandwidth * (Monitor.clock.substract(t2).toDouble()) ) );
 			
 			if ( totalIdleTime.toDouble() * bandwidth > virtualTime - vt2 )
