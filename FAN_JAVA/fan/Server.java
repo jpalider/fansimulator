@@ -65,12 +65,12 @@ public class Server {
 			p = null;
 			return;
 		}
-		
-		//---
+
 		choiceIntface.markFirstArrival();
 		choiceIntface.updateUpTime();
 		//Check if interface is free
 		if( !choiceIntface.isBusy() ) {
+						
 			choiceIntface.getQueue().putPacket(p);
 			//sendTime is equal to: packet length / interface speed
 			Time sendTime = new Time( (double) p.getLength() / choiceIntface.getBandwidth() );
@@ -86,13 +86,19 @@ public class Server {
 		
 		//If interface is not free (has any packets waiting in the queue)
 		else {
+			
 			//if the queue is not full
 			if( choiceIntface.getQueue().putPacket(p) ) {
 				p.setServiceStartTime(Monitor.clock);
 				choiceIntface.results.addQueueLength(choiceIntface.getQueue().getSize() );
+				
 			//if the queue is full
-			} else
+			} else {
 				choiceIntface.results.addRejectedPacket();
+//				p=null;
+				System.out.println("Rejected packet");
+			}
+				
 		}
 	}
 	
