@@ -12,7 +12,7 @@ public class PFQQueueBytes extends PFQQueue {
 	private int maxSizeInBytes;
 	
 	PFQQueueBytes(int maxSizeInBytes, int flowListSize, Interface intface){
-		super(0/*size in packets*/, flowListSize, intface);
+		super(99999/*size in packets*/, flowListSize, intface);
 		this.maxSizeInBytes = maxSizeInBytes;
 	}
 	
@@ -27,7 +27,7 @@ public class PFQQueueBytes extends PFQQueue {
 	 * Counted in bytes.
 	 */
 	public boolean isFull() {
-		System.out.println("To powinno sie wyswietlic :-)");
+		//System.out.println("To powinno sie wyswietlic :-)");
 		return ( (sizeInBytes+MTU) > maxSizeInBytes);
 	}
 	
@@ -39,4 +39,10 @@ public class PFQQueueBytes extends PFQQueue {
 		return false;
 	}
 	
+	public Packet removeFirst(){
+		Packet p = super.removeFirst();
+		//if (p != null)
+			sizeInBytes -= p.getLength();
+		return p;	
+	}	
 }
