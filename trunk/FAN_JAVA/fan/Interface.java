@@ -86,6 +86,10 @@ public class Interface{
 	public void send(){
 		
 		Packet pkt = queue.removeFirst();
+		if(pkt == null)
+		{
+			System.out.println("null packet from queues");
+		}
 		results.addAvgpacketLength(pkt);
 //		markFirstArrival();
 		updateUpTime();
@@ -121,7 +125,7 @@ public class Interface{
 //		this.queue = new FifoQueueBytes(100000, this);	
 //		this.queue = new FifoQueueBytes(size);	
 		// TODO: check and then test PFQQueue
-		this.queue = new PFQQueue(size, 100, this);
+		this.queue = new PFQQueueBytes(100000, 100, this);
 		this.setNotBusy();
 		
 	}
@@ -149,7 +153,7 @@ public class Interface{
 	 */
 	public void clearInterface() {
 		//this.queue = new FifoQueueBytes(150000,this);
-		this.queue = new PFQQueue(50, 100, this); 
+		this.queue = new PFQQueueBytes(100000, 100, this); 
 		this.setNotBusy();
 	}
 
