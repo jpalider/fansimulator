@@ -68,8 +68,8 @@ public class MBAC {
 	 */
 	public boolean congestionOccured(Packet p){
 		if ( queue.getType().equals("PFQ")){
-//			System.out.println("FR = " + getFairRate());
-//			System.out.println("PL = " + getPriorityLoad());
+			//System.out.println("FR = " + getFairRate());
+			//System.out.println("PL = " + getPriorityLoad());
 		
 			if ( (getFairRate() < minFairRate) || (getPriorityLoad() > maxPriorityLoad) ){
 				return true;		

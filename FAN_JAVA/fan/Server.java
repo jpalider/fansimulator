@@ -96,7 +96,7 @@ public class Server {
 			} else {
 				choiceIntface.results.addRejectedPacket();
 //				p=null;
-				System.out.println("Rejected packet");
+				//System.out.println("Rejected packet");
 			}
 				
 		}
