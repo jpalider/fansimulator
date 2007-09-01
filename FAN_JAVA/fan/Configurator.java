@@ -129,6 +129,16 @@ public class Configurator {
         							generatorElement.getElementsByTagName("looped").item(0) );
         			boolean loop = Boolean.valueOf (looped.getTextContent());
         			
+        			//Load flowLowerRange
+        			Element flowLower = (Element)(
+        								generatorElement.getElementsByTagName("flowLowerRange").item(0) );
+        			int flowLowerRange = Integer.parseInt( flowLower.getTextContent() );
+        			
+//        			//Load flowHigherRange
+        			Element flowHigher = (Element)(
+        								generatorElement.getElementsByTagName("flowHigherRange").item(0) );
+        			int flowHigherRange = Integer.parseInt( flowHigher.getTextContent() );
+        			
         			if (!loop) {
         				Element finishTime = (Element)( 
     							generatorElement.getElementsByTagName("finishTime").item(0) );
@@ -140,7 +150,9 @@ public class Configurator {
 	        				generatorVector.add(new Generate(	start, 
 	        													serverVector.get(i), 
 	        													finish, 
-	        													packetS));
+	        													packetS,
+	        													flowLowerRange,
+	        													flowHigherRange));
 	        				
 	        			}else if (generatorType.compareTo("normal") == 0){			
 				        	NodeList meanList = generatorElement.getElementsByTagName("mean");	   	
@@ -154,7 +166,9 @@ public class Configurator {
 	        														new Time(mean), 
 	        														new Time(variance), 
 	        														finish, 
-	        														packetS));
+	        														packetS,
+		        													flowLowerRange,
+		        													flowHigherRange));
 	        				
 	        			}else if (generatorType.compareTo("constant") == 0){					
 	        				NodeList intervalList = generatorElement.getElementsByTagName("interval");  
@@ -164,7 +178,9 @@ public class Configurator {
 	        															serverVector.get(i), 
 	        															new Time(interval), 
 	        															finish, 
-	        															packetS));
+	        															packetS,
+	    	        													flowLowerRange,
+	    	        													flowHigherRange));
 	        				
 	        			}else if (generatorType.compareTo("uniform") == 0){
 	        				NodeList rangeList = generatorElement.getElementsByTagName("range");  
@@ -174,7 +190,9 @@ public class Configurator {
 	        															serverVector.get(i), 
 	        															new Time(range), 
 	        															finish, 
-	        															packetS));
+	        															packetS,
+	    	        													flowLowerRange,
+	    	        													flowHigherRange));
 	        				
 	        			} else{
 	            			System.out.println( "fan.Configurator: wrong generator type!");
@@ -184,7 +202,11 @@ public class Configurator {
         			else {
 	        			
 	        			if (generatorType.compareTo("basic") == 0){			
-	        				generatorVector.add(new Generate(start, serverVector.get(i), packetS));
+	        				generatorVector.add(new Generate(	start, 
+	        													serverVector.get(i), 
+	        													packetS,
+	        													flowLowerRange,
+	        													flowHigherRange));
 	        				
 	        			}else if (generatorType.compareTo("normal") == 0){			
 				        	NodeList meanList = generatorElement.getElementsByTagName("mean");	   	
@@ -197,7 +219,9 @@ public class Configurator {
 	        														serverVector.get(i), 
 	        														new Time(mean), 
 	        														new Time(variance), 
-	        														packetS));
+	        														packetS,
+		        													flowLowerRange,
+		        													flowHigherRange));
 	        				
 	        			}else if (generatorType.compareTo("constant") == 0){					
 	        				NodeList intervalList = generatorElement.getElementsByTagName("interval");  
@@ -206,7 +230,9 @@ public class Configurator {
 	        				generatorVector.add(new ConstantGenerate(	start, 
 	        															serverVector.get(i), 
 	        															new Time(interval), 
-	        															packetS));
+	        															packetS,
+	    	        													flowLowerRange,
+	    	        													flowHigherRange));
 	        				
 	        			}else if (generatorType.compareTo("uniform") == 0){
 	        				NodeList rangeList = generatorElement.getElementsByTagName("range");  
@@ -215,7 +241,9 @@ public class Configurator {
 	        				generatorVector.add(new UniformGenerate(	start, 
 	        															serverVector.get(i), 
 	        															new Time(range), 
-	        															packetS));
+	        															packetS,
+	    	        													flowLowerRange,
+	    	        													flowHigherRange));
 	        				
 	        			} else{
 	            			System.out.println( "fan.Configurator: wrong generator type!");
@@ -291,6 +319,19 @@ public class Configurator {
 											generatorVector.get(k).getTime().toDouble()
 											) );
 					g.appendChild(start);
+					
+					//add information about flowLowerRange of generator
+					Element flowLowerRange = (Element) document.createElement( "flowLowerRange" );
+					flowLowerRange.setTextContent( 	String.valueOf(
+														generatorVector.get( k ).flowLowerRange ) );
+					g.appendChild( flowLowerRange );
+					
+					//add information about flowHigherRange of generator
+					Element flowHigherRange = (Element) document.createElement( "flowHigherRange" );
+					flowHigherRange.setTextContent( 	String.valueOf(
+														generatorVector.get( k ).flowHigherRange ) );
+					g.appendChild( flowHigherRange );
+					
 					
 					//add information about the fact if generator is looped, or has some specified
 					//finish time before end of simulation

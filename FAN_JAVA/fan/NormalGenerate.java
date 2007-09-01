@@ -12,32 +12,41 @@ public class NormalGenerate extends Generate {
 	/**
 	 * Constructor for Generator of packets with Normal(Gauss) probability distribution,
 	 * that starts at specified time and lasts till the end of whole simulation. Additionally it specified the size 
-	 * of the packets to be generated.
+	 * of the packets to be generated, lower and higher bounds of generated flow IDs. 
 	 * @param t start time of this generator
 	 * @param s server where this generator should be connected
 	 * @param mean Mean of normal probability distribution
 	 * @param variance Variance of this probability distribution
 	 * @param packetSize the size of the packets to created by this generator
+	 * @param flowLowerRange the lower limit of generated flow IDs
+	 * @param flowHigherRange the higher limit of generated flow IDs
 	 */
-	public NormalGenerate(Time t, Server s, Time mean, Time variance, int packetSize) {
+	public NormalGenerate(Time t, Server s, Time mean, Time variance, int packetSize, int flowLowerRange, int flowHigherRange) {
 		this(t, s, mean, variance);
 		this.packetSize = packetSize;
+		this.flowLowerRange = flowLowerRange;
+		this.flowHigherRange = flowHigherRange;
 	}
+	
 	
 	/**
 	 * Constructor for Generator of packets with Normal(Gauss) probability distribution,
 	 * that starts and finishes within specified time limits. Additionally it specified the size 
-	 * of the packets to be generated.
+	 * of the packets to be generated, lower and higher bounds of generated flow IDs.
 	 * @param t start time of this generator
 	 * @param s server where this generator should be connected
 	 * @param mean Mean of normal probability distribution
 	 * @param variance Variance of this probability distribution
 	 * @param fTime finish time of this generator
 	 * @param packetSize the size of the packets to created by this generator
+	 * @param flowLowerRange the lower limit of generated flow IDs
+	 * @param flowHigherRange the higher limit of generated flow IDs
 	 */
-	public NormalGenerate(Time t, Server s, Time mean, Time variance, Time fTime, int packetSize) {
+	public NormalGenerate(Time t, Server s, Time mean, Time variance, Time fTime, int packetSize, int flowLowerRange, int flowHigherRange) {
 		this(t, s, mean, variance, fTime);
 		this.packetSize = packetSize;
+		this.flowLowerRange = flowLowerRange;
+		this.flowHigherRange = flowHigherRange;
 	}
 	
 	/**
@@ -69,13 +78,19 @@ public class NormalGenerate extends Generate {
 		this.mean = mean;
 		this.variance = variance;
 		this.looped = true;
+		this.flowLowerRange = 0;
+		this.flowHigherRange = 5;
 	}
 	
 	/**
 	 * Method runned when this generation event occurs
 	 */
 	public void run() {
-		Packet p = new Packet( 	new FlowIdentifier((int)Monitor.generator.getNumber(5)), 
+		
+		FlowIdentifier flowID = new FlowIdentifier(
+				flowLowerRange + (int) Monitor.generator.getNumber( this.flowHigherRange - this.flowLowerRange ) );
+
+		Packet p = new Packet( 	flowID,
 								Packet.FlowType.STREAM,
 								packetSize);
 		place.recieve(p);
@@ -88,14 +103,18 @@ public class NormalGenerate extends Generate {
 														mean, 
 														variance, 
 														finishTime, 
-														packetSize ) );
+														packetSize,
+														flowLowerRange,
+														flowHigherRange) );
 		}
 		else
 			Monitor.agenda.schedule(new NormalGenerate(	newEventTime, 
 														place, 
 														mean, 
 														variance, 
-														finishTime ) );
+														packetSize,
+														flowLowerRange,
+														flowHigherRange) );
 	}
 
 	/**
