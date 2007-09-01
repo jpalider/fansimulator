@@ -263,21 +263,31 @@ public class GUI {
 													routes.elementAt(i).getServerInterface().getQueue().getMaxSize());
 							
 						}
+						
 						//refresh generator Tree
 						generatorTree.removeAll();
 						for(int i = 0; i < generatorsVector.size(); i++) {
 							if( generatorsVector.elementAt(i).getServer() == server) {
 								TreeItem generatorItem = new TreeItem(generatorTree,SWT.NONE);
 								generatorItem.setText("Generator nr " + (i+1));
+								
 								TreeItem generatorTypeItem = new TreeItem(generatorItem,SWT.NONE);
 								generatorTypeItem.setText( generatorsVector.elementAt(i).getType().name() );
-								generatorTypeItem = new TreeItem(generatorItem,SWT.NONE);
-								generatorTypeItem.setText( "Start [s]: " + String.valueOf( generatorsVector.elementAt(i).getTime().toDouble() ) );
+								
 								generatorTypeItem = new TreeItem(generatorItem, SWT.NONE);
 								generatorTypeItem.setText(	"Packet size [B]: " + 
 														String.valueOf(
 																generatorsVector.elementAt(i).getPacketSize()
 																) );
+								
+								generatorTypeItem = new TreeItem(generatorItem,SWT.NONE);
+								generatorTypeItem.setText( "Lower FlowID Range: " + String.valueOf( generatorsVector.elementAt(i).getFlowIdLowerRange() ) );
+								generatorTypeItem = new TreeItem(generatorItem,SWT.NONE);
+								generatorTypeItem.setText( "Higher FlowID Range: " + String.valueOf( generatorsVector.elementAt(i).getFlowIdHigherRange() ) );
+								
+								generatorTypeItem = new TreeItem(generatorItem,SWT.NONE);
+								generatorTypeItem.setText( "Start [s]: " + String.valueOf( generatorsVector.elementAt(i).getTime().toDouble() ) );
+									
 								
 								if( !generatorsVector.elementAt(i).isLooped() ) {
 									generatorTypeItem = new TreeItem(generatorItem, SWT.NONE);

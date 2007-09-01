@@ -96,6 +96,32 @@ public class AddGeneratorDialog extends Dialog {
         finishTimeNoteLabel.setSize(finishTimeNoteLabel.computeSize(finishTimeText.getSize().x , SWT.DEFAULT));
         finishTimeNoteLabel.setLocation(finishTimeText.getLocation().x, finishTimeText.getLocation().y + finishTimeText.getSize().y + 5);
         
+        //Lower FlowID Limit text box
+        final Text lowerFlowIdText = new Text( shell, SWT.SINGLE|SWT.BORDER );
+        lowerFlowIdText.setSize( startTimeText.getSize() );
+        lowerFlowIdText.setLocation( startTimeText.getLocation().x + startTimeText.getSize().x + 10, startTimeText.getLocation().y );
+        lowerFlowIdText.setText("0");
+        
+        //Lower FlowID Limit label
+        Label lowerFlowIdLabel = new Label( shell, SWT.NONE );
+        lowerFlowIdLabel.setText( "Lower FlowID bound" );
+        lowerFlowIdLabel.setSize( lowerFlowIdLabel.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
+        lowerFlowIdLabel.setLocation(	lowerFlowIdText.getLocation().x, 
+        								lowerFlowIdText.getLocation().y - lowerFlowIdLabel.getSize().y - 5 );
+        
+        //Higher FlowID Limit text box
+        final Text higherFlowIdText = new Text( shell, SWT.SINGLE|SWT.BORDER );
+        higherFlowIdText.setSize( startTimeText.getSize() );
+        higherFlowIdText.setLocation( lowerFlowIdText.getLocation().x, finishTimeText.getLocation().y );
+        higherFlowIdText.setText("5");
+        
+        //Higher FlowID Limit label
+        Label higherFlowIdLabel = new Label( shell, SWT.NONE );
+        higherFlowIdLabel.setText( "Higher FlowID bound" );
+        higherFlowIdLabel.setSize( higherFlowIdLabel.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
+        higherFlowIdLabel.setLocation(	higherFlowIdText.getLocation().x, 
+        								higherFlowIdText.getLocation().y - higherFlowIdLabel.getSize().y - 5 );
+        
         //Interval text box
         final Text intervalText = new Text(shell,SWT.SINGLE|SWT.BORDER);
         intervalText.setSize(100, generatorTypeCombo.getSize().y);
@@ -126,7 +152,7 @@ public class AddGeneratorDialog extends Dialog {
         Button addGeneratorBut = new Button(shell, SWT.NONE);
         addGeneratorBut.setText("Add this generator");
         addGeneratorBut.setSize(addGeneratorBut.computeSize( SWT.DEFAULT, SWT.DEFAULT) );
-        addGeneratorBut.setLocation(generatorTypeCombo.getLocation().x + generatorTypeCombo.getSize().x + 10, startTimeText.getLocation().y);
+        addGeneratorBut.setLocation(higherFlowIdText.getLocation().x, higherFlowIdText.getLocation().y + higherFlowIdText.getSize().y + 10 );
         
         //GeneratorType Combo selection listener
         generatorTypeCombo.addSelectionListener(new SelectionAdapter(){
@@ -176,34 +202,78 @@ public class AddGeneratorDialog extends Dialog {
 
         		if( generatorTypeCombo.getText().equals(GenerateType.basic.name()) ) {
         			if(finishTime != null)
-        				generatorsVector.add(new Generate(startTime, server, finishTime, packetSize) );
+        				generatorsVector.add(new Generate(	startTime, 
+        													server, 
+        													finishTime, 
+        													packetSize, 
+        													Integer.parseInt( lowerFlowIdText.getText() ),
+        													Integer.parseInt( higherFlowIdText.getText() ) ) );
         			else
-        				generatorsVector.add( new Generate(startTime,server, packetSize) );
+        				generatorsVector.add( new Generate(	startTime,
+        													server, 
+        													packetSize,
+        													Integer.parseInt( lowerFlowIdText.getText() ),
+        													Integer.parseInt( higherFlowIdText.getText() ) ) );
         		}
         		
         		else if( generatorTypeCombo.getText().equals(GenerateType.constant.name()) ) {
         			Time intervalTime = new Time( Double.valueOf(intervalText.getText()) );
         			if(finishTime != null)
-        				generatorsVector.add( new ConstantGenerate(startTime, server, intervalTime, finishTime, packetSize) );
+        				generatorsVector.add( new ConstantGenerate(	startTime, 
+        															server, 
+        															intervalTime, 
+        															finishTime, 
+        															packetSize,
+        															Integer.parseInt( lowerFlowIdText.getText() ),
+                													Integer.parseInt( higherFlowIdText.getText() ) ) );
         			else
-        				generatorsVector.add( new ConstantGenerate(startTime, server, intervalTime, packetSize) );
+        				generatorsVector.add( new ConstantGenerate(	startTime, 
+        															server, 
+        															intervalTime, 
+        															packetSize,
+        															Integer.parseInt( lowerFlowIdText.getText() ),
+                													Integer.parseInt( higherFlowIdText.getText() ) ) );
         		}
         		
         		else if( generatorTypeCombo.getText().equals(GenerateType.normal.name()) ) {
         			Time meanTime = new Time( Double.valueOf(intervalText.getText()) );
         			Time varianceTime = new Time( Double.valueOf( varianceText.getText() ) );
         			if(finishTime != null)
-        				generatorsVector.add( new NormalGenerate(startTime, server, meanTime, varianceTime, finishTime, packetSize) );
+        				generatorsVector.add( new NormalGenerate(	startTime, 
+        															server, 
+        															meanTime, 
+        															varianceTime, 
+        															finishTime, 
+        															packetSize,
+        															Integer.parseInt( lowerFlowIdText.getText() ),
+                													Integer.parseInt( higherFlowIdText.getText() ) ) );
         			else
-        				generatorsVector.add( new NormalGenerate(startTime, server, meanTime, varianceTime, packetSize) );
+        				generatorsVector.add( new NormalGenerate(	startTime, 
+        															server, 
+        															meanTime, 
+        															varianceTime, 
+        															packetSize,
+        															Integer.parseInt( lowerFlowIdText.getText() ),
+                													Integer.parseInt( higherFlowIdText.getText() ) ) );
         		}
         		
         		else if( generatorTypeCombo.getText().equals(GenerateType.uniform.name()) ) {
         			Time rangeTime = new Time( Double.valueOf(intervalText.getText()) );
         			if(finishTime != null)
-        				generatorsVector.add( new UniformGenerate(startTime, server, rangeTime, finishTime, packetSize) );
+        				generatorsVector.add( new UniformGenerate(	startTime, 
+        															server, 
+        															rangeTime, 
+        															finishTime, 
+        															packetSize,
+        															Integer.parseInt( lowerFlowIdText.getText() ),
+                													Integer.parseInt( higherFlowIdText.getText() ) ) );
         			else
-        				generatorsVector.add( new UniformGenerate(startTime, server, rangeTime, packetSize) );
+        				generatorsVector.add( new UniformGenerate(	startTime, 
+        															server, 
+        															rangeTime, 
+        															packetSize,
+        															Integer.parseInt( lowerFlowIdText.getText() ),
+                													Integer.parseInt( higherFlowIdText.getText() ) ) );
         		}
         		
         		shell.close();

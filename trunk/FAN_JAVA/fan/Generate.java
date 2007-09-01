@@ -5,6 +5,7 @@ package fan;
  * @author  dodek
  */
 public class Generate extends Event {
+	
 	/**
 	 * Server where this generator should be connected
 	 */
@@ -42,27 +43,48 @@ public class Generate extends Event {
 	protected int packetSize;
 	
 	/**
-	 * Constructor for the Generator event, specifing start, finish time and additionally packet size
+	 * Lower range of generated flow IDs
+	 */
+	protected int flowLowerRange;
+	
+	/**
+	 * Higher range of generated flow IDs
+	 */
+	protected int flowHigherRange;
+	
+	/**
+	 * Constructor for the Generator event, specifing start, finish time and additionally packet size.
+	 * It also specifies lower and higher range of generated flow IDs
 	 * @param t start time when the generator should be turned on
 	 * @param s server where the generator should be connected
 	 * @param fTime time when the generator should be turned off
 	 * @param packetSize the size of the packets created by generator
+	 * @param flowLowerRange the lower limit of generated flow IDs
+	 * @param flowHigherRange the higher limit of generated flow IDs
 	 */
-	public Generate(Time t, Server s, Time fTime, int packetSize) {
+	public Generate(Time t, Server s, Time fTime, int packetSize, int flowLowerRange, int flowHigherRange) {
 		this(t, s, fTime);
 		this.packetSize = packetSize;
+		this.flowHigherRange = flowHigherRange;
+		this.flowLowerRange = flowLowerRange;
 	}
+	
 	
 	/**
 	 * Constructor for the Generator event specifing only start time,
-	 * the Generator is turned on till the end of the simulation
+	 * the Generator is turned on till the end of the simulation.
+	 * It also specifies lower and higher range of generated flow IDs
 	 * @param t start time when the generator should be turned on
 	 * @param s server where the generator should be connected
 	 * @param packetSize the size of the packets created by generator
+	 * @param flowLowerRange the lower limit of generated flow IDs
+	 * @param flowHigherRange the higher limit of generated flow IDs
 	 */
-	public Generate(Time t, Server s, int packetSize) {
+	public Generate(Time t, Server s, int packetSize, int flowLowerRange, int flowHigherRange) {
 		this(t, s);
 		this.packetSize = packetSize;
+		this.flowHigherRange = flowHigherRange;
+		this.flowLowerRange = flowLowerRange;
 	}
 	
 	/**
@@ -89,13 +111,19 @@ public class Generate extends Event {
 		type = GenerateType.basic;
 		this.looped = true;
 		this.packetSize = 1500;
+		this.flowLowerRange = 0;
+		this.flowHigherRange = 5;
 	}
 	
 	/**
 	 * Method runned when the generation event occurs
 	 */
 	public void run() {
-		Packet p = new Packet( 	new FlowIdentifier((int)Monitor.generator.getNumber(5)), 
+		
+		FlowIdentifier flowID = new FlowIdentifier(
+									flowLowerRange + (int) Monitor.generator.getNumber( this.flowHigherRange - this.flowLowerRange ) );
+		
+		Packet p = new Packet( 	flowID, 
 								Packet.FlowType.STREAM,
 								packetSize);
 		place.recieve(p);
@@ -103,10 +131,10 @@ public class Generate extends Event {
 		if(!looped) {
 			if (newEventTime.compareTo(finishTime) > 0)
 				return;
-			Monitor.agenda.schedule( new Generate(newEventTime, place, finishTime, packetSize) );
+			Monitor.agenda.schedule( new Generate(newEventTime, place, finishTime, packetSize, flowLowerRange, flowHigherRange) );
 		}
 		else
-			Monitor.agenda.schedule( new Generate(newEventTime, place, packetSize) );
+			Monitor.agenda.schedule( new Generate(newEventTime, place, packetSize, flowLowerRange, flowHigherRange) );
 			
 	}
 	
@@ -149,5 +177,21 @@ public class Generate extends Event {
 	 */
 	public GenerateType getType() {
 		return type;
+	}
+	
+	/**
+	 * Returns the lower range of generated Flow IDs
+	 * @return Generated Flow ID lower range
+	 */
+	public int getFlowIdLowerRange() {
+		return flowLowerRange;
+	}
+	
+	/**
+	 * Returns the higher range of generated Flow IDs
+	 * @return Generated Flow ID higher range
+	 */
+	public int getFlowIdHigherRange() {
+		return flowHigherRange;
 	}
 }
