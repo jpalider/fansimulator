@@ -60,10 +60,11 @@ public class FIFOQueue implements Queue {
 	
 	public double getLoad(){
 		double dt = Monitor.clock.substract(lastTime).toDouble();
-		if (dt < 1.0)
-		load = ((recievedBytes-recievedBytesPrev)*8) / (dt*intfce.getBandwidth());
-		lastTime = Monitor.clock;
-		recievedBytesPrev = recievedBytes;
+		if (dt < 1.0){
+			load = (recievedBytes-recievedBytesPrev) / (dt*intfce.getBandwidth());
+			lastTime = Monitor.clock;
+			recievedBytesPrev = recievedBytes;
+		}
 		return load;
 	}
 	
