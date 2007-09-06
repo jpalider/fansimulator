@@ -8,7 +8,7 @@ public class FIFOQueue implements Queue {
 	long recievedBytes = 0;
 	long recievedBytesPrev = 0;
 	Time lastTime = new Time(0);
-	double load = 0d;
+	long load = 0;
 	Interface intfce;
 	
 	public FIFOQueue(int maxSize, Interface intfce) {
@@ -58,10 +58,10 @@ public class FIFOQueue implements Queue {
 		return type;
 	}
 	
-	public double getLoad(){
+	public long getLoad(){
 		double dt = Monitor.clock.substract(lastTime).toDouble();
 		if (dt < 1.0){
-			load = (recievedBytes-recievedBytesPrev) / (dt*intfce.getBandwidth());
+			load = (long)((recievedBytes-recievedBytesPrev) / (dt*intfce.getBandwidth()));
 			lastTime = Monitor.clock;
 			recievedBytesPrev = recievedBytes;
 		}

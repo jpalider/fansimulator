@@ -46,7 +46,8 @@ public class MBAC {
 	public long getPriorityLoad(){
 		if ( queue.getType().compareTo("PFQ") == 0){
 			return ((PFQQueue)queue).getPriorityLoad();
-		} else {			
+		} else if ( queue.getType().compareTo("PFQ") == 0){
+				return ((FifoQueueBytes)queue).getLoad();
 		} 
 		return 0;
 	}
