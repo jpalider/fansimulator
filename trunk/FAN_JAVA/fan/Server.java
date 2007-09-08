@@ -123,20 +123,20 @@ public class Server {
 //		this.results = new TimeResultsCollector(name);
 	}
 	
-	/**
-	 * Method for adding new interface to server
-	 * @param destServ Server that is a destination
-	 * @param probability Float with probability of packet going that server
-	 * @param bandwidth Int with the bandwidth of this interface
-	 */
-	public boolean addInterface(Server destServ, double probability, int bandwidth) {
-		Interface intfc = new Interface( bandwidth, destServ,this );
-		if(routing.addRoute(intfc, probability)) {
-			interfaces.add(intfc);
-			return true;
-		}
-		else return false;
-	}
+//	/**
+//	 * Method for adding new interface to server
+//	 * @param destServ Server that is a destination
+//	 * @param probability Float with probability of packet going that server
+//	 * @param bandwidth Int with the bandwidth of this interface
+//	 */
+//	public boolean addInterface(Server destServ, double probability, int bandwidth) {
+//		Interface intfc = new Interface( bandwidth, destServ,this );
+//		if(routing.addRoute(intfc, probability)) {
+//			interfaces.add(intfc);
+//			return true;
+//		}
+//		else return false;
+//	}
 	
 	/**
 	 * Method for adding new interface to server, with specified queue size of the interface
@@ -146,8 +146,8 @@ public class Server {
 	 * @param queueSize size of the queue that interface has (in bytes)
 	 * @return
 	 */
-	public boolean addInterface(Server destServ, double probability, int bandwidth, int queueSize) {
-		Interface intfc = new Interface( bandwidth, destServ,this, queueSize );
+	public boolean addInterface(Server destServ, double probability, int bandwidth, int queueSize, int maxFlowListSize) {
+		Interface intfc = new Interface( bandwidth, destServ,this, queueSize, maxFlowListSize);
 		if(routing.addRoute(intfc, probability)) {
 			interfaces.add(intfc);
 			return true;

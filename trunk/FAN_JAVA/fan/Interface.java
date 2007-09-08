@@ -104,12 +104,12 @@ public class Interface{
 		}
 	}
 
-	public Interface(int bandwidth, Server peer, Server local) {
-		this (bandwidth, peer, local, 50);
-	}
+//	public Interface(int bandwidth, Server peer, Server local) {
+//		this (bandwidth, peer, local, 50,50);
+//	}
 	
-	public Interface(int bandwidth, Server peer, Server local, int size) {
-		this (bandwidth,size);
+	public Interface(int bandwidth, Server peer, Server local, int size, int flsize) {
+		this (bandwidth,size, flsize);
 		this.peer = peer;
 		this.localhost = local;
 		this.results = new TimeResultsCollector(localhost.getName() + "_" + peer.getName());
@@ -120,12 +120,11 @@ public class Interface{
 	 * @param bandwidth The bandwidth of interface (in bytes per second)
 	 * @param size The size of the queue at the output of this interface
 	 */
-	public Interface(int bandwidth, int size) {
+	public Interface(int bandwidth, int size, int flsize) {
 		this.bandwidth = bandwidth;
 //		this.queue = new FifoQueueBytes(100000, this);	
 //		this.queue = new FifoQueueBytes(size);	
-		// TODO: check and then test PFQQueue
-		this.queue = new PFQQueueBytes(100000, 100, this);
+		this.queue = new PFQQueueBytes(size, flsize, this);
 		//this.queue = new FifoQueueBytes(100000,this);
 		this.setNotBusy();
 		

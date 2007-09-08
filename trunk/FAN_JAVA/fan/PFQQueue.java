@@ -150,6 +150,7 @@ public class PFQQueue implements Queue {
 	/**
 	 * TODO: Check if packetQueue is not full<br>
 	 * TODO: Check if flowList is not full - this should be provided by MBAC.
+	 * 		-> DONE
 	 * According to:
 	 * xp-hpsr.pdf : "Cross-protect: implicit service differentiation and admission control"  (III.B)
 	 */		
