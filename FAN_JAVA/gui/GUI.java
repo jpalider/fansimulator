@@ -42,6 +42,8 @@ import fan.ConstantGenerate;
 import fan.Generate;
 import fan.Monitor;
 import fan.NormalGenerate;
+import fan.PFQQueueBytes;
+import fan.Queue;
 import fan.Server;
 import fan.Time;
 import fan.UniformGenerate;
@@ -261,6 +263,12 @@ public class GUI {
 							TreeItem queueSizeItem = new TreeItem(interfaceItem, SWT.NONE);
 							queueSizeItem.setText(	"Queue size [B]: " + 
 													routes.elementAt(i).getServerInterface().getQueue().getMaxSize());
+							Queue queue = routes.elementAt(i).getServerInterface().getQueue();
+							if ( queue.getType().equals("PFQ")){
+								TreeItem maxFlowListSizeItem = new TreeItem(interfaceItem, SWT.NONE);
+								maxFlowListSizeItem.setText(	"FlowList size [ent.]: " + 
+										((PFQQueueBytes)queue).getFlowList().getMaxLength() );
+							}
 							
 						}
 						

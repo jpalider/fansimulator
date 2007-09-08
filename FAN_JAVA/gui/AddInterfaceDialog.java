@@ -76,10 +76,22 @@ public class AddInterfaceDialog extends Dialog {
         							queueSizeLabel.getLocation().y + queueSizeLabel.getSize().y + 5);
         queueSizeText.setText("1000");
         
+        //FlowList size label/text creation
+        Label maxFlowListSizeLabel = new Label(shell, SWT.NONE);
+        maxFlowListSizeLabel.setText("Enter Flow List size [ent.]");
+        maxFlowListSizeLabel.setSize ( maxFlowListSizeLabel.computeSize (SWT.DEFAULT, SWT.DEFAULT) );
+        maxFlowListSizeLabel.setLocation(	queueSizeText.getLocation().x, 
+        		queueSizeText.getLocation().y + queueSizeText.getSize().y + 5);
+        final Text maxFlowListSizeText = new Text( shell, SWT.SINGLE|SWT.BORDER );
+        maxFlowListSizeText.setSize ( probabilityText.getSize() );
+        maxFlowListSizeText.setLocation ( maxFlowListSizeLabel.getLocation().x,
+        		maxFlowListSizeLabel.getLocation().y + maxFlowListSizeLabel.getSize().y + 5);
+        maxFlowListSizeText.setText("1000");
+        
         //Add Interface Button creation
         Button addInterfaceBut = new Button(shell,SWT.NONE);
         addInterfaceBut.setText("Add This Interface");
-        addInterfaceBut.setLocation(queueSizeText.getLocation().x,queueSizeText.getLocation().y + queueSizeText.getSize().y + 5);
+        addInterfaceBut.setLocation(queueSizeText.getLocation().x,queueSizeText.getLocation().y + queueSizeText.getSize().y + maxFlowListSizeText.getSize().y + 25);
         addInterfaceBut.setSize(bandwidthText.getSize().x, bandwidthText.getSize().y * 2);
         addInterfaceBut.addSelectionListener(new SelectionAdapter() {
         	public void widgetSelected(SelectionEvent arg0) {
@@ -88,7 +100,8 @@ public class AddInterfaceDialog extends Dialog {
         					serversVector.elementAt ( serverList.getSelectionIndex() ),
         					Double.parseDouble ( probabilityText.getText() ), 
         					Integer.parseInt ( bandwidthText.getText() ),
-        					Integer.parseInt ( queueSizeText.getText() ) );
+        					Integer.parseInt ( queueSizeText.getText() ),
+        					Integer.parseInt ( maxFlowListSizeText.getText() ) );
         			shell.close();
         		}
         			

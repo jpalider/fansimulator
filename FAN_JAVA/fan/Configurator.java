@@ -103,8 +103,12 @@ public class Configurator {
             		int queueSize = Integer.parseInt( 
             							interfaceElement.getAttributes().getNamedItem("queueSize").getTextContent() );
             		
+            		// 5. flow list max size
+            		int maxFlowListSize = Integer.parseInt( 
+            				interfaceElement.getAttributes().getNamedItem("maxFlowListSize").getTextContent() );
+                       		
             		// finally create such interface            		
-            		serverVector.get(i).addInterface(destServ, probability, bandwidth, queueSize);     
+            		serverVector.get(i).addInterface(destServ, probability, bandwidth, queueSize, maxFlowListSize);     
         		}
         		// get its <generators> 
         		NodeList generatorList = serverElement.getElementsByTagName("generator");
@@ -291,6 +295,14 @@ public class Configurator {
 				ifc.setAttribute ("bandwidth", String.valueOf(( serverVector.get(i).getInterfaces().get(k).getBandwidth() ) ));
 				ifc.setAttribute (	"queueSize", 
 									String.valueOf( serverVector.get(i).getInterfaces().get(k).getQueue().getMaxSize() ) );
+				Queue queue = serverVector.get(i).getInterfaces().get(k).getQueue();
+				if ( queue.getType().equals("PFQ")){
+					ifc.setAttribute (	"maxFlowListSize", String.valueOf( ((PFQQueueBytes)queue).getFlowList().getMaxLength()) );
+				} else {
+					ifc.setAttribute (	"maxFlowListSize", "999999" );
+				}
+					
+				
 				// for all routes on particular server...
 				for (int m = 0; m < serverVector.get(i).getRoutingTable().getRouting().size() ; m++){
 					if ( serverVector.get(i).getInterfaces().get(k) == serverVector.get(i).getRoutingTable().getRouting().get(m).getServerInterface() ){

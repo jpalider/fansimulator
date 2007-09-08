@@ -12,8 +12,9 @@ public class PFQQueueBytes extends PFQQueue {
 	private int maxSizeInBytes;
 	
 	PFQQueueBytes(int maxSizeInBytes, int flowListSize, Interface intface){
-		super(99999/*size in packets*/, flowListSize, intface);
+		super(999999/*size in packets*/, flowListSize, intface);
 		this.maxSizeInBytes = maxSizeInBytes;
+		//System.out.println("PFGQueueBytes  FLsize" + flowListSize); 
 	}
 	
 	public int getSizeBytes() {
