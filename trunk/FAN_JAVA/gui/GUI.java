@@ -30,6 +30,8 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.swt.widgets.FileDialog;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartFrame;
 import org.jfree.chart.JFreeChart;
@@ -474,6 +476,10 @@ public class GUI {
 		Configurator conf = new Configurator("ServerConfig.xml");
 		conf.saveConfiguration(serversVector, generatorsVector);
 	}
+//	private void saveConfig(String fname) {
+//		Configurator conf = new Configurator(fname);
+//		conf.saveConfiguration(serversVector, generatorsVector);
+//	}
 	
 	/**
 	 * Loads the configuration of servers from file
@@ -489,6 +495,32 @@ public class GUI {
 		generatorsVector.clear();
 			
 		Configurator conf = new Configurator("ServerConfig.xml");
+		if( conf.configure(serversVector, generatorsVector) )
+			for(int i = 0; i < serversVector.size(); i ++) {
+				addServerTab(tabs, serversVector.elementAt(i));
+			}
+		else {
+			MessageBox errorMsgBox = new MessageBox(shell, SWT.ICON_ERROR|SWT.OK);
+			errorMsgBox.setMessage("Cannot read configuration file");
+			errorMsgBox.setText("Error while loading configuration");
+			errorMsgBox.open();
+		}
+			
+		Event newEvent = new Event();
+		newEvent.text = "refresh";
+		tabs.notifyListeners(100, newEvent);
+	}
+	
+	private void loadConfig(String fname) {
+		//numberOfServers.setText("0");
+		while(!numberOfServers.getText().equals("0")) {
+			System.out.println(numberOfServers.getText());
+			removeServerTab(tabs);
+		}
+		serversVector.clear();
+		generatorsVector.clear();
+			
+		Configurator conf = new Configurator(fname);
 		if( conf.configure(serversVector, generatorsVector) )
 			for(int i = 0; i < serversVector.size(); i ++) {
 				addServerTab(tabs, serversVector.elementAt(i));
@@ -541,6 +573,27 @@ public class GUI {
 				else if( ((MenuItem)se.widget).getText().equals("Open Configuration from File") ) {
 					loadConfig();
 				}
+				else if( ((MenuItem)se.widget).getText().equals("Select Configuration File...") ) {
+				    FileDialog fileDialog = new FileDialog(shell, SWT.MULTI);
+
+			        fileDialog.setFilterPath("c:");
+			        
+			        fileDialog.setFilterExtensions(new String[]{"*.xml", "*.*"});
+			        fileDialog.setFilterNames(new String[]{ "XML config file", "Any"});
+			        
+			        String firstFile = fileDialog.open();
+
+			        String selectedFile = new String();
+			        if(firstFile != null) {
+			          selectedFile = fileDialog.getFileNames()[0];
+			        }
+			        if(selectedFile != null) {
+			        	loadConfig(selectedFile);			        	
+			        } else {
+			        	System.out.println("Not a proger config file!");
+			        }
+				}
+				
 			}
 			
 			private void closeGUI() {
@@ -572,6 +625,9 @@ public class GUI {
 		openConfigItem.setText("Open Configuration from File");
 		openConfigItem.addSelectionListener(menuSelection);
 		
+		MenuItem selectConfigItem = new MenuItem(fileMenu,SWT.PUSH);
+		selectConfigItem.setText("Select Configuration File...");
+		selectConfigItem.addSelectionListener(menuSelection);
 		
 		
 		//SERVERS Menu
