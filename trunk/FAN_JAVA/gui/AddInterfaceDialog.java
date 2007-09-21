@@ -30,7 +30,7 @@ public class AddInterfaceDialog extends Dialog {
 		Shell parent = getParent();
         final Shell shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
         shell.setText("Add Interface To " + getText());
-        shell.setSize(250, 300);
+        shell.setSize( 300, 400);
         
         //Server list creation
         final Table serverList = new Table(shell,SWT.SINGLE|SWT.BORDER);
@@ -81,17 +81,49 @@ public class AddInterfaceDialog extends Dialog {
         maxFlowListSizeLabel.setText("Enter Flow List size [ent.]");
         maxFlowListSizeLabel.setSize ( maxFlowListSizeLabel.computeSize (SWT.DEFAULT, SWT.DEFAULT) );
         maxFlowListSizeLabel.setLocation(	queueSizeText.getLocation().x, 
-        		queueSizeText.getLocation().y + queueSizeText.getSize().y + 5);
+        									queueSizeText.getLocation().y + 
+        									queueSizeText.getSize().y + 5);
         final Text maxFlowListSizeText = new Text( shell, SWT.SINGLE|SWT.BORDER );
         maxFlowListSizeText.setSize ( probabilityText.getSize() );
         maxFlowListSizeText.setLocation ( maxFlowListSizeLabel.getLocation().x,
-        		maxFlowListSizeLabel.getLocation().y + maxFlowListSizeLabel.getSize().y + 5);
+        									maxFlowListSizeLabel.getLocation().y + 
+        									maxFlowListSizeLabel.getSize().y + 5);
         maxFlowListSizeText.setText("1000");
+        
+        //Minimum Fair Rate Label and TextBox creation
+        Label minFRLabel = new Label( shell, SWT.None );
+        minFRLabel.setText( "Enter Min Fair Rate [B/s]:" );
+        minFRLabel.setSize( minFRLabel.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
+        minFRLabel.setLocation( maxFlowListSizeText.getLocation().x, 
+        						maxFlowListSizeText.getLocation().y + 
+        						maxFlowListSizeText.getSize().y + 5 );
+        final Text minFRText = new Text( shell, SWT.SINGLE|SWT.BORDER );
+        minFRText.setSize( maxFlowListSizeText.getSize().x, maxFlowListSizeText.getSize().y );
+        minFRText.setLocation( 	minFRLabel.getLocation().x,
+        						minFRLabel.getLocation().y +
+        						minFRLabel.getSize().y + 5 );
+        minFRText.setText( "1" );
+        
+        //Maximum Priority Load Label and Text creation
+        Label maxPLLabel = new Label( shell, SWT.None );
+        maxPLLabel.setText( "Enter Max Priority Load [B/s]:" );
+        maxPLLabel.setSize( maxPLLabel.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
+        maxPLLabel.setLocation( minFRText.getLocation().x, 
+        						minFRText.getLocation().y + 
+        						minFRText.getSize().y + 5 );
+        final Text maxPLText = new Text( shell, SWT.SINGLE|SWT.BORDER );
+        maxPLText.setSize( maxFlowListSizeText.getSize().x, maxFlowListSizeText.getSize().y );
+        maxPLText.setLocation( 	maxPLLabel.getLocation().x,
+        						maxPLLabel.getLocation().y +
+        						maxPLLabel.getSize().y + 5 );
+        maxPLText.setText( "100000" );
+        															
+        
         
         //Add Interface Button creation
         Button addInterfaceBut = new Button(shell,SWT.NONE);
         addInterfaceBut.setText("Add This Interface");
-        addInterfaceBut.setLocation(queueSizeText.getLocation().x,queueSizeText.getLocation().y + queueSizeText.getSize().y + maxFlowListSizeText.getSize().y + 25);
+        addInterfaceBut.setLocation(queueSizeText.getLocation().x,maxPLText.getLocation().y + maxPLText.getSize().y + 10);
         addInterfaceBut.setSize(bandwidthText.getSize().x, bandwidthText.getSize().y * 2);
         addInterfaceBut.addSelectionListener(new SelectionAdapter() {
         	public void widgetSelected(SelectionEvent arg0) {
@@ -101,7 +133,9 @@ public class AddInterfaceDialog extends Dialog {
         					Double.parseDouble ( probabilityText.getText() ), 
         					Integer.parseInt ( bandwidthText.getText() ),
         					Integer.parseInt ( queueSizeText.getText() ),
-        					Integer.parseInt ( maxFlowListSizeText.getText() ) );
+        					Integer.parseInt ( maxFlowListSizeText.getText() ), 
+        					Integer.parseInt ( minFRText.getText() ),
+        					Integer.parseInt ( maxPLText.getText() ) );
         			shell.close();
         		}
         			

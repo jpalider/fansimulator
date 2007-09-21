@@ -14,6 +14,8 @@ public class Interface{
 	
 	private boolean busy;
 	
+	private MBAC admissionControl;
+	
 	private boolean virgin = true;
 	private Time firstPacketArrival = new Time(0);
 	private Time lastPacketDepart = new Time(0);
@@ -104,32 +106,30 @@ public class Interface{
 		}
 	}
 
-//	public Interface(int bandwidth, Server peer, Server local) {
-//		this (bandwidth, peer, local, 50,50);
-//	}
+
 	
-	public Interface(int bandwidth, Server peer, Server local, int size, int flsize) {
-		this (bandwidth,size, flsize);
+	/**
+	 * Constructor for Interface class. It creates interface with selected
+	 * bandwidth, queue size, and flowlist size. It also uses specified servers
+	 * as peer (destination) server and local server. Finally the constructor specifies
+	 * the parameters that are used by MBAC block in this router - minimum Fair Rate and 
+	 * maximum Priority Load.
+	 * @param bandwidth the bandwidth of this interface (in bytes)
+	 * @param peer The server which is a destination of this interface
+	 * @param local The server where this interface is located
+	 * @param minFR The minimum Fair Rate for MBAC used in this interface
+	 * @param maxPL The maximum Priority Load for MBAC used in this interface
+	 */
+	public Interface(int bandwidth, Server peer, Server local, int size, int flsize, long minFR, long maxPL) {
+		this.bandwidth = bandwidth;
+		this.queue = new PFQQueueBytes(size, flsize, this);
+		this.setNotBusy();
 		this.peer = peer;
 		this.localhost = local;
+		this.admissionControl = new MBAC(this, minFR, maxPL );
 		this.results = new TimeResultsCollector(localhost.getName() + "_" + peer.getName());
 	}
-	/**
-	 * Constructor for Interface class. It creates interface with default queue type,
-	 * with selected bandwidth and selected queue size.
-	 * @param bandwidth The bandwidth of interface (in bytes per second)
-	 * @param size The size of the queue at the output of this interface
-	 */
-	public Interface(int bandwidth, int size, int flsize) {
-		this.bandwidth = bandwidth;
-//		this.queue = new FifoQueueBytes(100000, this);	
-//		this.queue = new FifoQueueBytes(size);	
-		this.queue = new PFQQueueBytes(size, flsize, this);
-		//this.queue = new FifoQueueBytes(100000,this);
-		this.setNotBusy();
-		
-	}
-
+	
 	/**
 	 * @return  the localhost
 	 * @uml.property  name="localhost"
@@ -174,7 +174,10 @@ public class Interface{
 		if (this.virgin){
 			this.virgin = false;
 			this.firstPacketArrival = Monitor.clock;
-//			System.out.println("markFirstArrival -> " + peer.getName() + " " + Monitor.clock.toDouble());
 		}
+	}
+	
+	public MBAC getMBAC() {
+		return admissionControl;
 	}
 }
