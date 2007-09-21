@@ -106,9 +106,17 @@ public class Configurator {
             		// 5. flow list max size
             		int maxFlowListSize = Integer.parseInt( 
             				interfaceElement.getAttributes().getNamedItem("maxFlowListSize").getTextContent() );
-                       		
+                    
+            		// 6. MBAC's minimum fair rate
+            		long minFR = Integer.parseInt( 
+            				interfaceElement.getAttributes().getNamedItem("minFR").getTextContent() );
+            		
+            		// 7. MBAC's maximum priority load
+            		long maxPL = Integer.parseInt(
+            				interfaceElement.getAttributes().getNamedItem("maxPL").getTextContent() );
+            		
             		// finally create such interface            		
-            		serverVector.get(i).addInterface(destServ, probability, bandwidth, queueSize, maxFlowListSize);     
+            		serverVector.get(i).addInterface(destServ, probability, bandwidth, queueSize, maxFlowListSize, minFR, maxPL );     
         		}
         		// get its <generators> 
         		NodeList generatorList = serverElement.getElementsByTagName("generator");
@@ -291,18 +299,35 @@ public class Configurator {
 			// append interfaces tags
 			for (int k = 0; k < serverVector.get(i).getInterfacesNumber(); k++){
 				Element ifc = (Element) document.createElement("interface");
+				
+				//save peer of this interface
 				ifc.setAttribute ("peer", serverVector.get(i).getInterfaces().get(k).getServer().getName());
+				
+				//save bandwidth of this interface
 				ifc.setAttribute ("bandwidth", String.valueOf(( serverVector.get(i).getInterfaces().get(k).getBandwidth() ) ));
+				
+				//save queueSize of this interface
 				ifc.setAttribute (	"queueSize", 
 									String.valueOf( serverVector.get(i).getInterfaces().get(k).getQueue().getMaxSize() ) );
+				
+				//save maxFlowList size of this interface
 				Queue queue = serverVector.get(i).getInterfaces().get(k).getQueue();
 				if ( queue.getType().equals("PFQ")){
 					ifc.setAttribute (	"maxFlowListSize", String.valueOf( ((PFQQueueBytes)queue).getFlowList().getMaxLength()) );
 				} else {
 					ifc.setAttribute (	"maxFlowListSize", "999999" );
 				}
-					
 				
+				//save MBAC's minimum Fair Rate
+				ifc.setAttribute ( "minFR", String.valueOf( 
+									serverVector.get(i).getInterfaces().get(k).getMBAC().getMinFairRate() ) 
+									); 
+				
+				//save MBAC's maximum Priority Load
+				ifc.setAttribute ( "maxPL", String.valueOf( 
+						serverVector.get(i).getInterfaces().get(k).getMBAC().getMaxPriorityLoad() ) 
+						); 
+
 				// for all routes on particular server...
 				for (int m = 0; m < serverVector.get(i).getRoutingTable().getRouting().size() ; m++){
 					if ( serverVector.get(i).getInterfaces().get(k) == serverVector.get(i).getRoutingTable().getRouting().get(m).getServerInterface() ){

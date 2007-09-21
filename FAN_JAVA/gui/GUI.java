@@ -272,6 +272,11 @@ public class GUI {
 										((PFQQueueBytes)queue).getFlowList().getMaxLength() );
 							}
 							
+							TreeItem minFRItem = new TreeItem( interfaceItem, SWT.NONE );
+							minFRItem.setText( "Min Fair Rate [B/s]: " + routes.elementAt(i).getServerInterface().getMBAC().getMinFairRate());
+							
+							TreeItem maxPLItem = new TreeItem( interfaceItem, SWT.None );
+							maxPLItem.setText( "Max Priority Load [B/s]: " + routes.elementAt(i).getServerInterface().getMBAC().getMaxPriorityLoad() );
 						}
 						
 						//refresh generator Tree

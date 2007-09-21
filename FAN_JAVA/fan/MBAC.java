@@ -90,4 +90,20 @@ public class MBAC {
 		// as if there were no admission control
 		return false;
 	}
+	
+	/**
+	 * Method to return MBAC parameter - Minimum Fair Rate
+	 * @return Minimum Fair Rate
+	 */
+	public long getMinFairRate() {
+		return minFairRate;
+	}
+	
+	/**
+	 * Method to return MBAC parameter - Maximum Priority Load
+	 * @return Maximum Priority Load
+	 */
+	public long getMaxPriorityLoad() {
+		return maxPriorityLoad;
+	}
 }
