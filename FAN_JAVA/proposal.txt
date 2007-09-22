@@ -19,6 +19,8 @@ Simulation issues:
  - methods of checking whether streaming packets suffer delay
  - showing differences between PFQ and FIF0 with and without MBAC each
  - FIFO and MBAC -> we do not want to restrict packets by queue size, those from AFL get into thanks to MBAC
+ -ask Profesor Jajszczyk about source code.
+ 
  
 Scenarios:
  - Almost Saturate link and then test behaviour of new flows
@@ -30,5 +32,34 @@ Scenarios:
  	* ftp
  	* voip
  - Links' size
+ 
+ Scenario 1:
+ 2 Servers: 1 source and 1 destination server
+ Nearly saturated link - check if everything is alright
+ 
+ Scenario 2:
+ 2 Servers: 1 source and 1 destination server
+ Saturated link, and after few second we add new flows
+ 
+ Scenario 3:
+ 20 flows - each is 128kbit/s, capacity 2560kbit/s - minFR = 128kbits - check if all flows are serviced 
+ properly and their service time is at minimum and equal among flows.
+ 
+ Scenario 4:
+ Scenario 3 + add 1 new flow (it should be rejected).
+ 
+ Scenario 5:
+ 3 big elastic flows that take whole link capacity. After that we add 1 new flow (stream or elastic - 2 scenarios)
+ and check if they are serviced by server and have lower service time (in case of stream flows).
+ 
+ Scenario 6:
+ 1 flow exceeding Max PL - check if it is limited to this PL. (check PL and its definition)
+ 
+ Scenario 7:
+ Check different queue sizes and link utilization
+ 
+ 
+ 
+ 
  
  
