@@ -32,6 +32,14 @@ public class Configurator {
 	 * String to hold the filename where the configuration is saved
 	 */
 	private String filename;
+	private String description = new String("");
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public String getDescription() {
+		return description;
+	}
+	
 	
 	public Configurator(String configFile){
 		this.filename = configFile;  
@@ -63,7 +71,12 @@ public class Configurator {
 	       // I/O error
 	       ioe.printStackTrace();
 	    }
-		
+
+	    NodeList xmlDescription = document.getElementsByTagName("description");
+	    if (xmlDescription.item(0) != null){	    		    		    	
+	    	this.description = xmlDescription.item(0).getTextContent();	    	
+	    }
+	    
 		NodeList xmlListOfServers = document.getElementsByTagName("server");
         int totalServers = xmlListOfServers.getLength();
 
@@ -264,9 +277,7 @@ public class Configurator {
         		}        		
         	}
         }
-        
-        
-        
+               
         return true;
 	}
 	
@@ -292,6 +303,10 @@ public class Configurator {
           document = builder.newDocument();  // Create from whole cloth
           Element root = (Element) document.createElement("root"); 
 	      document.appendChild(root);
+	      
+	    Element descriprionElement = (Element) document.createElement( "description" );
+	    descriprionElement.setTextContent( description );	    
+	    root.appendChild(descriprionElement);
 	      
 		for (int i = 0; i < serverVector.size(); i++) {
 			Element s = (Element) document.createElement("server");
