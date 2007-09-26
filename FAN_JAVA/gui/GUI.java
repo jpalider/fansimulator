@@ -15,6 +15,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -59,6 +60,7 @@ public class GUI {
 	private Label numberOfServers;
 	private TabFolder tabs;
 	private Vector<Server> serversVector;
+	Text descField;
 	/**
 	 * @uml.property   name="generatorsVector"
 	 * @uml.associationEnd   multiplicity="(0 -1)" elementType="fan.ConstaGenerate"
@@ -72,7 +74,7 @@ public class GUI {
 	 */
 	public GUI(){
 		serversVector = new Vector<Server>();
-		generatorsVector = new Vector<Generate>();
+		generatorsVector = new Vector<Generate>();		
 		display = new Display();
 		shell = new Shell(display,SWT.DIALOG_TRIM);
 		shell.setLayout( new FillLayout());
@@ -478,42 +480,24 @@ public class GUI {
 	 *
 	 */
 	private void saveConfig() {
-		Configurator conf = new Configurator("ServerConfig.xml");
+		saveConfig("ServerConfig.xml");
+	}
+	private void saveConfig(String fname) {
+		if ((fname==null) || (fname.compareTo("")==0)) {
+			System.out.println("Empty config file name!");
+			return;
+		}
+		Configurator conf = new Configurator(fname);
+		conf.setDescription(descField.getText());
 		conf.saveConfiguration(serversVector, generatorsVector);
 	}
-//	private void saveConfig(String fname) {
-//		Configurator conf = new Configurator(fname);
-//		conf.saveConfiguration(serversVector, generatorsVector);
-//	}
 	
 	/**
 	 * Loads the configuration of servers from file
 	 *
 	 */
 	private void loadConfig() {
-		//numberOfServers.setText("0");
-		while(!numberOfServers.getText().equals("0")) {
-			System.out.println(numberOfServers.getText());
-			removeServerTab(tabs);
-		}
-		serversVector.clear();
-		generatorsVector.clear();
-			
-		Configurator conf = new Configurator("ServerConfig.xml");
-		if( conf.configure(serversVector, generatorsVector) )
-			for(int i = 0; i < serversVector.size(); i ++) {
-				addServerTab(tabs, serversVector.elementAt(i));
-			}
-		else {
-			MessageBox errorMsgBox = new MessageBox(shell, SWT.ICON_ERROR|SWT.OK);
-			errorMsgBox.setMessage("Cannot read configuration file");
-			errorMsgBox.setText("Error while loading configuration");
-			errorMsgBox.open();
-		}
-			
-		Event newEvent = new Event();
-		newEvent.text = "refresh";
-		tabs.notifyListeners(100, newEvent);
+		loadConfig("ServerConfig.xml");
 	}
 	
 	private void loadConfig(String fname) {
@@ -526,10 +510,12 @@ public class GUI {
 		generatorsVector.clear();
 			
 		Configurator conf = new Configurator(fname);
-		if( conf.configure(serversVector, generatorsVector) )
+		if( conf.configure(serversVector, generatorsVector) ) {
+			descField.setText( conf.getDescription() );			
 			for(int i = 0; i < serversVector.size(); i ++) {
 				addServerTab(tabs, serversVector.elementAt(i));
 			}
+		}
 		else {
 			MessageBox errorMsgBox = new MessageBox(shell, SWT.ICON_ERROR|SWT.OK);
 			errorMsgBox.setMessage("Cannot read configuration file");
@@ -574,10 +560,21 @@ public class GUI {
 				else if( ((MenuItem)se.widget).getText().equals("Save Configuration in File") ) {
 					saveConfig();
 				}
+				//Save config file as...
+				else if( ((MenuItem)se.widget).getText().equals("Save Configuration as ...") ) {
+//					
+					FileDialog dialog = new FileDialog(shell, SWT.SAVE);
+				    dialog.setFilterNames(new String[] { "Config Files", "All Files (*.*)" });
+				    dialog.setFilterExtensions(new String[] { "*.xml", "*.*" });				    
+				    dialog.setFileName("ServerConfig.xml");
+				    dialog.open();
+				    saveConfig(dialog.getFileName());
+				}
 				//Open config file
 				else if( ((MenuItem)se.widget).getText().equals("Open Configuration from File") ) {
 					loadConfig();
 				}
+				//Open config file...
 				else if( ((MenuItem)se.widget).getText().equals("Select Configuration File...") ) {
 				    FileDialog fileDialog = new FileDialog(shell, SWT.MULTI);
 
@@ -592,7 +589,7 @@ public class GUI {
 			        if(firstFile != null) {
 			          selectedFile = fileDialog.getFileNames()[0];
 			        }
-			        if(selectedFile != null) {
+			        if ((selectedFile.compareTo("") != 0) && (selectedFile!=null)) {
 			        	loadConfig(selectedFile);			        	
 			        } else {
 			        	System.out.println("Not a proger config file!");
@@ -625,6 +622,10 @@ public class GUI {
 		MenuItem saveConfigItem = new MenuItem(fileMenu,SWT.PUSH);
 		saveConfigItem.setText("Save Configuration in File");
 		saveConfigItem.addSelectionListener(menuSelection);
+		
+		MenuItem saveAsConfigItem = new MenuItem(fileMenu,SWT.PUSH);
+		saveAsConfigItem.setText("Save Configuration as ...");
+		saveAsConfigItem.addSelectionListener(menuSelection);
 
 		MenuItem openConfigItem = new MenuItem(fileMenu,SWT.PUSH);
 		openConfigItem.setText("Open Configuration from File");
@@ -700,6 +701,11 @@ public class GUI {
 		removeServerBut.setLocation( addServerBut.getLocation().x + addServerBut.getSize().x + 10, addServerBut.getLocation().y );
 		removeServerBut.setText("-");
 		removeServerBut.addSelectionListener(buttonListener);
+		
+		descField = new Text(shell, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
+		descField.setSize(330, 60);
+		descField.setLocation( removeServerBut.getLocation().x + removeServerBut.getSize().x + 30, removeServerBut.getLocation().y );
+
 	}
 
 	/**
