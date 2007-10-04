@@ -8,6 +8,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -285,6 +286,17 @@ public class GenerateGraphsDialog extends Dialog {
 	public void generateSpGraphs( String name ) {
 		
 		String filename = name.replaceAll("->", "_") + "SP.txt";
+		
+		/*
+		 * Hashmap to hold the map of flows against the series of their serviced packet data
+		 */
+		HashMap<Integer, XYSeries> flowSPSeries = new HashMap<Integer, XYSeries>();
+		
+		/*
+		 * Hashmap to hold the map of flows against the series of their average packet service time data
+		 */
+		HashMap<Integer, XYSeries> flowASTSeries = new HashMap<Integer, XYSeries>();
+		
 		try {
 			BufferedReader fReader = new BufferedReader ( new FileReader( filename ) );
 			String buffer;
@@ -302,11 +314,49 @@ public class GenerateGraphsDialog extends Dialog {
 				avgServiceTimeSeries.add( 	Double.parseDouble (params[0]),
 											Double.parseDouble (params[2])
 										);
+				
+				XYSeries newFlowSPSeries;
+				XYSeries newFlowASTSeries;
+				
+				if ( flowSPSeries.get( new Integer(params[5]) ) == null ){
+										
+					//Create series for new flow of serviced packets
+					newFlowSPSeries = new XYSeries( "Flow " + params[5] );
+					flowSPSeries.put( new Integer( params[5] ), newFlowSPSeries );
+					
+					//Create series for new flow of average packet service time
+					newFlowASTSeries = new XYSeries( "Flow " + params[5] );
+					flowASTSeries.put( new Integer( params[5] ), newFlowASTSeries );
+					
+				}
+				else {
+					newFlowSPSeries = flowSPSeries.get( new Integer(params[5]) );
+					newFlowASTSeries = flowASTSeries.get( new Integer(params[5]) );
+				}
+				
+				newFlowSPSeries.add(	Double.parseDouble (params[0]), 
+										Double.parseDouble (params[3]) );
+				newFlowASTSeries.add(	Double.parseDouble (params[0]), 
+										Double.parseDouble (params[4]) );
+
+	
 			}
 		
 			//Create chart
 			XYSeriesCollection servicedPacketCol = new XYSeriesCollection ( servicedPacketSeries );
 			XYSeriesCollection avgServTimeCol = new XYSeriesCollection ( avgServiceTimeSeries );
+			
+			for (Iterator iter = flowSPSeries.keySet().iterator(); iter.hasNext();) {
+				Integer element = (Integer) iter.next();
+				servicedPacketCol.addSeries ( flowSPSeries.get(element) );
+				System.out.println("Dodalem kolekcje nr: " + element);
+			}
+			
+			for (Iterator iter = flowASTSeries.keySet().iterator(); iter.hasNext();) {
+				Integer element = (Integer) iter.next();
+				avgServTimeCol.addSeries ( flowSPSeries.get(element) );
+			}			
+			
 			JFreeChart chartSP = ChartFactory.createXYLineChart(
 						"Total Number of Serviced Packets on " + name,  // Title
 						"Time",           								// X-Axis label
@@ -408,6 +458,12 @@ public class GenerateGraphsDialog extends Dialog {
 	public void generateRpGraphs( String name) {
 		
 		String filename = name.replaceAll("->", "_") + "RP.txt";
+		
+		/*
+		 * Hashmap to hold the map of flows against the series of their rejected packet data
+		 */
+		HashMap<Integer, XYSeries> flowRPSeries = new HashMap<Integer, XYSeries>();
+		
 		try {
 			BufferedReader fReader = new BufferedReader ( new FileReader( filename ) );
 			String buffer;
@@ -420,16 +476,36 @@ public class GenerateGraphsDialog extends Dialog {
 				rejectedPacketSeries.add(	Double.parseDouble (params[0]), 
 											Double.parseDouble (params[1])
 											);
+				XYSeries newFlowRPSeries;
+								
+				if ( flowRPSeries.get( new Integer(params[4]) ) == null ){
+										
+					//Create series for new flow of rejected packets
+					newFlowRPSeries = new XYSeries( "Flow " + params[4] );
+					flowRPSeries.put( new Integer( params[4] ), newFlowRPSeries );
+				}
+				else {
+					newFlowRPSeries = flowRPSeries.get( new Integer(params[4]) );
+				}
+				
+				newFlowRPSeries.add(	Double.parseDouble (params[0]), 
+										Double.parseDouble (params[3]) );
 			}
+		
 			
 			//Create chart
-			XYSeriesCollection rejectedServicedPacketCol = new XYSeriesCollection ( rejectedPacketSeries );
+			XYSeriesCollection rejectedPacketCol = new XYSeriesCollection ( rejectedPacketSeries );
+			
+			for (Iterator iter = flowRPSeries.keySet().iterator(); iter.hasNext();) {
+				Integer element = (Integer) iter.next();
+				rejectedPacketCol.addSeries ( flowRPSeries.get(element) );
+			}
 			
 			JFreeChart chart = ChartFactory.createXYLineChart(
 						"Total Number of Rejected Packets on " + name,  	// Title
 						"Time",           									// X-Axis label
 						"Number of Rejected Packets",           			// Y-Axis label
-						rejectedServicedPacketCol,							// Dataset
+						rejectedPacketCol,									// Dataset
 						PlotOrientation.VERTICAL,
 						true,				            	    			// Show legend
 						false,
