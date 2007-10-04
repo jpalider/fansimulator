@@ -24,6 +24,12 @@ public class PFQQueueBytes extends PFQQueue {
 	public int getMaxSize() {
 		return maxSizeInBytes;
 	}
+	
+	//Must be overloaded to display the graphs properly
+	public int getSize() {
+		return sizeInBytes;
+	}
+	
 	/**
 	 * Counted in bytes.
 	 */
