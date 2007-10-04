@@ -92,6 +92,7 @@ public class Interface{
 		{
 			System.out.println("null packet from queues");
 		}
+		peer.recieve( pkt );
 		results.addAvgpacketLength(pkt);
 //		markFirstArrival();
 		updateUpTime();

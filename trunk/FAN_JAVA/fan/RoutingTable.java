@@ -95,7 +95,7 @@ public class RoutingTable {
 	
 	/**
 	 * Method for getting the server for specified random result
-	 * @param result float from 0 to 1
+	 * @param result double from 0 to 1
 	 * @return Server for this random value
 	 */
 	public Interface getServerInterfaceForResult(double result) {

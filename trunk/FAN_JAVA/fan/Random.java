@@ -7,6 +7,10 @@ public class Random implements Randomize {
 		generator = new java.util.Random();
 	}
 	
+	/**
+	 * Method that returns double from range 0 to specified limit
+	 * @param range The upper limit of returned double
+	 */
 	public double getNumber(double range) {
 		return generator.nextDouble() * range;
 	}

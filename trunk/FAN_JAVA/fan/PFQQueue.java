@@ -238,6 +238,7 @@ public class PFQQueue implements Queue {
 			System.out.println("\tvtold = " + vt2);
 			System.out.println("\tvtnew = " + virtualTime);
 			System.out.println("");
+			
 			// I misunderstood something and have added such if statement - hope that won't
 			// make the algorithm worse 
 //			if (virtualTime != vt2){
