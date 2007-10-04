@@ -31,11 +31,6 @@ public class Server {
 	 */
 	private	FlowList flowList;
 	
-//	/**
-//	 * The ResultsCollector holding information about simulation times for this Server
-//	 */
-//	public ResultsCollector results;
-	
 	/**
 	 * Method for receiving Packet. It rejects or accepts this packet.
 	 * If it is accepted then it is added to the queue (interface is full,busy) 
@@ -51,22 +46,23 @@ public class Server {
 		//simulated network
 	
 		if( choiceIntface.getServer() == this ){
-			p = null;
-			choiceIntface.results.addServicedPacket(0);
+			choiceIntface.results.addServicedPacket( 0, p.getFlowIdentifier() );
 			choiceIntface.results.addQueueLength(0);
+			p = null;
 			return;
 		}
 		
 		
-		//new MBAC(choiceIntface, 1, 100000).congestionOccured(p) == true){
+		//check if MBAC accepts packet - if it is rejected it means that congestion has occured
 		if ( choiceIntface.getMBAC().congestionOccured( p ) == true ) {
-			choiceIntface.results.addRejectedPacket();
+			choiceIntface.results.addRejectedPacket( p.getFlowIdentifier() );
 			p = null;
 			return;
 		}
 
 		choiceIntface.markFirstArrival();
 		choiceIntface.updateUpTime();
+		
 		//Check if interface is free
 		if( !choiceIntface.isBusy() ) {
 						
@@ -79,7 +75,7 @@ public class Server {
 			
 			//And set interface as busy
 			choiceIntface.setBusy();
-			choiceIntface.results.addServicedPacket(0);
+			choiceIntface.results.addServicedPacket(0, p.getFlowIdentifier() );
 			choiceIntface.results.addQueueLength(0);
 		}
 		
@@ -93,49 +89,21 @@ public class Server {
 				
 			//if the queue is full
 			} else {
-				choiceIntface.results.addRejectedPacket();
-//				p=null;
-				//System.out.println("Rejected packet");
+				choiceIntface.results.addRejectedPacket( p.getFlowIdentifier() );
+				p=null;
 			}
 				
 		}
 	}
 	
-//	/**
-//	 * Default constructor 
-//	 * @param name
-//	 * @param rt
-//	 */
-//	public Server(String name, RoutingTable rt) {
-//		this.name = name;
-//		this.maxTrafficTypes = 2;
-//		this.routing = rt;
-//		//do przedyskutowania jak nalezy zrobic konfiguracje interfejsow, co konfigurujemy pierwsze
-//		//this.interfaces = rt.getInterfaces();
-//	}
 	
 	public Server(String name) {
 		this.name = name;
 		this.maxTrafficTypes = 2;
 		this.routing = new RoutingTable();
 		this.interfaces = new Vector<Interface>();
-//		this.results = new TimeResultsCollector(name);
 	}
 	
-//	/**
-//	 * Method for adding new interface to server
-//	 * @param destServ Server that is a destination
-//	 * @param probability Float with probability of packet going that server
-//	 * @param bandwidth Int with the bandwidth of this interface
-//	 */
-//	public boolean addInterface(Server destServ, double probability, int bandwidth) {
-//		Interface intfc = new Interface( bandwidth, destServ,this );
-//		if(routing.addRoute(intfc, probability)) {
-//			interfaces.add(intfc);
-//			return true;
-//		}
-//		else return false;
-//	}
 	
 	/**
 	 * Method for adding new interface to server, with specified queue size of the interface
