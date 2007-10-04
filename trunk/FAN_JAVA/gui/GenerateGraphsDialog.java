@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -33,6 +34,8 @@ public class GenerateGraphsDialog extends Dialog {
 	private final String LOC_SERV_PACKET_STRING = "Locally Serviced Packets";
 	private final String REJ_PACKET_STRING = "Rejected Packets";
 	private final String QUE_LENGTH_STRING = "Queue Length";
+	
+	private final Color BACKGROUND_COLOR = Color.BLACK;
 	
 	private Vector<ChartFrame> openedFrames;
 
@@ -349,12 +352,11 @@ public class GenerateGraphsDialog extends Dialog {
 			for (Iterator iter = flowSPSeries.keySet().iterator(); iter.hasNext();) {
 				Integer element = (Integer) iter.next();
 				servicedPacketCol.addSeries ( flowSPSeries.get(element) );
-				System.out.println("Dodalem kolekcje nr: " + element);
 			}
 			
 			for (Iterator iter = flowASTSeries.keySet().iterator(); iter.hasNext();) {
 				Integer element = (Integer) iter.next();
-				avgServTimeCol.addSeries ( flowSPSeries.get(element) );
+				avgServTimeCol.addSeries ( flowASTSeries.get(element) );
 			}			
 			
 			JFreeChart chartSP = ChartFactory.createXYLineChart(
@@ -378,6 +380,10 @@ public class GenerateGraphsDialog extends Dialog {
 					false,
 					false
 	    		);
+			
+			//set background color of charts
+			chartSP.getXYPlot().setBackgroundPaint( BACKGROUND_COLOR );
+			chartAST.getXYPlot().setBackgroundPaint( BACKGROUND_COLOR );
 			
 			//Display chart frames
 			ChartFrame frame = new ChartFrame("SP " + name, chartSP);
@@ -512,6 +518,10 @@ public class GenerateGraphsDialog extends Dialog {
 						false
 	        		);
 			
+			//set background color of charts
+			chart.getXYPlot().setBackgroundPaint( BACKGROUND_COLOR );
+			
+			
 			//Display chart frame
 			ChartFrame frame = new ChartFrame("RP " + name, chart);
 			frame.pack();
@@ -561,6 +571,10 @@ public class GenerateGraphsDialog extends Dialog {
 						false,
 						false
 	        		);
+			
+			//set background color of charts
+			chart.getXYPlot().setBackgroundPaint( BACKGROUND_COLOR );
+			
 			
 			//Display chart frame
 			ChartFrame frame = new ChartFrame("QL " + name, chart);
