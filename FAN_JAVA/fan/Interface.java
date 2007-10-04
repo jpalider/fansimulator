@@ -22,7 +22,7 @@ public class Interface{
 //	/**
 //	 * The ResultsCollector holding information about simulation times for this Interface
 //	 */
-	public ResultsCollector results;
+	public TimeResultsCollector results;
 	
 	/**
 	 * @return
@@ -100,7 +100,8 @@ public class Interface{
 		else {
 			Packet p = queue.peekFirst();
 			//Time used to send packet is not added to its service time
-			results.addServicedPacket( Monitor.clock.substract(p.getServiceStartTime()).toDouble() );
+			results.addServicedPacket( 	Monitor.clock.substract(p.getServiceStartTime()).toDouble(),
+										p.getFlowIdentifier() );
 			Time sendTime = new Time( (double) p.getLength() / (double)bandwidth );
 			Monitor.agenda.schedule( new Depart(Monitor.clock.add(sendTime),this) );
 		}
