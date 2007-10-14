@@ -3,6 +3,8 @@ package fan;
 public class Flow {
 	private FlowIdentifier flowID;
 	private long finishTag;
+	public long backlog;
+	public long bytes;
 	
 //	public int compareTo(Flow flow){
 //		if (flowID == flow.getFlowID()) return 0;
@@ -24,6 +26,7 @@ public class Flow {
 	}
 	
 	public void setFinishTag(long fTag) {
-		this.finishTag = fTag;
+		if ( this.finishTag < fTag )
+			this.finishTag = fTag;
 	}
 }
