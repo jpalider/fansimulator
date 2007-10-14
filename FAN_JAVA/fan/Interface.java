@@ -124,7 +124,7 @@ public class Interface{
 	 */
 	public Interface(int bandwidth, Server peer, Server local, int size, int flsize, long minFR, long maxPL) {
 		this.bandwidth = bandwidth;
-		this.queue = new PFQQueueBytes(size, flsize, this, local.getName());
+		this.queue = new PFQQueueBytes(size, flsize, this);
 		this.setNotBusy();
 		this.peer = peer;
 		this.localhost = local;
@@ -155,7 +155,7 @@ public class Interface{
 	 */
 	public void clearInterface() {
 		//this.queue = new FifoQueueBytes(150000,this);
-		this.queue = new PFQQueueBytes(100000, 100, this, localhost.getName()); 
+		this.queue = new PFQQueueBytes(100000, 100, this); 
 		//this.queue = new FifoQueueBytes(100000,this);
 		this.setNotBusy();
 	}
