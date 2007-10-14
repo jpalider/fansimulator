@@ -30,7 +30,7 @@ public class MBAC {
 		queue = intface.getQueue();
 		if (queue != null){	
 			if (queue.getType().equals("PFQ")){
-				flowList = ( (PFQQueue) queue ).getFlowList();				
+				flowList = ( (PFQQueueBytes) queue ).getFlowList();				
 			}
 		} else {
 			System.out.println("Initialization problem in MBAC.MBAC()");
@@ -46,7 +46,7 @@ public class MBAC {
 	 */
 	public long getPriorityLoad(){
 		if ( queue.getType().compareTo("PFQ") == 0){
-			return ((PFQQueue)queue).getPriorityLoad();
+			return ((PFQQueueBytes)queue).getPriorityLoad();
 		} else if ( queue.getType().compareTo("PFQ") == 0){
 				return ((FifoQueueBytes)queue).getLoad();
 		} 
@@ -58,7 +58,7 @@ public class MBAC {
 	 */
 	public long getFairRate(){
 		if ( queue.getType().equals("PFQ") ){
-			return ( (PFQQueue)queue ).getFairRate();
+			return ( (PFQQueueBytes)queue ).getFairRate();
 		} else {
 		}
 		return 0;

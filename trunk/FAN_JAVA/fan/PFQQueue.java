@@ -12,6 +12,7 @@ public class PFQQueue implements Queue {
 	String type;
 	Time lastMeasureTime;
 	boolean measured = false;
+	String name;
 	/**
 	 * This is the encapsulation class for Packet,
 	 * to hold information about timestamp assigned to it
@@ -108,7 +109,7 @@ public class PFQQueue implements Queue {
 	 * @param intface Interface the PFQ is assigned to - needed to perform link measurements
 	 *
 	 */
-	public PFQQueue(int size, int flowListSize, Interface intface) {
+	public PFQQueue(int size, int flowListSize, Interface intface, String serverName) {
 		packetQueue = new PriorityQueue<PacketTimestamped>(size);
 		maxSize = size;
 		virtualTime = 0;
@@ -121,6 +122,7 @@ public class PFQQueue implements Queue {
 		totalIdleTime = new Time(0);
 		priorityLoad = 0;
 		fairRate = bandwidth;
+		name = serverName;
 	}
 	
 	public int getSize() {
@@ -154,7 +156,9 @@ public class PFQQueue implements Queue {
 	 * According to:
 	 * xp-hpsr.pdf : "Cross-protect: implicit service differentiation and admission control"  (III.B)
 	 */		
+	
 	public boolean putPacket(Packet p) {
+
 		//measurement for idleTime
 		if ( getSize() == 0 )
 			totalIdleTime = totalIdleTime.add( Monitor.clock.substract( idleTime ) );
@@ -208,12 +212,19 @@ public class PFQQueue implements Queue {
 				packetFlow.backlog = pTimestamped.p.getLength();
 				packetFlow.bytes = pTimestamped.p.getLength();				
 			}
+			else {
+				System.out.println("FlowList is already saturated");
+			}
 		}
 		
 		// measurement operations every hundred of ms or more
+		//System.out.println("PRZED VIRTUAL TIME: " + virtualTime);
 		performMeasurements();
+		//System.out.println("PO VIRTUAL TIME: " + virtualTime);
 		
-		
+		if ( !flowList.contains( p.getFlowIdentifier() ) ) {
+			System.out.println("FLOWLIST ERROR");
+		}
 		
 		return true;
 	}
@@ -221,12 +232,14 @@ public class PFQQueue implements Queue {
 	private void performMeasurements() {
 		
 		//measurement for idleTime
+		
 		if ( getSize() == 0 )
 			totalIdleTime = totalIdleTime.add( Monitor.clock.substract( idleTime ) );
-		
+	
 		if ( Monitor.clock.substract(lastMeasureTime).toDouble() > 5.5 ){
 			priorityLoad = (long)( (priorityBytes - pbt2) / (bandwidth * (Monitor.clock.substract(t2).toDouble()) ) );
 			//System.out.println(this.);
+			System.out.println("Server " + name);
 			System.out.println("Measurements at " + Monitor.clock.toString());
 			
 			System.out.println("PriorityLoad = " + priorityLoad);
@@ -266,7 +279,6 @@ public class PFQQueue implements Queue {
 	 * TODO: Check if queue is not empty
 	 */
 	public Packet removeFirst() {
-		
 		if (packetQueue.isEmpty()){
 			// clear flow list (or will it timeout all its flows?)
 			return null;
@@ -278,6 +290,8 @@ public class PFQQueue implements Queue {
 			FlowPFQ flow = (FlowPFQ)flowList.getFlow(packet.p.getFlowIdentifier());
 			flow.backlog -= packet.p.getLength();			
 		} else {
+			System.out.println("FI: "+packet.p.getFlowIdentifier().toInt());
+			flowList.printAllFlows();
 			System.out.println("Something has gone wrong in PFQQueue.removeFirst()");
 		}
 		
