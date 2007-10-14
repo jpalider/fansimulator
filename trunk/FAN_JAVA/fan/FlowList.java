@@ -90,11 +90,11 @@ public class FlowList {
 		protectedList.clear();
 	}
 	
-	public void printAllFlows(){
-		System.out.println("AllFlows:");
-		for (Iterator it = protectedList.iterator(); it.hasNext(); ) {
-			Flow flow = (Flow) it.next();
-			System.out.println(" " + flow.getFlowID().toInt());			
+	public void printAllFlows() {
+		System.out.println("\nThe AFL contains the following flows:");
+		for (Iterator iter = protectedList.iterator(); iter.hasNext();) {
+			Flow element = (Flow) iter.next();
+			System.out.println ( element.getFlowID().toInt() + " Finish tag: " + element.getFinishTag() );
 		}
 	}
 }
