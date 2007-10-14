@@ -89,4 +89,12 @@ public class FlowList {
 	public void cleanAllFlows() {
 		protectedList.clear();
 	}
+	
+	public void printAllFlows(){
+		System.out.println("AllFlows:");
+		for (Iterator it = protectedList.iterator(); it.hasNext(); ) {
+			Flow flow = (Flow) it.next();
+			System.out.println(" " + flow.getFlowID().toInt());			
+		}
+	}
 }
