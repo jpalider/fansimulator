@@ -12,7 +12,6 @@ public class PFQQueue implements Queue {
 	String type;
 	Time lastMeasureTime;
 	boolean measured = false;
-	String name;
 	/**
 	 * This is the encapsulation class for Packet,
 	 * to hold information about timestamp assigned to it
@@ -38,20 +37,6 @@ public class PFQQueue implements Queue {
 	        else
 	            return -1;
 		}
-	}
-	
-	/**
-	 * This is the extended class for Flow, to hold information about current backlog size 
-	 * and received bytes.
-	 * According to:
-	 * xp-hpsr.pdf : "Cross-protect: implicit service differentiation and admission control"  (III.A)
-	 */
-	protected class FlowPFQ extends Flow{
-		FlowPFQ(FlowIdentifier newFlowID){
-			super(newFlowID);			
-		}
-		public long backlog;
-		public long bytes;
 	}
 	
 	/**
@@ -109,7 +94,7 @@ public class PFQQueue implements Queue {
 	 * @param intface Interface the PFQ is assigned to - needed to perform link measurements
 	 *
 	 */
-	public PFQQueue(int size, int flowListSize, Interface intface, String serverName) {
+	public PFQQueue(int size, int flowListSize, Interface intface) {
 		packetQueue = new PriorityQueue<PacketTimestamped>(size);
 		maxSize = size;
 		virtualTime = 0;
@@ -122,7 +107,6 @@ public class PFQQueue implements Queue {
 		totalIdleTime = new Time(0);
 		priorityLoad = 0;
 		fairRate = bandwidth;
-		name = serverName;
 	}
 	
 	public int getSize() {
@@ -156,9 +140,7 @@ public class PFQQueue implements Queue {
 	 * According to:
 	 * xp-hpsr.pdf : "Cross-protect: implicit service differentiation and admission control"  (III.B)
 	 */		
-	
 	public boolean putPacket(Packet p) {
-
 		//measurement for idleTime
 		if ( getSize() == 0 )
 			totalIdleTime = totalIdleTime.add( Monitor.clock.substract( idleTime ) );
@@ -178,23 +160,25 @@ public class PFQQueue implements Queue {
 		
 		//Check if this packet belongs to the flow registered in flowList
 		if( flowList.contains( pTimestamped.p.getFlowIdentifier() ) ) {
-			FlowPFQ packetFlow = (FlowPFQ)flowList.getFlow(pTimestamped.p.getFlowIdentifier());
+			Flow packetFlow = flowList.getFlow(pTimestamped.p.getFlowIdentifier());
 
 			packetFlow.backlog += pTimestamped.p.getLength();
 
-			if ( packetFlow.bytes >= MTU ){		
+			if ( packetFlow.bytes >= MTU ){
+				
 				pTimestamped.startTag = packetFlow.getFinishTag();
 				pTimestamped.finishTag = pTimestamped.startTag + pTimestamped.p.getLength();
 				packetQueue.offer(pTimestamped); // push { packet, flow_time_stamp } to PIFO
 			} else {
+				
 				pTimestamped.startTag = virtualTime;
 				pTimestamped.finishTag = pTimestamped.startTag + pTimestamped.p.getLength();
 				packetQueue.offer(pTimestamped);
 				priorityBytes += pTimestamped.p.getLength();
-				packetFlow.bytes += pTimestamped.p.getLength();		
-				
+				packetFlow.bytes += pTimestamped.p.getLength();	
 			}
-			packetFlow.setFinishTag( packetFlow.getFinishTag() + pTimestamped.p.getLength() );
+			
+			packetFlow.setFinishTag( pTimestamped.finishTag );
 		}
 		//if this is the packet of new flow
 		else {
@@ -206,25 +190,20 @@ public class PFQQueue implements Queue {
 			priorityBytes += pTimestamped.p.getLength();
 
 			if ( (flowList.getMaxLength() - flowList.getLength()) > 0 ){
-				FlowPFQ packetFlow = new FlowPFQ( pTimestamped.p.getFlowIdentifier() );
-				flowList.registerNewFlow(packetFlow);				
+				Flow packetFlow = new Flow( pTimestamped.p.getFlowIdentifier() );
 				packetFlow.setFinishTag(pTimestamped.finishTag);		
 				packetFlow.backlog = pTimestamped.p.getLength();
-				packetFlow.bytes = pTimestamped.p.getLength();				
-			}
-			else {
-				System.out.println("FlowList is already saturated");
+				packetFlow.bytes = pTimestamped.p.getLength();
+				flowList.registerNewFlow(packetFlow);
 			}
 		}
 		
+//		System.out.println ("packet finish tag: " + pTimestamped.finishTag + 
+//							", flow finish tag: " + flowList.getFlow( p.getFlowIdentifier() ).getFinishTag() );
 		// measurement operations every hundred of ms or more
-		//System.out.println("PRZED VIRTUAL TIME: " + virtualTime);
 		performMeasurements();
-		//System.out.println("PO VIRTUAL TIME: " + virtualTime);
 		
-		if ( !flowList.contains( p.getFlowIdentifier() ) ) {
-			System.out.println("FLOWLIST ERROR");
-		}
+		
 		
 		return true;
 	}
@@ -232,14 +211,12 @@ public class PFQQueue implements Queue {
 	private void performMeasurements() {
 		
 		//measurement for idleTime
-		
 		if ( getSize() == 0 )
 			totalIdleTime = totalIdleTime.add( Monitor.clock.substract( idleTime ) );
-	
+		
 		if ( Monitor.clock.substract(lastMeasureTime).toDouble() > 5.5 ){
 			priorityLoad = (long)( (priorityBytes - pbt2) / (bandwidth * (Monitor.clock.substract(t2).toDouble()) ) );
 			//System.out.println(this.);
-			System.out.println("Server " + name);
 			System.out.println("Measurements at " + Monitor.clock.toString());
 			
 			System.out.println("PriorityLoad = " + priorityLoad);
@@ -279,6 +256,7 @@ public class PFQQueue implements Queue {
 	 * TODO: Check if queue is not empty
 	 */
 	public Packet removeFirst() {
+		
 		if (packetQueue.isEmpty()){
 			// clear flow list (or will it timeout all its flows?)
 			return null;
@@ -287,12 +265,13 @@ public class PFQQueue implements Queue {
 		//Remove first packet from queue
 		PacketTimestamped packet = packetQueue.remove();
 		if ( flowList.contains(packet.p.getFlowIdentifier()) ){
-			FlowPFQ flow = (FlowPFQ)flowList.getFlow(packet.p.getFlowIdentifier());
+			Flow flow = (Flow)flowList.getFlow(packet.p.getFlowIdentifier());
 			flow.backlog -= packet.p.getLength();			
 		} else {
-			System.out.println("FI: "+packet.p.getFlowIdentifier().toInt());
-			flowList.printAllFlows();
 			System.out.println("Something has gone wrong in PFQQueue.removeFirst()");
+			System.out.println(	"The flow missing from the list is: " + 
+								packet.p.getFlowIdentifier().toInt() );
+			flowList.printAllFlows();
 		}
 		
 		if ( packet.startTag != virtualTime ){
