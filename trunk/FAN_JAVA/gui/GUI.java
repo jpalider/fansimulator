@@ -752,7 +752,7 @@ public class GUI {
 										simulationTimeLabel.getSize().x + 5,
 										simulationTimeLabel.getLocation().y);
 		simulationTimeText.setSize( 50, simulationTimeLabel.getSize().y);
-		simulationTimeText.setText("2000");
+		simulationTimeText.setText("200");
 		
 		//Run Simulation button listener
 		runSimulationButton.addSelectionListener(new SelectionAdapter() {
