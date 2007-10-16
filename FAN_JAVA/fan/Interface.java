@@ -156,6 +156,7 @@ public class Interface{
 	public void clearInterface() {
 		//this.queue = new FifoQueueBytes(150000,this);
 		this.queue = new PFQQueueBytes(100000, 100, this); 
+		admissionControl.setQueue(this.queue);
 		//this.queue = new FifoQueueBytes(100000,this);
 		this.setNotBusy();
 	}
