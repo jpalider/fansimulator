@@ -54,7 +54,7 @@ public class Server {
 		}
 		
 		
-		//check if MBAC accepts packet - if it is rejected it means that congestion has occured
+		//check if MBAC accepts packet - if it is rejected it means that congestion has occurred
 		if ( choiceIntface.getMBAC().congestionOccured( p ) == true ) {
 			choiceIntface.results.addRejectedPacket( p.getFlowIdentifier() );
 			p = null;
