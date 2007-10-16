@@ -106,4 +106,8 @@ public class MBAC {
 	public long getMaxPriorityLoad() {
 		return maxPriorityLoad;
 	}
+	
+	void setQueue(Queue queue){
+		this.queue = queue;
+	}
 }
