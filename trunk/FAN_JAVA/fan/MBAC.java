@@ -45,11 +45,12 @@ public class MBAC {
 	 * @return fair rate
 	 */
 	public long getPriorityLoad(){
-		if ( queue.getType().compareTo("PFQ") == 0){
+		if ( queue.getType().equals("PFQ") ){
 			return ((PFQQueueBytes)queue).getPriorityLoad();
-		} else if ( queue.getType().compareTo("PFQ") == 0){
-				return ((FifoQueueBytes)queue).getLoad();
+		} else if ( queue.getType().equals("FIFO") ){
+			return ((FifoQueueBytes)queue).getLoad();
 		} 
+		System.out.println("Unknown queue type!!!");
 		return 0;
 	}
 	/**
@@ -70,8 +71,6 @@ public class MBAC {
 	 */
 	public boolean congestionOccured(Packet p){
 		if ( queue.getType().equals("PFQ")){
-			//System.out.println("FR = " + getFairRate());
-			//System.out.println("PL = " + getPriorityLoad());
 			if (flowList.getLength() == flowList.getMaxLength())
 				return true;
 			if ( (getFairRate() < minFairRate) || (getPriorityLoad() > maxPriorityLoad) ){
@@ -80,13 +79,11 @@ public class MBAC {
 				return false;
 			}
 		} else if ( queue.getType().compareTo("FIFOBytes") == 0) {
-//			System.out.println("FifoBytes");
 			if (((FifoQueueBytes)queue).getFreeBytes() >= p.getLength()){
-//				if ( priority load + AFL )
+				//	if ( priority load + AFL )
 				return false;
 			}
 		}	
-	//	System.out.println("CongestionOccured");
 		// as if there were no admission control
 		return false;
 	}
@@ -107,6 +104,10 @@ public class MBAC {
 		return maxPriorityLoad;
 	}
 	
+	/**
+	 * Method for setting queue for this MBAC
+	 * @param queue Queue to be set for this MBAC
+	 */
 	void setQueue(Queue queue){
 		this.queue = queue;
 	}
