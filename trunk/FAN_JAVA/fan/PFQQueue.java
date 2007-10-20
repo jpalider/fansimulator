@@ -198,23 +198,22 @@ public class PFQQueue implements Queue {
 			}
 		}
 		
-//		System.out.println ("packet finish tag: " + pTimestamped.finishTag + 
-//							", flow finish tag: " + flowList.getFlow( p.getFlowIdentifier() ).getFinishTag() );
-		// measurement operations every hundred of ms or more
-		performMeasurements();
+		//measurement operations every hundred of ms or more
+		performMeasurements("putPacket()");
 		
 		
 		
 		return true;
 	}
 	
-	private void performMeasurements() {
+	private void performMeasurements(String source) {
 		
 		//measurement for idleTime
 		if ( getSize() == 0 )
 			totalIdleTime = totalIdleTime.add( Monitor.clock.substract( idleTime ) );
 		
 		if ( Monitor.clock.substract(lastMeasureTime).toDouble() > 5.5 ){
+			System.out.println("The source is: " + source);
 			priorityLoad = (long)( (priorityBytes - pbt2) / (bandwidth * (Monitor.clock.substract(t2).toDouble()) ) );
 			//System.out.println(this.);
 			System.out.println("Measurements at " + Monitor.clock.toString());
@@ -297,21 +296,13 @@ public class PFQQueue implements Queue {
 	}
 	
 	public long getFairRate(){
-		// TODO
-		// max{ S*C, dvt(t)}/dt
-		performMeasurements();
-//		if (t2.compareTo(t1) == 0)
-//			return bandwidth; //S*C /;
-//		else
-			return fairRate;
+		performMeasurements("getFairRate()");
+		return fairRate;
 	}
 	
 	public long getPriorityLoad(){
-		performMeasurements();
-//		if (t2.compareTo(t1) == 0)	// at startup... 
-//			return (long)0;
-//		else 
-			return priorityLoad;
+		performMeasurements("getPriorityLoad");
+		return priorityLoad;
 	}
 
 	public String getType(){
