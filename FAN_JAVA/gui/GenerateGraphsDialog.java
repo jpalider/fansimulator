@@ -308,8 +308,11 @@ public class GenerateGraphsDialog extends Dialog {
 			XYSeries avgServiceTimeSeries = new XYSeries ("Avg Packet Service Time");
 			
 			//Process the file until the end
-		
+			int index = 0;
+			
 			while( (buffer = fReader.readLine()) != null ) {
+				if ( index++ % 20 != 0 )
+					continue;
 				String[] params = buffer.split(":");
 				servicedPacketSeries.add(	Double.parseDouble (params[0]), 
 											Double.parseDouble (params[1])
