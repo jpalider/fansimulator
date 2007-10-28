@@ -79,7 +79,7 @@ public class GUI {
 			while( !Monitor.agenda.isEmpty() && Monitor.clock.compareTo(new Time(simulationTime)) <= 0 ) {
 				progressDialog.setProgress( Monitor.clock.toDouble() );
 				fan.Event now = Monitor.agenda.removeFirst();
-				Monitor.clock = now.time;
+				Monitor.clock = now.time;				
 				now.run();
 			}
 			progressDialog.setProgress( simulationTime );
