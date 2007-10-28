@@ -88,6 +88,7 @@ public class ProgressDialog extends Dialog {
 		short progress = (short)( value / (double)maximum * (double)100 );
 		if( progress - previousProgress >= 1) {
 			progressLabel.setText("Simulation Progress: " +  progress + "%");
+			progressLabel.update();
 			previousProgress = progress;
 			if( progress == 100 ) 
 				finishButton.setEnabled( true );
