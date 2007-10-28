@@ -23,6 +23,8 @@ public class Simulator {
 //		cfg.configure(serverVector, generatorVector);
 //		cfg.saveConfiguration(serverVector,generatorVector);
 //		if (true) return;
+		
+		new gui.SplashScreen().run();
 
 		new gui.GUI();
 		
