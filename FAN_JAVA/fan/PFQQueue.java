@@ -262,7 +262,7 @@ public class PFQQueue implements Queue {
 	 * TODO: Check if queue is not empty
 	 */
 	public Packet removeFirst() {
-		printElements();
+
 		if (packetQueue.isEmpty()){
 			// clear flow list (or will it timeout all its flows?)
 			System.out.println("Queue is empty!");
