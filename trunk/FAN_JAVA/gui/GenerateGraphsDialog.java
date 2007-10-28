@@ -309,10 +309,11 @@ public class GenerateGraphsDialog extends Dialog {
 			
 			//Process the file until the end
 			int index = 0;
-			
 			while( (buffer = fReader.readLine()) != null ) {
-				if ( index++ % 20 != 0 )
+				if (index++ % 9 != 0) {
+					index = 0;
 					continue;
+				}
 				String[] params = buffer.split(":");
 				servicedPacketSeries.add(	Double.parseDouble (params[0]), 
 											Double.parseDouble (params[1])
@@ -480,7 +481,12 @@ public class GenerateGraphsDialog extends Dialog {
 			XYSeries rejectedPacketSeries = new XYSeries ("Rejected Packets");
 								
 			//Process the file until the end
+			int index = 0;
 			while( (buffer = fReader.readLine()) != null ) {
+				if (index++ % 9 != 0) {
+					index = 0;
+					continue;
+				}
 				String[] params = buffer.split(":");
 				rejectedPacketSeries.add(	Double.parseDouble (params[0]), 
 											Double.parseDouble (params[1])
