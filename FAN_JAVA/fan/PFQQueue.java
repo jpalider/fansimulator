@@ -221,7 +221,7 @@ public class PFQQueue implements Queue {
 			System.out.println("The source is: " + source);
 			priorityLoad = (long)( (priorityBytes - pbt2) / (bandwidth * (Monitor.clock.substract(t2).toDouble()) ) );
 			//System.out.println(this.);
-			
+			/*
 			System.out.println("PriorityLoad = " + priorityLoad);
 			System.out.println("\tPriorityBytes = " + priorityBytes);
 			System.out.println("\ttold = " + t2);
@@ -230,16 +230,16 @@ public class PFQQueue implements Queue {
 			System.out.println("fairRate = " + (virtualTime - vt2));
 			System.out.println("\tvtold = " + vt2);
 			System.out.println("\tvtnew = " + virtualTime);
-			
+			*/
 			// I misunderstood something and have added such if statement - hope that won't
 			// make the algorithm worse 
 //			if (virtualTime != vt2){
 				if ( totalIdleTime.toDouble() * bandwidth > (virtualTime - vt2) ) {
-					System.out.println( "totalIdleTime is bigger: " + totalIdleTime.toDouble() );
+					//System.out.println( "totalIdleTime is bigger: " + totalIdleTime.toDouble() );
 					fairRate = (long)( totalIdleTime.toDouble() * bandwidth / ( Monitor.clock.substract(t2).toDouble() ) );
 				}
 				else{
-					System.out.println( "totalIdleTime is smaller: " + totalIdleTime.toDouble() );
+					//System.out.println( "totalIdleTime is smaller: " + totalIdleTime.toDouble() );
 					fairRate = (long)( ( virtualTime - vt2 ) / ( Monitor.clock.substract(t2).toDouble() ) );
 				}
 				System.out.println("Fair Rate is: " + fairRate + "\n");
