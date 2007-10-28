@@ -60,6 +60,27 @@ public class GUI {
 	private Label numberOfServers;
 	private TabFolder tabs;
 	private Vector<Server> serversVector;
+	
+	private class SimulationThread extends Thread {
+		private ProgressDialog progressDialog;
+		private double simulationTime;
+		
+		public SimulationThread( ProgressDialog pd, double simulTime ) {
+			progressDialog = pd;
+			simulationTime = simulTime;
+		}
+		
+		public void run() {
+			while( !Monitor.agenda.isEmpty() && Monitor.clock.compareTo(new Time(simulationTime)) <= 0 ) {
+				progressDialog.setProgress( Monitor.clock.toDouble() );
+				fan.Event now = Monitor.agenda.removeFirst();
+				Monitor.clock = now.time;
+				now.run();
+			}
+			progressDialog.setProgress( simulationTime );
+		}
+	}
+	
 	Text descField;
 	/**
 	 * @uml.property   name="generatorsVector"
@@ -434,6 +455,7 @@ public class GUI {
 				}
 				
 			});
+			
 			System.out.println("filelist size is: " + fileList.length );
 			
 			for (int i = 0; i < fileList.length; i++) {
@@ -449,15 +471,13 @@ public class GUI {
 			}
 			
 			
-			//Run main simulation loop
-			while( !Monitor.agenda.isEmpty() && Monitor.clock.compareTo(new Time(simulationTime)) <= 0 ) {
-				fan.Event now = Monitor.agenda.removeFirst();
-				Monitor.clock = now.time;
-				now.run();
-				//System.out.println("The time is now: " + Monitor.clock);
-			}
+			ProgressDialog progressDialog = new ProgressDialog( shell, SWT.NONE, simulationTime );
+			display.asyncExec( new SimulationThread( progressDialog, simulationTime ) );
+			progressDialog.open();
 			
+			shell.update();
 			//Display the results of simulation
+
 			DisplayResultsDialog sumUpDialog = new DisplayResultsDialog(shell, SWT.NONE, serversVector);
 			sumUpDialog.open();
 		}
