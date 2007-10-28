@@ -14,6 +14,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
@@ -32,6 +33,10 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.graphics.Image;
+//import org.eclipse.swt.widgets.TrayIcon;
+import org.eclipse.swt.widgets.Tray;
+import org.eclipse.swt.widgets.TrayItem;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartFrame;
@@ -102,6 +107,9 @@ public class GUI {
 	    shell.setSize(750, 600);
 	    shell.setText("FAN simulator");
 	    shell.setLayout(null);
+	    shell.setImage(new Image(display,"res/titleimage.png"));
+	    setTray();	    
+	    centerWindow();
 	    this.addMenu(shell);
 	    this.addServerTabFolder(shell);
 	    this.addServerNumberControl(shell);
@@ -798,5 +806,22 @@ public class GUI {
 				generateGraphs();
 			}
 		});
+	}
+	
+	void setTray() {
+	    Tray tray = display.getSystemTray();
+	    Image image = new Image(display,"res/titleimage.png");
+	    if(tray != null) {
+	    	TrayItem trayItem = new TrayItem(tray, SWT.NONE);
+	    	trayItem.setImage(image);	    	
+	    }	    
+	}
+	
+	void centerWindow(){
+		Rectangle splashRect = shell.getBounds();
+		Rectangle displayRect = display.getBounds();
+		int x = (displayRect.width - splashRect.width) / 2;
+		int y = (displayRect.height - splashRect.height) / 2;
+		shell.setLocation(x, y);
 	}
 }
