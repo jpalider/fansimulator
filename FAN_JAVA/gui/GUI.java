@@ -588,6 +588,7 @@ public class GUI {
 				    dialog.setFilterExtensions(new String[] { "*.xml", "*.*" });				    
 				    dialog.setFileName("ServerConfig.xml");
 				    dialog.open();
+				    shell.update();
 				    saveConfig(dialog.getFileName());
 				}
 				//Open config file
@@ -598,12 +599,13 @@ public class GUI {
 				else if( ((MenuItem)se.widget).getText().equals("Select Configuration File...") ) {
 				    FileDialog fileDialog = new FileDialog(shell, SWT.MULTI);
 
-			        fileDialog.setFilterPath("c:");
+			        //fileDialog.setFilterPath("c:");
 			        
 			        fileDialog.setFilterExtensions(new String[]{"*.xml", "*.*"});
 			        fileDialog.setFilterNames(new String[]{ "XML config file", "Any"});
 			        
 			        String firstFile = fileDialog.open();
+			        shell.update();
 
 			        String selectedFile = new String();
 			        if(firstFile != null) {
