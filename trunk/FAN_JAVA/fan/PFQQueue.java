@@ -141,9 +141,12 @@ public class PFQQueue implements Queue {
 	 * xp-hpsr.pdf : "Cross-protect: implicit service differentiation and admission control"  (III.B)
 	 */		
 	public boolean putPacket(Packet p) {
+	
 		//measurement for idleTime
-		if ( getSize() == 0 )
+		if ( packetQueue.size() == 0 ) {
 			totalIdleTime = totalIdleTime.add( Monitor.clock.substract( idleTime ) );
+		}
+			
 		
 		//Create encapsulation for packet p
 		PacketTimestamped pTimestamped = new PacketTimestamped();
@@ -201,23 +204,24 @@ public class PFQQueue implements Queue {
 		//measurement operations every hundred of ms or more
 		performMeasurements("putPacket()");
 		
-		
-		
 		return true;
 	}
 	
-	private void performMeasurements(String source) {
+	protected void performMeasurements(String source) {
 		
 		//measurement for idleTime
-		if ( getSize() == 0 )
+		if ( getSize() == 0 ) {
 			totalIdleTime = totalIdleTime.add( Monitor.clock.substract( idleTime ) );
+			idleTime = Monitor.clock;
+		}
 		
-		if ( Monitor.clock.substract(lastMeasureTime).toDouble() > 0.25 ){
-			//System.out.println("The source is: " + source);
+		if ( Monitor.clock.substract(lastMeasureTime).toDouble() > 10.5 ){
+			System.out.println("Measurements at " + Monitor.clock.toString());
+			
+			System.out.println("The source is: " + source);
 			priorityLoad = (long)( (priorityBytes - pbt2) / (bandwidth * (Monitor.clock.substract(t2).toDouble()) ) );
 			//System.out.println(this.);
-			System.out.println("Measurements at " + Monitor.clock.toString());
-/*			
+			
 			System.out.println("PriorityLoad = " + priorityLoad);
 			System.out.println("\tPriorityBytes = " + priorityBytes);
 			System.out.println("\ttold = " + t2);
@@ -226,23 +230,19 @@ public class PFQQueue implements Queue {
 			System.out.println("fairRate = " + (virtualTime - vt2));
 			System.out.println("\tvtold = " + vt2);
 			System.out.println("\tvtnew = " + virtualTime);
-			System.out.println("");
-*/			
+			
 			// I misunderstood something and have added such if statement - hope that won't
 			// make the algorithm worse 
 //			if (virtualTime != vt2){
-				if ( totalIdleTime.toDouble() * bandwidth > (virtualTime - vt2) )
+				if ( totalIdleTime.toDouble() * bandwidth > (virtualTime - vt2) ) {
+					System.out.println( "totalIdleTime is bigger: " + totalIdleTime.toDouble() );
 					fairRate = (long)( totalIdleTime.toDouble() * bandwidth / ( Monitor.clock.substract(t2).toDouble() ) );
-				else{
-					if (virtualTime != vt2){
-						fairRate = (long)( ( virtualTime - vt2 ) / ( Monitor.clock.substract(t2).toDouble() ) );
-						System.out.println("virtualTime != vt2");
-					}
-					else {
-						System.out.println("virtualTime == vt2");
-						System.out.println("totalIdleTime = " + totalIdleTime.toDouble());						
-					}
 				}
+				else{
+					System.out.println( "totalIdleTime is smaller: " + totalIdleTime.toDouble() );
+					fairRate = (long)( ( virtualTime - vt2 ) / ( Monitor.clock.substract(t2).toDouble() ) );
+				}
+				System.out.println("Fair Rate is: " + fairRate + "\n");
 //			}
 //			t1 = t2;
 			t2 = Monitor.clock; 
@@ -262,9 +262,10 @@ public class PFQQueue implements Queue {
 	 * TODO: Check if queue is not empty
 	 */
 	public Packet removeFirst() {
-		
+		printElements();
 		if (packetQueue.isEmpty()){
 			// clear flow list (or will it timeout all its flows?)
+			System.out.println("Queue is empty!");
 			return null;
 		}			
 		
@@ -288,12 +289,13 @@ public class PFQQueue implements Queue {
 		}
 		
 		//if PIFO is now empty remove all flows from flowslist
-		if(packetQueue.isEmpty())
-			flowList.cleanAllFlows();
-		
+		if( packetQueue.isEmpty() ) {
+//			flowList.cleanAllFlows();
+//		
 		//save the time so we may know how much time the queue will be idle (in case there are no
 		//more packets waiting in the queue
-		idleTime = Monitor.clock;
+			idleTime = Monitor.clock;
+		}
 		
 		return packet.p;
 	}
@@ -317,7 +319,8 @@ public class PFQQueue implements Queue {
 	}
 	
 	public void printElements() {
-		System.out.println("\nThe Queue is:");
+		System.out.println("\nThe Queue [" + getSize() +"] is:");
+		System.out.println("The queue has " + packetQueue.size() + " elements.");
 		PacketTimestamped[] packetTable = new PacketTimestamped[packetQueue.size()];
 		packetQueue.toArray(packetTable);
 		for (int i = 0; i < packetTable.length; i++) {
