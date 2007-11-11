@@ -15,7 +15,7 @@ public class Random implements Randomize {
 	 * @param range The upper limit of returned double
 	 */
 	public double getNumber(double range) {
-		return generator.nextDouble() * (range + 1);
+		return generator.nextDouble() * (range);
 	}
 	
 	public double getGaussianNumber(double mean, double variance) {
