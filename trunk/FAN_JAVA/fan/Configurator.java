@@ -19,11 +19,11 @@ import org.w3c.dom.DOMException;
 import java.io.*;
 import org.w3c.dom.*;
 
+import com.sun.org.apache.xml.internal.serialize.OutputFormat;
+import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
+
 import java.util.Iterator;
 import java.util.Vector;
-
-import org.apache.xml.serialize.XMLSerializer;
-import org.apache.xml.serialize.OutputFormat;
 
 public class Configurator {
 	private Document document;
@@ -125,7 +125,7 @@ public class Configurator {
             				interfaceElement.getAttributes().getNamedItem("minFR").getTextContent() );
             		
             		// 7. MBAC's maximum priority load
-            		long maxPL = Integer.parseInt(
+            		double maxPL = Double.parseDouble(
             				interfaceElement.getAttributes().getNamedItem("maxPL").getTextContent() );
             		
             		// finally create such interface            		
