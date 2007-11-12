@@ -1,0 +1,65 @@
+
+Simulation issues:
+
+ - adjusting parameters:
+ 	* link capacity
+ 	* AFL length
+ 	* PFQ length
+ 	* MBAC algorithm
+ 	* traffic generators
+ 	* FRmin, PLmax
+ - link utilization, packet loss and packet delay depending on PFQ length and/or MBAC algorithm
+ 	* the longer the buffer the more packets get transmitted (utilization increases) but suffer longer delay
+ 	* on the other hand elastic flow can wait longer - is it really a problem?
+ - test various thresholds for fair_rate and peak_rate
+ - proper traffic generation -> user traffic <-> PL <-> 1% link capacity
+ - Results collector should measure:
+ 	* if prioritized flows (of low peak rate) get dropped
+ - short term burst may no be added to PFL (10% probability of accepting a new flow) ->AJ
+ - methods of checking whether streaming packets suffer delay
+ - showing differences between PFQ and FIF0 with and without MBAC each
+ - FIFO and MBAC -> we do not want to restrict packets by queue size, those from AFL get into thanks to MBAC
+ -ask Profesor Jajszczyk about source code.
+ 
+ 
+Scenarios:
+ - Almost Saturate link and then test behaviour of new flows
+ 	* elastic
+ 	* streaming
+ - Observe behaviour of PFQ and link around link saturation -> global scope
+ - Real traffic generator
+ 	* http
+ 	* ftp
+ 	* voip
+ - Links' size
+ 
+ Scenario 1:
+ 2 Servers: 1 source and 1 destination server
+ Nearly saturated link - check if everything is alright
+ 
+ Scenario 2:
+ 2 Servers: 1 source and 1 destination server
+ Saturated link, and after few second we add new flows
+ 
+ Scenario 3:
+ 20 flows - each is 128kbit/s, capacity 2560kbit/s - minFR = 128kbits - check if all flows are serviced 
+ properly and their service time is at minimum and equal among flows.
+ 
+ Scenario 4:
+ Scenario 3 + add 1 new flow (it should be rejected).
+ 
+ Scenario 5:
+ 3 big elastic flows that take whole link capacity. After that we add 1 new flow (stream or elastic - 2 scenarios)
+ and check if they are serviced by server and have lower service time (in case of stream flows).
+ 
+ Scenario 6:
+ 1 flow exceeding Max PL - check if it is limited to this PL. (check PL and its definition)
+ 
+ Scenario 7:
+ Check different queue sizes and link utilization
+ 
+ 
+ 
+ 
+ 
+ 
