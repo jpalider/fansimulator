@@ -84,7 +84,7 @@ public class ConstantGenerate extends Generate {
 	public void run() {
 		
 		FlowIdentifier flowID = new FlowIdentifier(
-				flowLowerRange + (int) Monitor.generator.getNumber( this.flowHigherRange - this.flowLowerRange ) );
+				flowLowerRange + (int) Monitor.generator.getNumber( this.flowHigherRange - this.flowLowerRange + 1 ) );
 		
 		Packet p = new Packet( 	flowID, 
 								Packet.FlowType.STREAM,
