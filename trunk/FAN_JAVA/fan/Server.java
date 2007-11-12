@@ -113,7 +113,7 @@ public class Server {
 	 * @param queueSize size of the queue that interface has (in bytes)
 	 * @return
 	 */
-	public boolean addInterface ( Server destServ, double probability, int bandwidth, int queueSize, int maxFlowListSize, long minFR, long maxPL ) {
+	public boolean addInterface ( Server destServ, double probability, int bandwidth, int queueSize, int maxFlowListSize, long minFR, double maxPL ) {
 		Interface intfc = new Interface( bandwidth, destServ,this, queueSize, maxFlowListSize, minFR, maxPL );
 		if(routing.addRoute(intfc, probability)) {
 			interfaces.add(intfc);
