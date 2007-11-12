@@ -70,19 +70,19 @@ public class PFQQueueBytes extends PFQQueue {
 
 			packetFlow.backlog += pTimestamped.p.getLength();
 
-			if ( packetFlow.bytes >= MTU ){
-				
-				pTimestamped.startTag = packetFlow.getFinishTag();
-				pTimestamped.finishTag = pTimestamped.startTag + pTimestamped.p.getLength();
-				packetQueue.offer(pTimestamped); // push { packet, flow_time_stamp } to PIFO
-			} else {
+//			if ( packetFlow.bytes >= MTU ){
+//				
+//				pTimestamped.startTag = packetFlow.getFinishTag();
+//				pTimestamped.finishTag = pTimestamped.startTag + pTimestamped.p.getLength();
+//				packetQueue.offer(pTimestamped); // push { packet, flow_time_stamp } to PIFO
+//			} else {
 				
 				pTimestamped.startTag = virtualTime;
 				pTimestamped.finishTag = pTimestamped.startTag + pTimestamped.p.getLength();
 				packetQueue.offer(pTimestamped);
 				priorityBytes += pTimestamped.p.getLength();
-				packetFlow.bytes += pTimestamped.p.getLength();	
-			}
+//				packetFlow.bytes += pTimestamped.p.getLength();	
+//			}
 			
 			packetFlow.setFinishTag( pTimestamped.finishTag );
 		}
@@ -99,7 +99,7 @@ public class PFQQueueBytes extends PFQQueue {
 				Flow packetFlow = new Flow( pTimestamped.p.getFlowIdentifier() );
 				packetFlow.setFinishTag(pTimestamped.finishTag);		
 				packetFlow.backlog = pTimestamped.p.getLength();
-				packetFlow.bytes = pTimestamped.p.getLength();
+//				packetFlow.bytes = pTimestamped.p.getLength();
 				flowList.registerNewFlow(packetFlow);
 			}
 		}
