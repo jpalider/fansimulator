@@ -310,7 +310,7 @@ public class GenerateGraphsDialog extends Dialog {
 			//Process the file until the end
 			int index = 0;
 			while( (buffer = fReader.readLine()) != null ) {
-				if (index++ % 9 != 0) {
+				if (index++ % 20 != 0) {
 					index = 0;
 					continue;
 				}
