@@ -135,7 +135,7 @@ public class AddInterfaceDialog extends Dialog {
         					Integer.parseInt ( queueSizeText.getText() ),
         					Integer.parseInt ( maxFlowListSizeText.getText() ), 
         					Integer.parseInt ( minFRText.getText() ),
-        					Integer.parseInt ( maxPLText.getText() ) );
+        					Double.parseDouble ( maxPLText.getText() ) );
         			shell.close();
         		}
         			
