@@ -86,7 +86,7 @@ public class PFQQueue implements Queue {
 //	protected long vt1;
 	protected Time idleTime;
 	protected Time totalIdleTime;
-	protected long priorityLoad;
+	protected double priorityLoad;
 	protected long fairRate;
 	
 	/**
@@ -220,6 +220,7 @@ public class PFQQueue implements Queue {
 			
 			System.out.println("The source is: " + source);
 			priorityLoad = (long)( (priorityBytes - pbt2) / (bandwidth * (Monitor.clock.substract(t2).toDouble()) ) );
+			priorityLoad = ( (double)(priorityBytes - pbt2) / ((double)bandwidth * (Monitor.clock.substract(t2).toDouble()) ) );
 			//System.out.println(this.);
 			/*
 			System.out.println("PriorityLoad = " + priorityLoad);
@@ -243,6 +244,7 @@ public class PFQQueue implements Queue {
 					fairRate = (long)( ( virtualTime - vt2 ) / ( Monitor.clock.substract(t2).toDouble() ) );
 				}
 				System.out.println("Fair Rate is: " + fairRate + "\n");
+				System.out.println("PriorityLoad is:" + priorityLoad + "\n");
 //			}
 //			t1 = t2;
 			t2 = Monitor.clock; 
@@ -309,7 +311,7 @@ public class PFQQueue implements Queue {
 		return fairRate;
 	}
 	
-	public long getPriorityLoad(){
+	public double getPriorityLoad(){
 		performMeasurements("getPriorityLoad");
 		return priorityLoad;
 	}
