@@ -122,7 +122,7 @@ public class Interface{
 	 * @param minFR The minimum Fair Rate for MBAC used in this interface
 	 * @param maxPL The maximum Priority Load for MBAC used in this interface
 	 */
-	public Interface(int bandwidth, Server peer, Server local, int size, int flsize, long minFR, long maxPL) {
+	public Interface(int bandwidth, Server peer, Server local, int size, int flsize, long minFR, double maxPL) {
 		this.bandwidth = bandwidth;
 		this.queue = new PFQQueueBytes(size, flsize, this);
 		this.setNotBusy();

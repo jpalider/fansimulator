@@ -17,7 +17,7 @@ public class MBAC {
 	FlowList flowList;
 	Queue queue;
 	long minFairRate;
-	long maxPriorityLoad;
+	double maxPriorityLoad;
 	long bandwidth;
 	
 	/**
@@ -26,7 +26,7 @@ public class MBAC {
 	 * @param minFairRate Minimum Fair Rate
 	 * @param maxPriorityLoad Maximum Priority Load
 	 */
-	public MBAC(Interface intface, long minFairRate, long maxPriorityLoad){
+	public MBAC(Interface intface, long minFairRate, double maxPriorityLoad){
 		queue = intface.getQueue();
 		if (queue != null){	
 			if (queue.getType().equals("PFQ")){
@@ -106,7 +106,7 @@ public class MBAC {
 	 * Method to return MBAC parameter - Maximum Priority Load
 	 * @return Maximum Priority Load
 	 */
-	public long getMaxPriorityLoad() {
+	public double getMaxPriorityLoad() {
 		return maxPriorityLoad;
 	}
 	
