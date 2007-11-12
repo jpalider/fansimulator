@@ -44,7 +44,7 @@ public class MBAC {
 	 * Measured priority load in bits.
 	 * @return fair rate
 	 */
-	public long getPriorityLoad(){
+	public double getPriorityLoad(){
 		if ( queue.getType().equals("PFQ") ){
 			return ((PFQQueueBytes)queue).getPriorityLoad();
 		} else if ( queue.getType().equals("FIFO") ){
