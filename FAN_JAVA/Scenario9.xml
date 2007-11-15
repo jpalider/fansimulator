@@ -5,7 +5,7 @@
         1000x1250B/s =  1250B/0.001s That is 1%, TODO: 99%??</description>
     <server n="Server nr 1">
         <interface bandwidth="125000000" maxFlowListSize="2000"
-            maxPL="0.01" minFR="1249" peer="Server nr 2"
+            maxPL="0.01" minFR="1250" peer="Server nr 2"
             probability="1.0" queueSize="10000000"/>
         <generator type="constant">
             <packetSize>1250</packetSize>
