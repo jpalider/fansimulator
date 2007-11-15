@@ -76,14 +76,11 @@ public class MBAC {
 				return true;
 			}
 			if ( (getFairRate() < minFairRate) || (getPriorityLoad() > maxPriorityLoad) ){
-//				if (getFairRate() < minFairRate)
-//					System.out.println("mFR = " + getFairRate());
-//				if (getPriorityLoad() > maxPriorityLoad)
-//					System.out.println("mPL = " + getPriorityLoad());
 				return true;		
-			} else if ( flowList.contains(p.getFlowIdentifier()) ) {
-				return false;
-			}
+			} 
+//			else if ( flowList.contains(p.getFlowIdentifier()) ) {
+			return false;
+//			}
 		} else if ( queue.getType().compareTo("FIFOBytes") == 0) {
 			if (((FifoQueueBytes)queue).getFreeBytes() >= p.getLength()){
 				//	if ( priority load + AFL )
