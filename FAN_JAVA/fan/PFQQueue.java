@@ -215,7 +215,7 @@ public class PFQQueue implements Queue {
 			idleTime = Monitor.clock;
 		}
 		
-		if ( Monitor.clock.substract(lastMeasureTime).toDouble() > 10.5 ){
+		if ( Monitor.clock.substract(lastMeasureTime).toDouble() > 0.5 ){
 			System.out.println("Measurements at " + Monitor.clock.toString());
 			
 			System.out.println("The source is: " + source);
@@ -280,7 +280,7 @@ public class PFQQueue implements Queue {
 			System.out.println("Something has gone wrong in PFQQueue.removeFirst()");
 			System.out.println(	"The flow missing from the list is: " + 
 								packet.p.getFlowIdentifier().toInt() );
-			flowList.printAllFlows();
+			//flowList.printAllFlows();
 		}
 		
 		if ( packet.startTag != virtualTime ){
@@ -292,7 +292,7 @@ public class PFQQueue implements Queue {
 		
 		//if PIFO is now empty remove all flows from flowslist
 		if( packetQueue.isEmpty() ) {
-//			flowList.cleanAllFlows();
+			flowList.cleanAllFlows();
 //		
 		//save the time so we may know how much time the queue will be idle (in case there are no
 		//more packets waiting in the queue
@@ -316,9 +316,11 @@ public class PFQQueue implements Queue {
 		return priorityLoad;
 	}
 
+	
 	public String getType(){
 		return type;
 	}
+	
 	
 	public void printElements() {
 		System.out.println("\nThe Queue [" + getSize() +"] is:");
@@ -326,11 +328,58 @@ public class PFQQueue implements Queue {
 		PacketTimestamped[] packetTable = new PacketTimestamped[packetQueue.size()];
 		packetQueue.toArray(packetTable);
 		for (int i = 0; i < packetTable.length; i++) {
-			System.out.println(	"Clock: " + packetTable[i].clock + 
+			System.out.print(	"Clock: " + packetTable[i].clock + 
 								", sTag: " +packetTable[i].startTag + 
 								", fTag: " + packetTable[i].finishTag +
+								", size: " + packetTable[i].p.getLength() +
 								", FlowID: " + packetTable[i].p.getFlowIdentifier().toInt());
+			if( packetTable[i].p.getServiceStartTime() != null ) {
+				System.out.println(", serviceStartTime: " + packetTable[i].p.getServiceStartTime() );
+			} else
+				System.out.println("");
 		}
 		System.out.println("");
+	}
+	
+	
+	public PacketTimestamped getFirstFlowPacket(FlowIdentifier flowId) {
+		PacketTimestamped tempPacket = null;
+		Packet frontPacket = peekFirst();
+		for (Iterator iter = packetQueue.iterator(); iter.hasNext();) {
+			PacketTimestamped element = (PacketTimestamped) iter.next();
+			if ( element.p.getFlowIdentifier().equals( flowId ) && element.p != frontPacket )
+				if( tempPacket == null ) {
+					tempPacket = element;
+				} else if( element.compareTo( tempPacket ) < 0 ) {
+					tempPacket = element;
+				}
+		}
+		return tempPacket;
+	}
+	
+	
+	public PacketTimestamped removeFirstFlowPacket(FlowIdentifier flowId) {
+		PacketTimestamped tempPacket = null;
+		if( isEmpty() )
+			return null;
+		Packet frontPacket = peekFirst();
+		for (Iterator iter = packetQueue.iterator(); iter.hasNext();) {
+			PacketTimestamped element = (PacketTimestamped) iter.next();
+			if ( element.p.getFlowIdentifier().equals( flowId ) && element.p != frontPacket )
+				if( tempPacket == null ) {
+					tempPacket = element;
+				} else if( element.compareTo( tempPacket ) < 0 ) {
+					tempPacket = element;
+				}
+		} 
+		if( tempPacket == null )
+			return null;
+		else {
+			Flow flow = (Flow)flowList.getFlow( flowId );
+			flow.backlog -= tempPacket.p.getLength();
+			if( packetQueue.remove( tempPacket ) )
+				System.out.println("REMOVED THE PACKET OF FLOW " + flowId.toInt() );
+			return tempPacket;
+		}
 	}
 }

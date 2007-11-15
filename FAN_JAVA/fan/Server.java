@@ -56,9 +56,16 @@ public class Server {
 		
 		//check if MBAC accepts packet - if it is rejected it means that congestion has occurred
 		if ( choiceIntface.getMBAC().congestionOccured( p ) == true ) {
-			choiceIntface.results.addRejectedPacket( p.getFlowIdentifier() );
-			p = null;
-			return;
+			if( !( (PFQQueueBytes)choiceIntface.getQueue() ).getFlowList().contains( p.getFlowIdentifier() ) )
+			{
+				p = null;
+				return;
+			}
+			FlowIdentifier mostBackloggedFlow = ( (PFQQueueBytes)choiceIntface.getQueue() ).flowList.getMostBackloggedFlow();
+			choiceIntface.results.addRejectedPacket( mostBackloggedFlow );
+			System.out.println( "The size of the queue before is: " + ( (PFQQueueBytes)choiceIntface.getQueue() ).getSize() );
+			( (PFQQueueBytes)choiceIntface.getQueue() ).removeFirstFlowPacket( mostBackloggedFlow );
+			System.out.println( "The size of the queue after is: " + ( (PFQQueueBytes)choiceIntface.getQueue() ).getSize() );
 		}
 
 		choiceIntface.markFirstArrival();
@@ -66,7 +73,9 @@ public class Server {
 		
 		//Check if interface is free
 		if( !choiceIntface.isBusy() ) {
+			
 			choiceIntface.getQueue().putPacket(p);
+			
 			//sendTime is equal to: packet length / interface speed
 			Time sendTime = new Time( (double) p.getLength() / choiceIntface.getBandwidth() );
 			
@@ -74,7 +83,6 @@ public class Server {
 			Monitor.agenda.schedule( new Depart(Monitor.clock.add(sendTime),choiceIntface) );
 			
 			//And set interface as busy
-			choiceIntface.setBusy();
 			choiceIntface.results.addServicedPacket(0, p.getFlowIdentifier() );
 			choiceIntface.results.addQueueLength(0);
 		}
