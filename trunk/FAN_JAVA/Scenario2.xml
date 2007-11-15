@@ -10,7 +10,7 @@ Required bandwidth(BW) is 20x16000 B/s&#xd;
 Queue size is BW/4 as 250ms==1/4s is max waiting time</description>
     <server n="Server nr 1">
         <interface bandwidth="320000" maxFlowListSize="100"
-            maxPL="100000" minFR="16000" peer="Server nr 2"
+            maxPL="1.0" minFR="16000" peer="Server nr 2"
             probability="1.0" queueSize="100000"/>
         <generator type="constant">
             <packetSize>400</packetSize>
