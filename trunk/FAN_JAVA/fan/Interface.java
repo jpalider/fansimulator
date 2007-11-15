@@ -12,8 +12,6 @@ public class Interface{
 	
 	private Queue queue;
 	
-	private boolean busy;
-	
 	private MBAC admissionControl;
 	
 	private boolean virgin = true;
@@ -29,21 +27,9 @@ public class Interface{
 	 * @uml.property  name="busy"
 	 */
 	public boolean isBusy() {
-		return this.busy;
+		return !queue.isEmpty();
 	}
 	
-	/**
-	 * 
-	 * @return
-	 */
-	public void setBusy() {
-		this.busy = true;
-	}
-	
-	public void setNotBusy() {
-		this.busy = false;
-		updateUpTime();
-	}
 	
 	/**
 	 * Method for getting the Server pointed by this interface
@@ -96,11 +82,18 @@ public class Interface{
 		results.addAvgpacketLength(pkt);
 //		markFirstArrival();
 		updateUpTime();
-		if(queue.isEmpty())
-			this.setNotBusy();
-		else {
+		if( !queue.isEmpty() ) {
 			Packet p = queue.peekFirst();
 			//Time used to send packet is not added to its service time
+			if( p == null) {
+				System.out.println( "ERROR: The packet was null" );
+			} else if ( p.getServiceStartTime() == null ) {
+				System.out.println( "ERROR: The packetServiceStartTime is null" );
+				( (PFQQueueBytes)getQueue() ).printElements() ;
+				System.out.println("The previous packet had the following parameters:");
+				System.out.println(	"Flow ID: " + pkt.getFlowIdentifier().toInt() + 
+									", service start time: " + pkt.getServiceStartTime().toDouble() );
+			}
 			results.addServicedPacket( 	Monitor.clock.substract(p.getServiceStartTime()).toDouble(),
 										p.getFlowIdentifier() );
 			Time sendTime = new Time( (double) p.getLength() / (double)bandwidth );
@@ -125,7 +118,6 @@ public class Interface{
 	public Interface(int bandwidth, Server peer, Server local, int size, int flsize, long minFR, double maxPL) {
 		this.bandwidth = bandwidth;
 		this.queue = new PFQQueueBytes(size, flsize, this);
-		this.setNotBusy();
 		this.peer = peer;
 		this.localhost = local;
 		this.admissionControl = new MBAC(this, minFR, maxPL );
@@ -158,7 +150,6 @@ public class Interface{
 		this.queue = new PFQQueueBytes(100000, 100, this); 
 		admissionControl.setQueue(this.queue);
 		//this.queue = new FifoQueueBytes(100000,this);
-		this.setNotBusy();
 	}
 
 	public Time getUpTime(){		

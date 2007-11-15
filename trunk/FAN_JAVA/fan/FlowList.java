@@ -97,4 +97,22 @@ public class FlowList {
 			System.out.println ( element.getFlowID().toInt() + " Finish tag: " + element.getFinishTag() );
 		}
 	}
+	
+	/**
+	 * Metod to return flow identifier of the most backlogged flow
+	 * @return
+	 */
+	public FlowIdentifier getMostBackloggedFlow() {
+		
+		long maxBacklog = 0;
+		FlowIdentifier backloggedFlowId = null;
+		for (Iterator iter = protectedList.iterator(); iter.hasNext();) {
+			Flow element = (Flow) iter.next();
+			if( element.backlog > maxBacklog ) {
+				maxBacklog = element.backlog;
+				backloggedFlowId = element.getFlowID();
+			}
+		}
+		return backloggedFlowId;
+	}
 }
