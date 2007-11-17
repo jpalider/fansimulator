@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <description>Scenario 2:&#xd;
+Nearly saturated link - check if everything is alright&#xd;
+20x128 kb/s&#xd;
+128000b == 16000B&#xd;
+16000 every second is replaced by 400 every 25ms&#xd;
+20 connections should occur every 25ms/20&#xd;
+Required bandwidth(BW) is 20x16000 B/s&#xd;
+Queue size is BW/4 as 250ms==1/4s is max waiting time</description>
+    <server n="Server nr 1">
+        <interface bandwidth="320000" maxFlowListSize="100"
+            maxPL="100000.0" minFR="16000" peer="Server nr 2"
+            probability="1.0" queueSize="100000"/>
+        <generator type="constant">
+            <packetSize>400</packetSize>
+            <startTime>0.0</startTime>
+            <flowLowerRange>1</flowLowerRange>
+            <flowHigherRange>20</flowHigherRange>
+            <looped>true</looped>
+            <interval>0.00125</interval>
+        </generator>
+        <generator type="constant">
+            <packetSize>500</packetSize>
+            <startTime>5.0</startTime>
+            <flowLowerRange>21</flowLowerRange>
+            <flowHigherRange>21</flowHigherRange>
+            <looped>true</looped>
+            <interval>6.0E-4</interval>
+        </generator>
+    </server>
+    <server n="Server nr 2">
+        <interface bandwidth="1" maxFlowListSize="100" maxPL="100000.0"
+            minFR="1" peer="Server nr 2" probability="1.0" queueSize="100000"/>
+    </server>
+</root>
