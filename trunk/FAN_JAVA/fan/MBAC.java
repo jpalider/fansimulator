@@ -75,9 +75,13 @@ public class MBAC {
 				System.out.println("FlowList saturated.");
 				return true;
 			}
-			if ( (getFairRate() < minFairRate) || (getPriorityLoad() > maxPriorityLoad) ){
+			if (getFairRate() < minFairRate) { 
+				System.out.println( "Congestion occured, FR is: " + getFairRate() );
 				return true;		
-			} 
+			}  else if (getPriorityLoad() > maxPriorityLoad) {
+				System.out.println( "Congestion occured, PL is: " + getPriorityLoad() );
+				return true;
+			}
 //			else if ( flowList.contains(p.getFlowIdentifier()) ) {
 			return false;
 //			}

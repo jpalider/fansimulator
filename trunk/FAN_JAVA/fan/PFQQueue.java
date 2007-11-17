@@ -10,7 +10,16 @@ import java.util.PriorityQueue;
 public class PFQQueue implements Queue {
 	
 	String type;
-	Time lastMeasureTime;
+	/**
+	 * This is the measure time used for Fair Rate calculation
+	 */
+	Time lastMeasureTimeFR;
+	
+	/**
+	 * This is the measure time used for Priority Load calculation
+	 */
+	Time lastMeasureTimePL;
+	
 	boolean measured = false;
 	/**
 	 * This is the encapsulation class for Packet,
@@ -101,7 +110,8 @@ public class PFQQueue implements Queue {
 		flowList = new FlowList(flowListSize);
 		bandwidth = intface.getBandwidth();
 		type = "PFQ";
-		lastMeasureTime = Monitor.clock;
+		lastMeasureTimeFR = new Time(0);
+		lastMeasureTimePL = new Time(0);
 		priorityBytes = 0;
 		idleTime = new Time(0);
 		totalIdleTime = new Time(0);
@@ -215,48 +225,41 @@ public class PFQQueue implements Queue {
 			idleTime = Monitor.clock;
 		}
 		
-		if ( Monitor.clock.substract(lastMeasureTime).toDouble() > 0.5 ){
-			System.out.println("Measurements at " + Monitor.clock.toString());
+		//Measurements for Fair Rate
+		if ( Monitor.clock.substract(lastMeasureTimeFR).toDouble() > 0.5 ){
+			System.out.println(	"Measurements of Fair Rate at " + 
+								Monitor.clock.toString() +
+								", source: " + source );
 			
-			System.out.println("The source is: " + source);
-			priorityLoad = (long)( (priorityBytes - pbt2) / (bandwidth * (Monitor.clock.substract(t2).toDouble()) ) );
-			priorityLoad = ( (double)(priorityBytes - pbt2) / ((double)bandwidth * (Monitor.clock.substract(t2).toDouble()) ) );
-			//System.out.println(this.);
-			/*
-			System.out.println("PriorityLoad = " + priorityLoad);
-			System.out.println("\tPriorityBytes = " + priorityBytes);
-			System.out.println("\ttold = " + t2);
-			System.out.println("\ttnew = " + Monitor.clock);
-			
-			System.out.println("fairRate = " + (virtualTime - vt2));
-			System.out.println("\tvtold = " + vt2);
-			System.out.println("\tvtnew = " + virtualTime);
-			*/
 			// I misunderstood something and have added such if statement - hope that won't
 			// make the algorithm worse 
 //			if (virtualTime != vt2){
-				if ( totalIdleTime.toDouble() * bandwidth > (virtualTime - vt2) ) {
-					//System.out.println( "totalIdleTime is bigger: " + totalIdleTime.toDouble() );
-					fairRate = (long)( totalIdleTime.toDouble() * bandwidth / ( Monitor.clock.substract(t2).toDouble() ) );
-				}
-				else{
-					//System.out.println( "totalIdleTime is smaller: " + totalIdleTime.toDouble() );
-					fairRate = (long)( ( virtualTime - vt2 ) / ( Monitor.clock.substract(t2).toDouble() ) );
-				}
-				System.out.println("Fair Rate is: " + fairRate + "\n");
-				System.out.println("PriorityLoad is:" + priorityLoad + "\n");
-//			}
-//			t1 = t2;
-			t2 = Monitor.clock; 
-			// - for priority load
-//			pbt1 = pbt2;
-			pbt2 = priorityBytes;	
-			// - for fair rate
-//			vt1 = vt2;
-			vt2 = virtualTime;
+			if ( totalIdleTime.toDouble() * bandwidth >= (virtualTime - vt2) ) {
+				System.out.println( "totalIdleTime is bigger: " + totalIdleTime.toDouble() );
+				fairRate = (long)( totalIdleTime.toDouble() * (double)bandwidth / ( Monitor.clock.substract(t2).toDouble() ) );
+			}
+			else{
+				System.out.println( "totalIdleTime is smaller: " + totalIdleTime.toDouble() );
+				fairRate = (long)( (double)( virtualTime - vt2 ) / ( Monitor.clock.substract( lastMeasureTimeFR ).toDouble() ) );
+			}
 			
-			lastMeasureTime = Monitor.clock;
-			totalIdleTime = new Time( 0 );
+			System.out.println("Fair Rate is: " + fairRate + "\n");
+						
+			lastMeasureTimeFR = Monitor.clock;
+			vt2 = virtualTime;
+			//totalIdleTime = new Time( 0 );
+		}
+		
+		//Measurements for Priority Load
+		if ( Monitor.clock.substract(lastMeasureTimePL).toDouble() > 0.5 ){
+			//calculate priority load
+			priorityLoad = ( (double)(priorityBytes - pbt2) / ((double)bandwidth * (Monitor.clock.substract( lastMeasureTimePL ).toDouble()) ) );
+			
+			//System.out.println("Priority Load is: " + priorityLoad + "\n");
+			
+			//save values that will be required next time for PL calculation
+			lastMeasureTimePL = Monitor.clock; 
+			pbt2 = priorityBytes;
 		}
 	}
 
