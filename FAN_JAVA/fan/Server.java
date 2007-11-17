@@ -58,6 +58,8 @@ public class Server {
 		if ( choiceIntface.getMBAC().congestionOccured( p ) == true ) {
 			if( !( (PFQQueueBytes)choiceIntface.getQueue() ).getFlowList().contains( p.getFlowIdentifier() ) )
 			{
+				System.out.println("The flow is not in the list");
+				choiceIntface.results.addRejectedPacket( p.getFlowIdentifier() );
 				p = null;
 				return;
 			}
