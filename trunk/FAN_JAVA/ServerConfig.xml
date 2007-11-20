@@ -1,36 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
-    <description>Scenario 2:&#xd;
-Nearly saturated link - check if everything is alright&#xd;
-20x128 kb/s&#xd;
-128000b == 16000B&#xd;
-16000 every second is replaced by 400 every 25ms&#xd;
-20 connections should occur every 25ms/20&#xd;
-Required bandwidth(BW) is 20x16000 B/s&#xd;
-Queue size is BW/4 as 250ms==1/4s is max waiting time</description>
+    <description>Scenario 9: Assuming devotion 1% of total bandwidth to
+        priority traffic, on 1Gb/s = 125MB/s it will be 1250000 B/s =
+        1000x1250B/s =  1250B/0.001s That is 1%, TODO: 99%??</description>
     <server n="Server nr 1">
-        <interface bandwidth="320000" maxFlowListSize="25"
-            maxPL="100000" minFR="17000" peer="Server nr 2"
-            probability="1.0" queueSize="80000"/>
+        <interface bandwidth="125000000" maxFlowListSize="2000"
+            maxPL="0.01" minFR="1250" peer="Server nr 2"
+            probability="1.0" queueSize="10000000"/>
         <generator type="constant">
-            <packetSize>400</packetSize>
+            <packetSize>1250</packetSize>
             <startTime>0.0</startTime>
             <flowLowerRange>1</flowLowerRange>
-            <flowHigherRange>20</flowHigherRange>
+            <flowHigherRange>1000</flowHigherRange>
             <looped>true</looped>
-            <interval>0.00125</interval>
+            <interval>0.0010</interval>
         </generator>
         <generator type="constant">
-            <packetSize>400</packetSize>
-            <startTime>5.0</startTime>
-            <flowLowerRange>21</flowLowerRange>
-            <flowHigherRange>21</flowHigherRange>
+            <packetSize>1500</packetSize>
+            <startTime>3.0</startTime>
+            <flowLowerRange>77</flowLowerRange>
+            <flowHigherRange>77</flowHigherRange>
             <looped>true</looped>
-            <interval>0.025</interval>
+            <interval>1.0E-4</interval>
         </generator>
     </server>
     <server n="Server nr 2">
-        <interface bandwidth="1" maxFlowListSize="100" maxPL="100000"
+        <interface bandwidth="1" maxFlowListSize="100" maxPL="100000.0"
             minFR="1" peer="Server nr 2" probability="1.0" queueSize="100000"/>
     </server>
 </root>
