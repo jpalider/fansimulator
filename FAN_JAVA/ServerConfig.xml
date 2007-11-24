@@ -18,8 +18,8 @@
         <generator type="constant">
             <packetSize>1500</packetSize>
             <startTime>3.0</startTime>
-            <flowLowerRange>77</flowLowerRange>
-            <flowHigherRange>77</flowHigherRange>
+            <flowLowerRange>1777</flowLowerRange>
+            <flowHigherRange>1777</flowHigherRange>
             <looped>true</looped>
             <interval>1.0E-4</interval>
         </generator>
