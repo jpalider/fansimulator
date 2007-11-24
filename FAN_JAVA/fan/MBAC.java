@@ -19,7 +19,6 @@ public class MBAC {
 	long minFairRate;
 	double maxPriorityLoad;
 	long bandwidth;
-	static final double epsilon = 0.00001;
 	
 	/**
 	 * Default constructor for MBAC
@@ -76,11 +75,11 @@ public class MBAC {
 				System.out.println("FlowList saturated.");
 				return true;
 			}
-			if ( getFairRate() < minFairRate + epsilon) { 
-				System.out.println( "Congestion occured, FR is: " + getFairRate() );
+			if (getFairRate() < minFairRate) { 
+//				System.out.println( "Congestion occured, FR is: " + getFairRate() );
 				return true;		
-			}  else if (getPriorityLoad() > maxPriorityLoad + epsilon) {
-				System.out.println( "Congestion occured, PL is: " + getPriorityLoad() );
+			}  else if (getPriorityLoad() > maxPriorityLoad) {
+//				System.out.println( "Congestion occured, PL is: " + getPriorityLoad() );
 				return true;
 			}
 //			else if ( flowList.contains(p.getFlowIdentifier()) ) {
