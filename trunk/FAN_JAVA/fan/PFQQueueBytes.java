@@ -47,8 +47,11 @@ public class PFQQueueBytes extends PFQQueue {
 		
 //		measurement for idleTime
 		if ( packetQueue.size() == 0 ) {
-			totalIdleTime = totalIdleTime.add( Monitor.clock.substract( idleTime ) );
+			//totalIdleTime = totalIdleTime.add( Monitor.clock.substract( idleTime ) );
 		}
+		
+//		measurement operations every hundred of ms or more
+		performMeasurements("putPacket()");
 			
 		
 		//Create encapsulation for packet p
@@ -61,6 +64,7 @@ public class PFQQueueBytes extends PFQQueue {
 //		if(packetQueue.size() >= maxSize){
 		if(isFull()){
 			p = null;
+			System.out.println("The queue is full");
 			return false;
 		}
 		
@@ -73,7 +77,11 @@ public class PFQQueueBytes extends PFQQueue {
 
 			if ( packetFlow.bytes >= MTU ){
 				
-				pTimestamped.startTag = packetFlow.getFinishTag();
+				if( packetFlow.getFinishTag() < virtualTime ) 
+					 pTimestamped.startTag = virtualTime;
+				 else
+					 pTimestamped.startTag = packetFlow.getFinishTag();
+				
 				pTimestamped.finishTag = pTimestamped.startTag + pTimestamped.p.getLength();
 				packetQueue.offer(pTimestamped); // push { packet, flow_time_stamp } to PIFO
 			} else {
@@ -104,14 +112,12 @@ public class PFQQueueBytes extends PFQQueue {
 				flowList.registerNewFlow(packetFlow);
 			} else {
 				System.out.println("CONGESTION IN THE LIST");
+				System.out.println( "Flowlist length: " + flowList.getLength() + ", flowlist max size: " + flowList.getMaxLength() );
 			}
 			
 		}
 		
 		sizeInBytes += p.getLength();
-		
-		//measurement operations every hundred of ms or more
-		performMeasurements("putPacket()");
 		
 		return true;
 			

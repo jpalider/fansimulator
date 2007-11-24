@@ -25,6 +25,14 @@ public class Time implements Comparable<Time>{
 		this.t = time;
 	}
 	
+	/**
+	 * Copy constructor for Time
+	 * @param oldTime Time to be copied into this new object
+	 */
+	public Time( Time oldTime ) {
+		this.t = oldTime.t;
+	}
+	
 	/**This method returns new Time object with time value equal to 
 	 * the sum of this and tt times. It doesn't change time value of this
 	 * object.

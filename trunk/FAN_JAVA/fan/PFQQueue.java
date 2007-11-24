@@ -3,6 +3,8 @@ package fan;
 import java.util.Iterator;
 import java.util.PriorityQueue;
 
+import javax.print.attribute.standard.Finishings;
+
 /**
  * This is the implementation of PFQ Queue
  * 
@@ -32,6 +34,8 @@ public class PFQQueue implements Queue {
 		public long finishTag;
 		public double clock;
 		public int compareTo(PacketTimestamped p){
+			if( packetQueue.peek() == p )
+				return 1;
 			if (this.startTag == p.startTag) {
 				if ( this.clock == p.clock ) 
 					return 0;
@@ -97,6 +101,7 @@ public class PFQQueue implements Queue {
 	protected Time totalIdleTime;
 	protected double priorityLoad;
 	protected long fairRate;
+	
 	
 	/**
 	 * Constructor for PFQQueue class
@@ -179,7 +184,11 @@ public class PFQQueue implements Queue {
 
 			if ( packetFlow.bytes >= MTU ){
 				
-				pTimestamped.startTag = packetFlow.getFinishTag();
+				 if( packetFlow.getFinishTag() < virtualTime ) 
+					 pTimestamped.startTag = virtualTime;
+				 else
+					 pTimestamped.startTag = packetFlow.getFinishTag();
+				 
 				pTimestamped.finishTag = pTimestamped.startTag + pTimestamped.p.getLength();
 				packetQueue.offer(pTimestamped); // push { packet, flow_time_stamp } to PIFO
 			} else {
@@ -220,13 +229,13 @@ public class PFQQueue implements Queue {
 	protected void performMeasurements(String source) {
 		
 		//measurement for idleTime
-		if ( getSize() == 0 ) {
+		if ( isEmpty() ) {
 			totalIdleTime = totalIdleTime.add( Monitor.clock.substract( idleTime ) );
-			idleTime = Monitor.clock;
+			idleTime = new Time( Monitor.clock.toDouble() );
 		}
 		
 		//Measurements for Fair Rate
-		if ( Monitor.clock.substract(lastMeasureTimeFR).toDouble() > 0.5 ){
+		if ( Monitor.clock.substract(lastMeasureTimeFR).toDouble() >= 0.5 ){
 			System.out.println(	"Measurements of Fair Rate at " + 
 								Monitor.clock.toString() +
 								", source: " + source );
@@ -235,27 +244,37 @@ public class PFQQueue implements Queue {
 			// make the algorithm worse 
 //			if (virtualTime != vt2){
 			if ( totalIdleTime.toDouble() * bandwidth >= (virtualTime - vt2) ) {
-				System.out.println( "totalIdleTime is bigger: " + totalIdleTime.toDouble() );
-				fairRate = (long)( totalIdleTime.toDouble() * (double)bandwidth / ( Monitor.clock.substract(t2).toDouble() ) );
+				System.out.println( "totalIdleTime is bigger: " + totalIdleTime.toDouble() + ",vt = " + virtualTime + ",vt2 = " + vt2);
+				fairRate = (long)( totalIdleTime.toDouble() * (double)bandwidth / ( Monitor.clock.substract( lastMeasureTimeFR ).toDouble() ) );
 			}
 			else{
-				System.out.println( "totalIdleTime is smaller: " + totalIdleTime.toDouble() );
+				System.out.println( "totalIdleTime is smaller: " + totalIdleTime.toDouble() + ",vt = " + virtualTime + ",vt2 = " + vt2 );
 				fairRate = (long)( (double)( virtualTime - vt2 ) / ( Monitor.clock.substract( lastMeasureTimeFR ).toDouble() ) );
 			}
 			
 			System.out.println("Fair Rate is: " + fairRate + "\n");
 						
-			lastMeasureTimeFR = Monitor.clock;
+			lastMeasureTimeFR = new Time( Monitor.clock );
 			vt2 = virtualTime;
-			//totalIdleTime = new Time( 0 );
+			totalIdleTime = new Time( 0 );
 		}
 		
 		//Measurements for Priority Load
-		if ( Monitor.clock.substract(lastMeasureTimePL).toDouble() > 0.5 ){
+		if ( Monitor.clock.substract(lastMeasureTimePL).toDouble() >= 0.005 ){
 			//calculate priority load
-			priorityLoad = ( (double)(priorityBytes - pbt2) / ((double)bandwidth * (Monitor.clock.substract( lastMeasureTimePL ).toDouble()) ) );
+			priorityLoad = ( (double)(priorityBytes - pbt2) / 
+							(double) Math.round( (double)bandwidth * ( Monitor.clock.substract( lastMeasureTimePL ).toDouble() ) ) );
+			if( priorityLoad > 1 )
+				priorityLoad = 1;
 			
-			//System.out.println("Priority Load is: " + priorityLoad + "\n");
+//			PRINT DETAILS OF PRIORITY LOAD MEASUREMENTS			
+//			System.out.println(	"Priority Load is: " + priorityLoad + 
+//								", pb - pb2 = " + (double)(priorityBytes - pbt2) + 
+//								", band * clock = " + ((double)bandwidth * (Monitor.clock.substract( lastMeasureTimePL ).toDouble()) ) + 
+//								", band = " + (double)bandwidth +
+//								", clock = " + Monitor.clock.toDouble() + 
+//								", lastMeasureTime = " + lastMeasureTimePL.toDouble() );
+//			
 			
 			//save values that will be required next time for PL calculation
 			lastMeasureTimePL = Monitor.clock; 
@@ -270,7 +289,6 @@ public class PFQQueue implements Queue {
 
 		if (packetQueue.isEmpty()){
 			// clear flow list (or will it timeout all its flows?)
-			System.out.println("Queue is empty!");
 			return null;
 		}			
 		
@@ -290,16 +308,13 @@ public class PFQQueue implements Queue {
 //			FlowPFQ flow = (FlowPFQ)flowList.getFlow(packet.p.getFlowIdentifier());
 			virtualTime = packet.startTag;
 			//Remove all queues which finishTag is smaller than virtualTime
-			flowList.cleanFlows(virtualTime);
+			flowList.cleanFlows(virtualTime - 10000);
 		}
 		
 		//if PIFO is now empty remove all flows from flowslist
 		if( packetQueue.isEmpty() ) {
-			flowList.cleanAllFlows();
-//		
-		//save the time so we may know how much time the queue will be idle (in case there are no
-		//more packets waiting in the queue
-			idleTime = Monitor.clock;
+		//	flowList.cleanAllFlows();
+			idleTime = new Time( Monitor.clock );
 		}
 		
 		return packet.p;

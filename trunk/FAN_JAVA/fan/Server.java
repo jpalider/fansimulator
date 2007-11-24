@@ -58,16 +58,20 @@ public class Server {
 		if ( choiceIntface.getMBAC().congestionOccured( p ) == true ) {
 			if( !( (PFQQueueBytes)choiceIntface.getQueue() ).getFlowList().contains( p.getFlowIdentifier() ) )
 			{
-				System.out.println("The flow is not in the list");
+				//System.out.println("The flow: " + p.getFlowIdentifier().toInt() + " is not in the list" );				
 				choiceIntface.results.addRejectedPacket( p.getFlowIdentifier() );
 				p = null;
 				return;
+			} else {
+				FlowIdentifier mostBackloggedFlow = ( (PFQQueueBytes)choiceIntface.getQueue() ).flowList.getMostBackloggedFlow();
+				if( mostBackloggedFlow != null ) { 
+					//System.out.println( "The size of the queue before is: " + ( (PFQQueueBytes)choiceIntface.getQueue() ).getSize() );
+					if( ( (PFQQueueBytes)choiceIntface.getQueue() ).removeFirstFlowPacket( mostBackloggedFlow ) != null )
+						choiceIntface.results.addRejectedPacket( mostBackloggedFlow );
+//					System.out.println( "The size of the queue after is: " + ( (PFQQueueBytes)choiceIntface.getQueue() ).getSize() );
+				} //else
+					//System.out.println( "There is no backlogged flow" );
 			}
-			FlowIdentifier mostBackloggedFlow = ( (PFQQueueBytes)choiceIntface.getQueue() ).flowList.getMostBackloggedFlow();
-			choiceIntface.results.addRejectedPacket( mostBackloggedFlow );
-			System.out.println( "The size of the queue before is: " + ( (PFQQueueBytes)choiceIntface.getQueue() ).getSize() );
-			( (PFQQueueBytes)choiceIntface.getQueue() ).removeFirstFlowPacket( mostBackloggedFlow );
-			System.out.println( "The size of the queue after is: " + ( (PFQQueueBytes)choiceIntface.getQueue() ).getSize() );
 		}
 
 		choiceIntface.markFirstArrival();

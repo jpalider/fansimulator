@@ -160,6 +160,8 @@ public class TimeResultsCollector extends ResultsCollector {
 	 */
 	public void addRejectedPacket( FlowIdentifier flowID ) {
 		super.addRejectedPacket();
+		if ( flowID == null )
+			System.out.println("Flow ID is null in rejectedPacket");
 		
 		if( flowRejectedPackets.get( flowID.toInt() ) == null ) {
 			flowRejectedPackets.put( flowID.toInt(), 0 );
