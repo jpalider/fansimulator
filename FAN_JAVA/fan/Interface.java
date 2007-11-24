@@ -1,7 +1,7 @@
 package fan;
 
 /**
- * @author  dodek
+ * @author dodek
  */
 public class Interface{
 	private int bandwidth;
@@ -18,13 +18,21 @@ public class Interface{
 	private Time firstPacketArrival = new Time(0);
 	private Time lastPacketDepart = new Time(0);
 	
+	/**
+	 * Holds information about maximum flow list size
+	 */
 	private int maxFlowListSize;
+	
+	/**
+	 * Holds information about maximum queue size
+	 */
 	private int maxQueueSize;
 	
-//	/**
-//	 * The ResultsCollector holding information about simulation times for this Interface
-//	 */
+	/**
+	 * The ResultsCollector holding information about simulation times for this Interface
+	 */
 	public TimeResultsCollector results;
+	
 	
 	/**
 	 * @return
@@ -43,6 +51,7 @@ public class Interface{
 		return this.peer;
 	}
 	
+	
 	/**
 	 * Method for setting Server pointed by this interface
 	 * @param newPeer Server pointed by this interface
@@ -51,6 +60,7 @@ public class Interface{
 		this.peer = newPeer;
 	}
 	
+	
 	/**
 	 * @return  the queue
 	 * @uml.property  name="queue"
@@ -58,6 +68,7 @@ public class Interface{
 	public Queue getQueue() {
 		return this.queue;
 	}
+
 	
 	/**
 	 * Getter for interface bandwidth
@@ -67,6 +78,7 @@ public class Interface{
 	public int getBandwidth() {
 		return this.bandwidth;
 	}
+
 	
 	/**
 	 * Called by Depart event. send() makes a call to receive(Packet p)
@@ -105,7 +117,6 @@ public class Interface{
 		}
 	}
 
-
 	
 	/**
 	 * Constructor for Interface class. It creates interface with selected
@@ -129,6 +140,7 @@ public class Interface{
 		this.maxFlowListSize = flsize;
 		this.maxQueueSize = size;
 	}
+
 	
 	/**
 	 * @return  the localhost
@@ -138,6 +150,7 @@ public class Interface{
 		return localhost;
 	}
 
+	
 	/**
 	 * @param localhost  the localhost to set
 	 * @uml.property  name="localhost"
@@ -146,6 +159,7 @@ public class Interface{
 		this.localhost = locahost;
 	}
 
+	
 	/**
 	 * This is the method responsible for clearing interface data. It doesn't change
 	 * configuration of interface, the aim of this method is to clear interface after
@@ -158,13 +172,23 @@ public class Interface{
 		//this.queue = new FifoQueueBytes(100000,this);
 	}
 
+	
+	/**
+	 * Method to get upTime of this interface
+	 * @return
+	 */
 	public Time getUpTime(){		
 		return lastPacketDepart.substract(firstPacketArrival);
 	}
 	
+	
+	/**
+	 * Method to update upTime of this interface
+	 */
 	public void updateUpTime(){
 		lastPacketDepart = Monitor.clock;
 	}
+
 	
 	/**
 	 * Remembers when a packet appeared on this interface for the first time
@@ -177,6 +201,11 @@ public class Interface{
 		}
 	}
 	
+	
+	/**
+	 * Method to return MBAC assigned to this interface
+	 * @return
+	 */
 	public MBAC getMBAC() {
 		return admissionControl;
 	}
