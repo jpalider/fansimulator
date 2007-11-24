@@ -17,6 +17,10 @@ public class Interface{
 	private boolean virgin = true;
 	private Time firstPacketArrival = new Time(0);
 	private Time lastPacketDepart = new Time(0);
+	
+	private int maxFlowListSize;
+	private int maxQueueSize;
+	
 //	/**
 //	 * The ResultsCollector holding information about simulation times for this Interface
 //	 */
@@ -122,6 +126,8 @@ public class Interface{
 		this.localhost = local;
 		this.admissionControl = new MBAC(this, minFR, maxPL );
 		this.results = new TimeResultsCollector(localhost.getName() + "_" + peer.getName());
+		this.maxFlowListSize = flsize;
+		this.maxQueueSize = size;
 	}
 	
 	/**
@@ -147,7 +153,7 @@ public class Interface{
 	 */
 	public void clearInterface() {
 		//this.queue = new FifoQueueBytes(150000,this);
-		this.queue = new PFQQueueBytes(100000, 100, this); 
+		this.queue = new PFQQueueBytes(maxQueueSize, maxFlowListSize, this); 
 		admissionControl.setQueue(this.queue);
 		//this.queue = new FifoQueueBytes(100000,this);
 	}
