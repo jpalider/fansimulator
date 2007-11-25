@@ -9,7 +9,11 @@ import java.util.Queue;
  */
 public class EventList {
 	
+	/**
+	 * The queue that stores the list of events that are scheduled to occur
+	 */
 	private Queue<Event> queue; 
+	
 	
 	/**
 	 * Default constructor
@@ -18,6 +22,8 @@ public class EventList {
 	public EventList() {
 		queue = new PriorityQueue<Event>();
 	}
+	
+	
 	/**
 	 * Returns an Event that is going to happen now.
 	 * @return Event
@@ -26,6 +32,8 @@ public class EventList {
 	public Event removeFirst(){
 		return queue.poll();
 	}
+	
+	
 	/**
 	 * Schedules an event according to occurence time of that event.
 	 * @author Mumin
@@ -34,6 +42,12 @@ public class EventList {
 		queue.add(newEvent);
 	}
 	
+	
+	/**
+	 * Method to check if there are any events waiting to be scheduled
+	 * @return 	True if there are no more events in the list of all events,
+	 * 			False otherwise.
+	 */
 	public boolean isEmpty() {
 		return queue.isEmpty();
 	}

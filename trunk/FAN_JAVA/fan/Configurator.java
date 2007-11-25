@@ -32,19 +32,47 @@ public class Configurator {
 	 * String to hold the filename where the configuration is saved
 	 */
 	private String filename;
+	
+	/**
+	 * String to hold the description of the scenario
+	 */
 	private String description = new String("");
+	
+	
+	/**
+	 * Method to set description of the scenario
+	 * @param description Description of the scenario
+	 */
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
+	
+	/**
+	 * Method to get description from scenario
+	 * @return Description of the scenario
+	 */
 	public String getDescription() {
 		return description;
 	}
 	
 	
+	/**
+	 * Constructor of this class, it requires the name of the file where configuration (scenario)
+	 * is/will be stored
+	 * @param configFile String with the file name of configuration file
+	 */
 	public Configurator(String configFile){
 		this.filename = configFile;  
 	} 
 	
+	
+	/**
+	 * Method to load configuration from file into vector of servers and vector of generators
+	 * @param serverVector Vector that will hold the list of servers after this method is run.
+	 * @param generatorVector Vector that will hold the list of generators after this method is run
+	 * @return true if the configuration is successfully loaded, false otherwise
+	 */
 	public boolean configure( Vector<Server> serverVector, Vector<Generate> generatorVector){
 		DocumentBuilderFactory factory =
 	        DocumentBuilderFactory.newInstance();
@@ -281,20 +309,29 @@ public class Configurator {
         return true;
 	}
 	
+	
+	/**
+	 * Method to return server with specified name from the selected vector of servers
+	 * @param serverVector The vector holding list of servers
+	 * @param peerName The name of the server to be returned
+	 * @return Server with selected name, or null if it has not been found
+	 */
 	public Server findServerByName(Vector<Server> serverVector, String peerName){
 		for (int i = 0; i < serverVector.size(); i++) {
 			if ( serverVector.get(i).getName().compareTo(peerName) == 0 ){
 				return serverVector.get(i);
 			}
-		}
-//		System.out.println( "fan.Configurator.findServerByName : search failed!");	
+		}	
 		return null;
 	}
 	
-//	public boolean saveConfiguration(Vector<Server> serverVector, Vector<Generate> generatorVector){
-//		return saveConfiguration("test.xml", serverVector, generatorVector);		
-//	}
 	
+	/**
+	 * Method to save configuration (scenarion) inside specified earlier file
+	 * @param serverVector The Vector of servers to be stored in file
+	 * @param generatorVector The Vector of generators to be stored in file
+	 * @return true if configuration was saved properly, false otherwise
+	 */
 	public boolean saveConfiguration(Vector<Server> serverVector, Vector<Generate> generatorVector){
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
