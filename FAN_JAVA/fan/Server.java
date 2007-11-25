@@ -13,6 +13,7 @@ public class Server {
 	
 	/**
 	 * The maximum number of traffic types serviced by router
+	 * @deprecated
 	 */
 	private	int maxTrafficTypes;
 	
@@ -110,7 +111,10 @@ public class Server {
 		}
 	}
 	
-	
+	/**
+	 * Constructor
+	 * @param name A name of a server
+	 */
 	public Server(String name) {
 		this.name = name;
 		this.maxTrafficTypes = 2;
