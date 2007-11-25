@@ -14,7 +14,11 @@ import javax.print.attribute.standard.Finishings;
  */
 public class PFQQueue implements Queue {
 	
-	String type;
+	/**
+	 * Field to hold the type of the queue - in this case "PFQ"
+	 */
+	public String type;
+	
 	/**
 	 * This is the measure time used for Fair Rate calculation
 	 */
@@ -25,17 +29,42 @@ public class PFQQueue implements Queue {
 	 */
 	Time lastMeasureTimePL;
 	
+	/**
+	 * Field to hold value saying if the measurements were already performed
+	 */
 	boolean measured = false;
+	
 	/**
 	 * This is the encapsulation class for Packet,
 	 * to hold information about timestamp assigned to it
 	 * (according to PFQ algorithm)
 	 */
 	public class PacketTimestamped implements Comparable<PacketTimestamped>{
+		/**
+		 * Packet encapsulated by this PacketTimestamped
+		 */
 		public Packet p;
+		
+		/**
+		 * Start tag assigned to this packet
+		 */
 		public long startTag;
+		
+		/**
+		 * Finish tag assigned to this packet
+		 */
 		public long finishTag;
+		
+		/**
+		 * Time when this packet came to the queue
+		 */
 		public double clock;
+		
+		
+		/**
+		 * Method to compare PacketTimestamped objects
+		 * @param p The packet that should be compared with this packet
+		 */
 		public int compareTo(PacketTimestamped p){
 			if( packetQueue.peek() == p )
 				return 1;
@@ -84,32 +113,44 @@ public class PFQQueue implements Queue {
 	 * MTU definition
 	 */
 	protected final int MTU = 1500;
+	
+	/**
+	 * Field that holds the bandwidth of the interface that this queue
+	 * is assigned to
+	 */
+	protected long bandwidth = 0;
+	
 	/**
 	 * Variables needed to measure priority load
 	 */
-	protected long bandwidth = 0;
 	protected Time t2 = Monitor.clock;	//new Time(0.0);
-//	protected Time t1  Monitor.clock;	//new Time(0.0);
 	protected long pbt2 = 0;
-//	protected long pbt1 = 0;
 	
 	/**
 	 * Variables needed to measure fair rate
 	 */
-//	protected Time fpt2 = new Time(0.0);
-//	protected Time fpt1 = new Time(0.0);
 	protected long vt2 = 0;
-//	protected long vt1;
 	protected Time idleTime;
 	protected Time totalIdleTime;
+	
+	/**
+	 * Variable to hold calculated priority load
+	 */
 	protected double priorityLoad;
+	
+	
+	/**
+	 * Variable to hold calculated fair rate
+	 */
 	protected long fairRate;
 	
 	
 	/**
-	 * Constructor for PFQQueue class
-	 * @param intface Interface the PFQ is assigned to - needed to perform link measurements
-	 *
+	 * Constructor for PFQ class
+	 * @param 	size The maximum size (in packets) of the queue
+	 * @param 	flowListSize The maximum number of flows that this queue 
+	 * 			may serve
+	 * @param 	intface Interface that this queue is assigned to
 	 */
 	public PFQQueue(int size, int flowListSize, Interface intface) {
 		packetQueue = new PriorityQueue<PacketTimestamped>(size);
@@ -127,30 +168,56 @@ public class PFQQueue implements Queue {
 		fairRate = bandwidth;
 	}
 	
+	
+	/**
+	 * Method to get current size of the queue (number of packets
+	 * waiting to be served)
+	 * @return Number of packets waiting in the queue
+	 */
 	public int getSize() {
 		return packetQueue.size();
 	}
 	
+	
+	/**
+	 * Method to get maximum size of the queue (in packets)
+	 * @return Maximum size of the queue in packets
+	 */
 	public int getMaxSize() {
 		return maxSize;
 	}
 
+	
+	/**
+	 * Method to check if the queue is empty
+	 * @return 	True if the queue is empty, false if there are any
+	 *			packets inside
+	 */
 	public boolean isEmpty() {
 		return packetQueue.isEmpty();
 	}
 
+	
 	/**
+	 * Checks if the queue is full
 	 * Counted in packets, if counted in bytes different action should be taken.
+	 * @return True if the number of packets equals queue maximum size, false otherwise
 	 */
 	public boolean isFull() {
 		return packetQueue.size() == maxSize;
-		//return ( (packetQueue.sizeInBytes+MTU) > maxSizeInBytes)
 	}
 
+	
+	/**
+	 * Method to get first packet waiting in the queue - but not
+	 * remove it from the queue
+	 * @return First packet waiting in the queue
+	 */
 	public Packet peekFirst() {
 		return packetQueue.peek().p;
 	}
 
+	
 	/**
 	 * Method to put packet in this queue. If the queue is full, the packet is not put inside
 	 * the queue and false value is returned. Otherwise the packet is put in the queue and true
@@ -161,7 +228,7 @@ public class PFQQueue implements Queue {
 	 */		
 	public boolean putPacket(Packet p) {
 	
-		//measurement for idleTime
+//		measurement for idleTime
 		if ( packetQueue.size() == 0 ) {
 			totalIdleTime = totalIdleTime.add( Monitor.clock.substract( idleTime ) );
 		}
@@ -172,15 +239,13 @@ public class PFQQueue implements Queue {
 		pTimestamped.p = p;
 		pTimestamped.clock = Monitor.clock.toDouble();
 			
-		// TODO: "reject packet at head of longest backlog
-		//at first check if there are any free places at packet queue		
-//		if(packetQueue.size() >= maxSize){
+//		at first check if there are any free places at packet queue		
 		if(isFull()){
 			p = null;
 			return false;
 		}
 		
-		//Check if this packet belongs to the flow registered in flowList
+//		Check if this packet belongs to the flow registered in flowList
 		if( flowList.contains( pTimestamped.p.getFlowIdentifier() ) ) {
 			Flow packetFlow = flowList.getFlow(pTimestamped.p.getFlowIdentifier());
 
@@ -275,15 +340,6 @@ public class PFQQueue implements Queue {
 							(double) Math.round( (double)bandwidth * ( Monitor.clock.substract( lastMeasureTimePL ).toDouble() ) ) );
 			if( priorityLoad > 1 )
 				priorityLoad = 1;
-			
-//			PRINT DETAILS OF PRIORITY LOAD MEASUREMENTS			
-//			System.out.println(	"Priority Load is: " + priorityLoad + 
-//								", pb - pb2 = " + (double)(priorityBytes - pbt2) + 
-//								", band * clock = " + ((double)bandwidth * (Monitor.clock.substract( lastMeasureTimePL ).toDouble()) ) + 
-//								", band = " + (double)bandwidth +
-//								", clock = " + Monitor.clock.toDouble() + 
-//								", lastMeasureTime = " + lastMeasureTimePL.toDouble() );
-//			
 			
 			//save values that will be required next time for PL calculation
 			lastMeasureTimePL = Monitor.clock; 
