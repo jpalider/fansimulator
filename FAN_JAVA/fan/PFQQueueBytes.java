@@ -1,18 +1,29 @@
-/**
- * 
- */
 package fan;
 
-import fan.PFQQueue.PacketTimestamped;
-
 /**
- * @author Mumin
- *
+ * Class for PFQ Queue, but this one performs all calculations and
+ * measurements in bytes
  */
 public class PFQQueueBytes extends PFQQueue {
+	
+	/**
+	 * Current size in bytes of this queue
+	 */
 	private int sizeInBytes;
+	
+	/**
+	 * Maximum size in bytes of this queue
+	 */
 	private int maxSizeInBytes;
 	
+	
+	/**
+	 * Constructor for this class
+	 * @param 	maxSizeInBytes Maximum size of the queue in bytes
+	 * @param 	flowListSize Maximum number of flows that this queue
+	 * 			can process
+	 * @param 	intface the interface this queue is assigned to
+	 */
 	public PFQQueueBytes(int maxSizeInBytes, int flowListSize, Interface intface){
 		super(999999/*size in packets*/, flowListSize, intface);
 		this.maxSizeInBytes = maxSizeInBytes;
@@ -20,21 +31,40 @@ public class PFQQueueBytes extends PFQQueue {
 		//System.out.println("PFGQueueBytes  FLsize" + flowListSize); 
 	}
 	
+	
+	/**
+	 * Method to get size of this queue in bytes
+	 * @return Size of this queue in bytes
+	 */
 	public int getSizeBytes() {
 		return sizeInBytes;
 	}
 	
+	
+	/**
+	 * Method to get maximum size of this queue in bytes
+	 * @return Maximum size of this queue in bytes
+	 */
 	public int getMaxSize() {
 		return maxSizeInBytes;
 	}
 	
-	//Must be overloaded to display the graphs properly
+	/**
+	 * Method to get size of this queue in bytes
+	 * It has to be overloaded in order to perform all the
+	 * calculations properly
+	 * @return Maximum size of this queue in bytes
+	 */
 	public int getSize() {
-		return sizeInBytes;
+		return getSizeBytes();
 	}
 	
+	
 	/**
-	 * Counted in bytes.
+	 * Checks if the queue is full (it performs all measurements
+	 * in bytes)
+	 * @return 	True if queue is full and cannot accept new packets,
+	 * 			false if it has enough space for new packets
 	 */
 	public boolean isFull() {
 		if( (sizeInBytes + MTU) > maxSizeInBytes) {
@@ -43,6 +73,13 @@ public class PFQQueueBytes extends PFQQueue {
 			return false;
 	}
 	
+	
+	/**
+	 * Method to put packet inside this queue
+	 * @param p Packet that should go into this queue
+	 * @return 	True if there was free place in this queue for this 
+	 * 			packet, false if the packet was not put in this queue
+	 */
 	public boolean putPacket(Packet p){
 		
 //		measurement for idleTime
@@ -59,16 +96,15 @@ public class PFQQueueBytes extends PFQQueue {
 		pTimestamped.p = p;
 		pTimestamped.clock = Monitor.clock.toDouble();
 		
-		// TODO: "reject packet at head of longest backlog
-		//at first check if there are any free places at packet queue		
-//		if(packetQueue.size() >= maxSize){
+		
+//		at first check if there are any free places at packet queue		
 		if(isFull()){
 			p = null;
 			System.out.println("The queue is full");
 			return false;
 		}
 		
-		//Check if this packet belongs to the flow registered in flowList
+//		Check if this packet belongs to the flow registered in flowList
 		if( flowList.contains( pTimestamped.p.getFlowIdentifier() ) ) {
 //			System.out.println("I have found the flow: " + pTimestamped.p.getFlowIdentifier().toInt() );
 			Flow packetFlow = flowList.getFlow(pTimestamped.p.getFlowIdentifier());
@@ -125,6 +161,10 @@ public class PFQQueueBytes extends PFQQueue {
 	}
 	
 	
+	/**
+	 * Remove and return packet at head of this queue
+	 * @return Packet that was removed from the front of the queue
+	 */
 	public Packet removeFirst(){
 		Packet p = super.removeFirst();
 		sizeInBytes -= p.getLength();
@@ -132,6 +172,12 @@ public class PFQQueueBytes extends PFQQueue {
 	}
 	
 	
+	/**
+	 * Method to remove first packet in the queue that belongs to specified
+	 * flow.
+	 * @param flowId Selected flow, which first packet should be removed
+	 * @return Removed packet 
+	 */
 	public PacketTimestamped removeFirstFlowPacket(FlowIdentifier flowId) {
 		PacketTimestamped tempPacket = super.removeFirstFlowPacket( flowId );
 		if( tempPacket != null ) {
