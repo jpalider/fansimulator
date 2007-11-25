@@ -2,6 +2,7 @@ package fan;
 
 import java.util.*;
 
+
 /**
  * The class represents PFL, which stands after Protected Flow List, mere,
  * a list of flows' identifiers which are kept as long as they do not get
@@ -85,6 +86,7 @@ public class FlowList {
 			}
 		}		
 	}
+	
 	
 	public void cleanAllFlows() {
 		protectedList.clear();
