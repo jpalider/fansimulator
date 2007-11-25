@@ -1,12 +1,13 @@
 package fan;
 import java.util.Vector;
 
-
+/**
+ * This is the root class from the fan simulator, from here slash screen and gui are
+ * started. In text-based environment it also serves as simulation runner.
+ *
+ */
 public class Simulator {
 
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
 		//Setup server
 //		RoutingTable rt = new RoutingTable();
