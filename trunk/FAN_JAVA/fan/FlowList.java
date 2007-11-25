@@ -10,49 +10,68 @@ import java.util.*;
  * latest activity Time t is older than Time timeout, according to Time 
  * current time. Packets with Flow Identifiers on PFL are guaranteed to
  * be served.
- * 
- * TODO:
- * Test 'unregisterInactiveFlows' functionality
- * 
- * TODO:
- * It is taking as granted that time of checking protected  flows takes no time.
- * That should be fixed. Or shouldn't??
- * What could be examined is PFL's length influence on router efficiency - if any.
- * 
  * @see FlowIdentifier
- * @author Mumin
  */
 
 public class FlowList {
 	
+	/**
+	 * Implementation of PFL
+	 */
 	private LinkedList<Flow> protectedList;
+	/**
+	 * Maximum number of flows a PFL can hold
+	 */
 	private int maxLength;
 	
+	/**
+	 * Constructor for this class
+	 * @param maxLength Defines maximum number of flows a PFL can hold
+	 */
 	public FlowList(int maxLength){		
 		protectedList = new LinkedList<Flow>();
 		this.maxLength = maxLength;		
 	}	
-		
+	/**
+	 * Returns number of currently held flows  
+	 * @return Current list size
+	 */	
 	public int getLength(){
 		return protectedList.size();
 	}
-		
+	/**
+	 * Returns maximum number od flows a list can hold  
+	 * @return maximum number od flows
+	 */	
 	public int getMaxLength(){
 		return maxLength;
 	}
-	
+	/**
+	 * Registers a new flow to PFL
+	 * @param flow Flow to be added to list
+	 * @return False if not succeded, otherwise true. The reason a flow cannot be 
+	 * registered is that the list is already full.
+	 */
 	public boolean registerNewFlow(Flow flow){
 		if (getLength() >= getMaxLength())
 			return false;
 		protectedList.add(flow);
 		return true;
 	}
-	
+	/**
+	 * Unregisteres a flow from PFL
+	 * @param flow Flow to be removed from PFL
+	 * @return True
+	 */
 	public boolean unregisterFlow(Flow flow){
 		protectedList.remove(flow);
 		return true;
 	}
-	
+	/**
+	 * Checkes whether a flow identifier belongs to any of flows in the PFL
+	 * @param flowID A flow identifier to be checked
+	 * @return True if appropriate flow is found in PFL, false otherwise
+	 */
 	public boolean contains(FlowIdentifier flowID){
 		for (Iterator iter = protectedList.iterator(); iter.hasNext();) {
 			Flow element = (Flow) iter.next();
@@ -61,14 +80,22 @@ public class FlowList {
 		}
 		return false;
 	}
-	
+	/**
+	 * Checkes whether a flow is already in the PFL
+	 * @param flowID A flow to be checked
+	 * @return True if a given flow is in PFL, false otherwise
+	 */	
 	public boolean contains(Flow flow) {
 		if(protectedList.contains(flow))
 			return true;
 		else
 			return false;
 	}
-	
+	/**
+	 * Finds a flow for a given flow identifier
+	 * @param flowID Flow identifier for processing
+	 * @return Flow with flow identifier identical to flowID, null if none found
+	 */
 	public Flow getFlow(FlowIdentifier flowID) {
 		for (Iterator iter = protectedList.iterator(); iter.hasNext();) {
 			Flow element = (Flow) iter.next();
@@ -77,7 +104,11 @@ public class FlowList {
 		}
 		return null;
 	}
-
+	/**
+	 * Removes all flows from FPL of which finish tag is smaller that virtualTime 
+	 * @param virtualTime Defines the upper limit of flows' finish tag for removing
+	 * @see Flow
+	 */
 	public void cleanFlows(long virtualTime){
 		for (int i = 0; i < protectedList.size(); i++) {
 			Flow element = protectedList.get( i );
@@ -87,11 +118,16 @@ public class FlowList {
 		}		
 	}
 	
-	
+	/**
+	 * Removes all flows from PFL
+	 */
 	public void cleanAllFlows() {
 		protectedList.clear();
 	}
-	
+	/**
+	 * Displayes priopriate information of all flows currently held in PFL.
+	 *
+	 */
 	public void printAllFlows() {
 		System.out.println("\nThe AFL contains the following flows:");
 		for (Iterator iter = protectedList.iterator(); iter.hasNext();) {
@@ -102,7 +138,7 @@ public class FlowList {
 	
 	/**
 	 * Metod to return flow identifier of the most backlogged flow
-	 * @return
+	 * @return Flow identifier of most backlogged flow.
 	 */
 	public FlowIdentifier getMostBackloggedFlow() {
 		
