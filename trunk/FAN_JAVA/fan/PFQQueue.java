@@ -1,5 +1,8 @@
 package fan;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Iterator;
 import java.util.PriorityQueue;
 
@@ -149,11 +152,12 @@ public class PFQQueue implements Queue {
 	}
 
 	/**
-	 * TODO: Check if packetQueue is not full<br>
-	 * TODO: Check if flowList is not full - this should be provided by MBAC.
-	 * 		-> DONE
-	 * According to:
-	 * xp-hpsr.pdf : "Cross-protect: implicit service differentiation and admission control"  (III.B)
+	 * Method to put packet in this queue. If the queue is full, the packet is not put inside
+	 * the queue and false value is returned. Otherwise the packet is put in the queue and true
+	 * value is returned
+	 * @param p The packet that should be put inside this queue
+	 * @return 	true if packet was put in this queue, false if the queue was full and packet
+	 * 			was rejected
 	 */		
 	public boolean putPacket(Packet p) {
 	
@@ -225,7 +229,12 @@ public class PFQQueue implements Queue {
 		
 		return true;
 	}
+
 	
+	/**
+	 * Method to perfrom the measurements required to calculate Fair Rate and Priority Load
+	 * @param source The name of the fragment that executed this method
+	 */
 	protected void performMeasurements(String source) {
 		
 		//measurement for idleTime
@@ -282,8 +291,9 @@ public class PFQQueue implements Queue {
 		}
 	}
 
+	
 	/**
-	 * TODO: Check if queue is not empty
+	 * Method to get and remove the first packet waiting in this queue
 	 */
 	public Packet removeFirst() {
 
@@ -298,17 +308,18 @@ public class PFQQueue implements Queue {
 			Flow flow = (Flow)flowList.getFlow(packet.p.getFlowIdentifier());
 			flow.backlog -= packet.p.getLength();			
 		} else {
-			System.out.println("Something has gone wrong in PFQQueue.removeFirst()");
+			System.out.println( "Something has gone wrong in PFQQueue.removeFirst()" );
 			System.out.println(	"The flow missing from the list is: " + 
 								packet.p.getFlowIdentifier().toInt() );
-			//flowList.printAllFlows();
 		}
-		
-		if ( packet.startTag != virtualTime ){
-//			FlowPFQ flow = (FlowPFQ)flowList.getFlow(packet.p.getFlowIdentifier());
-			virtualTime = packet.startTag;
-			//Remove all queues which finishTag is smaller than virtualTime
-			flowList.cleanFlows(virtualTime - 10000);
+				
+		if( packetQueue.peek() != null ) {
+			if ( packetQueue.peek().startTag != virtualTime ){
+				
+				virtualTime = packetQueue.peek().startTag;
+//				Remove all queues which finishTag is smaller than virtualTime with timeout
+				flowList.cleanFlows( virtualTime - 10000 );
+			}
 		}
 		
 		//if PIFO is now empty remove all flows from flowslist
@@ -320,26 +331,47 @@ public class PFQQueue implements Queue {
 		return packet.p;
 	}
 	
+	
+	/**
+	 * Method to get the list of flows used in this queue
+	 * @return The list of flows in this queue
+	 */
 	public FlowList getFlowList(){
 		return flowList;
 	}
 	
+	
+	/**
+	 * Method to get fair rate in this queue
+	 * @return Fair Rate in this queue
+	 */
 	public long getFairRate(){
 		performMeasurements("getFairRate()");
 		return fairRate;
 	}
 	
+	
+	/**
+	 * Method to get priority load in this queue
+	 * @return Priority Load of this queue
+	 */
 	public double getPriorityLoad(){
 		performMeasurements("getPriorityLoad");
 		return priorityLoad;
 	}
 
 	
+	/**
+	 * Method to return type of the queue
+	 */
 	public String getType(){
 		return type;
 	}
 	
 	
+	/**
+	 * Method to print all elements of this queue - however they will be unsorted
+	 */
 	public void printElements() {
 		System.out.println("\nThe Queue [" + getSize() +"] is:");
 		System.out.println("The queue has " + packetQueue.size() + " elements.");
@@ -360,6 +392,11 @@ public class PFQQueue implements Queue {
 	}
 	
 	
+	/**
+	 * Method to return the first packet of the specified flow
+	 * @param flowId The flow which packet should be removed
+	 * @return First packet of specified flow or null if there is no such packet
+	 */
 	public PacketTimestamped getFirstFlowPacket(FlowIdentifier flowId) {
 		PacketTimestamped tempPacket = null;
 		Packet frontPacket = peekFirst();
@@ -376,6 +413,11 @@ public class PFQQueue implements Queue {
 	}
 	
 	
+	/**
+	 * Method for removing packet at the head of the specified flow in the queue
+	 * @param flowId The flow which first packet should be removed
+	 * @return The removed packet or null if there is no such packet
+	 */
 	public PacketTimestamped removeFirstFlowPacket(FlowIdentifier flowId) {
 		PacketTimestamped tempPacket = null;
 		if( isEmpty() )
@@ -399,6 +441,22 @@ public class PFQQueue implements Queue {
 				System.out.println("REMOVED THE PACKET OF FLOW " + flowId.toInt() );
 			return tempPacket;
 		}
+	}
+	
+	
+	/**
+	 * Method to check if there is any packet in the queue with the specified flowID
+	 * @param flowID The flowID to be checked
+	 * @return Packet of the specified flow, or null if there is no such a packet
+	 */
+	public PacketTimestamped checkFlowPackets( FlowIdentifier flowID ) {
+		for (Iterator iter = packetQueue.iterator(); iter.hasNext();) {
+			PacketTimestamped p = (PacketTimestamped) iter.next();
+			if( p.p.getFlowIdentifier().equals( flowID ) ) {
+				return p;
+			}
+		}
+		return null;
 	}
 	
 }

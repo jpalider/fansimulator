@@ -76,16 +76,17 @@ public class PFQQueueBytes extends PFQQueue {
 			packetFlow.backlog += pTimestamped.p.getLength();
 
 			if ( packetFlow.bytes >= MTU ){
-				
-				if( packetFlow.getFinishTag() < virtualTime ) 
-					 pTimestamped.startTag = virtualTime;
-				 else
-					 pTimestamped.startTag = packetFlow.getFinishTag();
+			
+				if( packetFlow.getFinishTag() < virtualTime )
+					pTimestamped.startTag = virtualTime;
+				else
+					pTimestamped.startTag = packetFlow.getFinishTag();
 				
 				pTimestamped.finishTag = pTimestamped.startTag + pTimestamped.p.getLength();
 				packetQueue.offer(pTimestamped); // push { packet, flow_time_stamp } to PIFO
-			} else {
-				
+			} 
+			else {
+			
 				pTimestamped.startTag = virtualTime;
 				pTimestamped.finishTag = pTimestamped.startTag + pTimestamped.p.getLength();
 				packetQueue.offer(pTimestamped);
@@ -97,7 +98,7 @@ public class PFQQueueBytes extends PFQQueue {
 		}
 		//if this is the packet of new flow
 		else {
-
+			
 			pTimestamped.startTag = virtualTime;
 			pTimestamped.finishTag = pTimestamped.startTag + pTimestamped.p.getLength();
 			packetQueue.offer(pTimestamped);

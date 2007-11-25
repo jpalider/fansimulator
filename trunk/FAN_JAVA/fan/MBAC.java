@@ -66,8 +66,8 @@ public class MBAC {
 	}
 	
 	/**
-	 * TODO: more sophisticated mbac protection
-	 * @return
+	 * Method to measure congestion using Minimum Fair Rate and Priority Load
+	 * @return true if congestion has occured, false if there is no congestion
 	 */
 	public boolean congestionOccured(Packet p){
 		if ( queue.getType().equals("PFQ")){
@@ -82,16 +82,16 @@ public class MBAC {
 //				System.out.println( "Congestion occured, PL is: " + getPriorityLoad() );
 				return true;
 			}
-//			else if ( flowList.contains(p.getFlowIdentifier()) ) {
+
 			return false;
-//			}
+
 		} else if ( queue.getType().compareTo("FIFOBytes") == 0) {
 			if (((FifoQueueBytes)queue).getFreeBytes() >= p.getLength()){
 				//	if ( priority load + AFL )
 				return false;
 			}
 		}	
-		// as if there were no admission control
+
 		return false;
 	}
 	
