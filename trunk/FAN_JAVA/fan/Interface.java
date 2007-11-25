@@ -1,7 +1,17 @@
 package fan;
 
 /**
- * @author dodek
+ * This is the class representing a router interface. There are only outgoing interfaces,
+ * packet leaving such interface after some time (sending time) reaches its destination
+ * router, merely MBAC which is meant to be some kind of incoming interface.
+ * In this simulator there are no
+ * modelled links between simulated routers, Interface serving that role is in charge
+ * of controlling bandwidth limitations, introducing necessary delays etc. In this
+ * simulator it is considered that transmition between two router interfaces is
+ * immiediate (no propagation delays, signaling, etc.)   
+ * @see MBAC
+ * @see Queue
+ * @see Server
  */
 public class Interface{
 	private int bandwidth;
@@ -35,8 +45,8 @@ public class Interface{
 	
 	
 	/**
-	 * @return
-	 * @uml.property  name="busy"
+	 * Checks whether any Packet is being processed (sent) at the moment
+	 * @return True if a packet is currently being sent
 	 */
 	public boolean isBusy() {
 		return !queue.isEmpty();
@@ -62,8 +72,8 @@ public class Interface{
 	
 	
 	/**
-	 * @return  the queue
-	 * @uml.property  name="queue"
+	 * Gets a queue of this Interface
+	 * @return Packet queue
 	 */
 	public Queue getQueue() {
 		return this.queue;
@@ -73,7 +83,6 @@ public class Interface{
 	/**
 	 * Getter for interface bandwidth
 	 * @return  int bandwidth of the server
-	 * @uml.property  name="bandwidth"
 	 */
 	public int getBandwidth() {
 		return this.bandwidth;
@@ -96,18 +105,17 @@ public class Interface{
 		}
 		peer.recieve( pkt );
 		results.addAvgpacketLength(pkt);
-//		markFirstArrival();
 		updateUpTime();
 		if( !queue.isEmpty() ) {
 			Packet p = queue.peekFirst();
 			//Time used to send packet is not added to its service time
 			if( p == null) {
-				System.out.println( "ERROR: The packet was null" );
+				Debug.print( "ERROR: The packet was null" );
 			} else if ( p.getServiceStartTime() == null ) {
-				System.out.println( "ERROR: The packetServiceStartTime is null" );
+				Debug.print( "ERROR: The packetServiceStartTime is null" );
 				( (PFQQueueBytes)getQueue() ).printElements() ;
-				System.out.println("The previous packet had the following parameters:");
-				System.out.println(	"Flow ID: " + pkt.getFlowIdentifier().toInt() + 
+				Debug.print( "The previous packet had the following parameters:");
+				Debug.print(	"Flow ID: " + pkt.getFlowIdentifier().toInt() + 
 									", service start time: " + pkt.getServiceStartTime().toDouble() );
 			}
 			results.addServicedPacket( 	Monitor.clock.substract(p.getServiceStartTime()).toDouble(),
@@ -143,8 +151,8 @@ public class Interface{
 
 	
 	/**
+	 *  Returns server that this is interface is part of
 	 * @return  the localhost
-	 * @uml.property  name="localhost"
 	 */
 	public Server getLocalhost() {
 		return localhost;
@@ -152,8 +160,8 @@ public class Interface{
 
 	
 	/**
-	 * @param localhost  the localhost to set
-	 * @uml.property  name="localhost"
+	 * Sets server that this is interface is part of
+	 * @param localhost the localhost to set
 	 */
 	public void setLocalhost(Server locahost) {
 		this.localhost = locahost;
@@ -204,7 +212,7 @@ public class Interface{
 	
 	/**
 	 * Method to return MBAC assigned to this interface
-	 * @return
+	 * @return MBAC assigned to this interface
 	 */
 	public MBAC getMBAC() {
 		return admissionControl;
