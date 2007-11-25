@@ -32,7 +32,7 @@ public class SplashScreen implements Runnable {
 	
 	public void run() {
 		splash.open();
-		try { Thread.sleep(4*1000); } catch (Exception e) {}
+		try { Thread.sleep(2*1000); } catch (Exception e) {}
 		display.dispose();		
 	}
 	
