@@ -9,14 +9,15 @@ package fan;
 public class Flow {
 	private FlowIdentifier flowID;
 	private long finishTag;
+	/**
+	 * Amount of backlogged information 
+	 */
 	public long backlog;
+	/**
+	 * Transmitted bytes
+	 */
 	public long bytes;
 	
-//	public int compareTo(Flow flow){
-//		if (flowID == flow.getFlowID()) return 0;
-////		if (flowID > flow.getFlowID()) return 1;
-////		if (flowID < flow.getFlowID()) return -1;		
-//	}
 	/**
 	 * Method to get flow identifier
 	 * @return Flow identifier
