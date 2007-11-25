@@ -81,7 +81,7 @@ public class Server {
 		if( !choiceIntface.isBusy() ) {
 			
 			choiceIntface.getQueue().putPacket(p);
-			
+			p.setServiceStartTime(Monitor.clock);
 			//sendTime is equal to: packet length / interface speed
 			Time sendTime = new Time( (double) p.getLength() / choiceIntface.getBandwidth() );
 			
