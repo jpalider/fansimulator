@@ -12,7 +12,7 @@ public class EventList {
 	/**
 	 * The queue that stores the list of events that are scheduled to occur
 	 */
-	private Queue<Event> queue; 
+	public Queue<Event> queue; 
 	
 	
 	/**
@@ -50,5 +50,13 @@ public class EventList {
 	 */
 	public boolean isEmpty() {
 		return queue.isEmpty();
+	}
+	
+	
+	/**
+	 * Method to clear event list
+	 */
+	public void clear() {
+		queue.clear();	
 	}
 }
