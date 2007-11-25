@@ -474,6 +474,7 @@ public class GUI {
 			
 			//Reset clock and schedule all generators attached to servers
 			Monitor.clock = new Time(-1);
+			Monitor.agenda.clear();
 			for(int i = 0; i < generatorsVector.size(); i++) {
 				Monitor.agenda.schedule(generatorsVector.elementAt(i));
 			}
