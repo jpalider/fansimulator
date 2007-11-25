@@ -112,7 +112,7 @@ public class Configurator {
         // that must be done at the very beginning, mere, before interface configuration
         for (int i = 0; i < totalServers; i++) {
         	NamedNodeMap serverAttributes = xmlListOfServers.item(i).getAttributes();
-        	System.out.println( "ServerNames : " + serverAttributes.getNamedItem("n").getTextContent() );
+        	Debug.print( "ServerNames : " + serverAttributes.getNamedItem("n").getTextContent() );
         	serverVector.add( new Server(serverAttributes.getNamedItem("n").getTextContent()) );
 		}
 
@@ -131,7 +131,7 @@ public class Configurator {
         			String peerName = new String( interfaceElement.getAttributes().getNamedItem("peer").getTextContent() );
             		Server destServ = findServerByName(serverVector, peerName);
             		if (destServ == null){
-            			System.out.println( "fan.Configurator: no such destination server for interface " + (j+1) + ".");
+            			Debug.print( "fan.Configurator: no such destination server for interface " + (j+1) + ".");
             			continue;
             		}
             		// 2. routing probability
@@ -248,7 +248,7 @@ public class Configurator {
 	    	        													flowHigherRange));
 	        				
 	        			} else{
-	            			System.out.println( "fan.Configurator: wrong generator type!");
+	        				Debug.print( "fan.Configurator: wrong generator type!");
 	        			}
         			}
         			
@@ -299,7 +299,7 @@ public class Configurator {
 	    	        													flowHigherRange));
 	        				
 	        			} else{
-	            			System.out.println( "fan.Configurator: wrong generator type!");
+	        				Debug.print( "fan.Configurator: wrong generator type!");
 	        			}
         			}
         		}        		
@@ -463,7 +463,7 @@ public class Configurator {
         				u.setTextContent(ug.getRange().toString()); 				
         				g.appendChild(u);
         			} else{
-            			System.out.println( "fan.Configurator: wrong generator type!");
+        				Debug.print( "fan.Configurator: wrong generator type!");
         			}
 					
 					s.appendChild(g);
@@ -491,7 +491,7 @@ public class Configurator {
             // Parser with specified options can't be built
             pce.printStackTrace();
         } catch (Exception e){
-        	System.out.println("Exception caught!");
+        	Debug.print("Exception caught!");
         }
 		return true;
 	}
