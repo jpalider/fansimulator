@@ -2,7 +2,7 @@ package fan;
 import java.util.Vector;
 
 /**
- * This is the root class from the fan simulator, from here slash screen and gui are
+ * This is the root class for the fan simulator, from here slash screen and gui are
  * started. In text-based environment it also serves as simulation runner.
  *
  */
