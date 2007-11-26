@@ -33,7 +33,7 @@ public class MBAC {
 				flowList = ( (PFQQueueBytes) queue ).getFlowList();				
 			}
 		} else {
-			System.out.println("Initialization problem in MBAC.MBAC()");
+			Debug.print("Initialization problem in MBAC.MBAC()");
 		}
 		this.minFairRate = minFairRate;
 		this.maxPriorityLoad = maxPriorityLoad;
@@ -50,7 +50,7 @@ public class MBAC {
 		} else if ( queue.getType().equals("FIFO") ){
 			return ((FifoQueueBytes)queue).getLoad();
 		} 
-		System.out.println("Unknown queue type!!!");
+		Debug.print("Unknown queue type!!!");
 		return 0;
 	}
 	/**
