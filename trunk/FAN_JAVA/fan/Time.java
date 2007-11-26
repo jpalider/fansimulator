@@ -9,15 +9,6 @@ public class Time implements Comparable<Time>{
 	 * In this implementation time is stored in double
 	 */
 	private double t;
-	
-//	double getTime(){
-//		return t;
-//	}
-	
-//	void setTime(double time){
-//		t = time;
-//	}
-	
 	/**
 	 * Basic constructor for this class
 	 */
@@ -42,10 +33,6 @@ public class Time implements Comparable<Time>{
 	public Time add(Time tt) {
 		return new Time(tt.t + this.t);
 	}
-//	
-//	public void add(double tt) {
-//		this.t += tt;
-//	}
 	
 	/**This method returns new Time object with time value equal to 
 	 * this minus tt. It doesn't change time value of this
