@@ -4,7 +4,9 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Vector;
 
-
+/**
+ * Class for holding information about packet forwarding
+ */
 public class RoutingTable {
 	
 	/**
@@ -32,16 +34,30 @@ public class RoutingTable {
 			}
 			else return -1;
 		}
-		
+		/**
+		 * Constructor
+		 * 
+		 * Route is defined in propabilistic manner. Each interface has mapped 
+		 * probability that decides wheter a packet will be assigned to that 
+		 * interface 
+		 * @param newServerInterface Interface linked with destination server
+		 * @param probab Probability that an incoming packet will be assigned to newServerInterface
+		 */
 		public Route(Interface newServerInterface, double probab) {
 			serverInterface = newServerInterface;
 			probability = probab;
 		}
-
+		/**
+		 * Getter for probability of a route
+		 * @return Probability of selecting the route
+		 */
 		public double getProbability() {
 			return probability;
 		}
-
+		/**
+		 * Getter for interface that a packet gets to following this route.
+		 * @return
+		 */
 		public Interface getServerInterface() {
 			return serverInterface;
 		}
@@ -122,7 +138,10 @@ public class RoutingTable {
 		}
 		return sum;
 	}
-	
+	/**
+	 * Gets all interfaces, thus servers, known by the routing table
+	 * @return Vector of interfaces
+	 */
 	public Vector<Interface> getInterfaces() {
 		Vector<Interface> output = new Vector<Interface>();
 		for (Iterator<Route> iter = routing.iterator(); iter.hasNext();) {
@@ -130,7 +149,11 @@ public class RoutingTable {
 		}
 		return output;
 	}
-
+	/**
+	 * Routing getter
+	 * @return Vector of Route objects holding information about possible routes
+	 *  to other hosts
+	 */
 	public Vector<Route> getRouting() {
 		return routing;
 	}
