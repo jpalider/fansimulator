@@ -132,7 +132,7 @@ public class FlowList {
 		System.out.println("\nThe AFL contains the following flows:");
 		for (Iterator iter = protectedList.iterator(); iter.hasNext();) {
 			Flow element = (Flow) iter.next();
-			System.out.println ( element.getFlowID().toInt() + " Finish tag: " + element.getFinishTag() );
+			Debug.print( element.getFlowID().toInt() + " Finish tag: " + element.getFinishTag() );
 		}
 	}
 	
