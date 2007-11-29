@@ -2,19 +2,24 @@ package fan;
 
 import java.text.DecimalFormat;
 import java.util.Vector;
-
+/**
+ * This class is responsible for saving measured data and save it correctly
+ */
 public class RaportPrinter {
-	
+	/**
+	 * Prints summary results at the end of simluation 
+	 * @param s Server for which results are to be printed
+	 */
 	public static void printSimulationResults(Server s) {
 		DecimalFormat format = new DecimalFormat("#.##");
-//		System.out.println("\nThe server has processed TOTAL: " + (s.results.getRejectedPackets() + s.results.getServicedPackets()) + " packets");
-//		System.out.println("\nThe number of serviced packets is: " + s.results.getServicedPackets());
-//		System.out.println("\nThe number of locally serviced packets is: " + s.results.getLocallyServicedPackets());
-//		System.out.println("\nThe number of rejected packets is: " + s.results.getRejectedPackets());
-//		System.out.println("\nThe percentage of rejected packets is: " + format.format(s.results.getAvgRejectedPackets()) );
-//		System.out.println("\nThe average packet service time is: " + format.format(s.results.getAvgPacketServiceTime()) + " s" );
-//		System.out.println("\nThe average queue length is: " + format.format(s.results.getAvgQueueLength()) + " packets");
-//		System.out.println("\nThe maximum queue length is: " + s.results.getMaxQueueLength() + " packets");
+//		Debug.print("\nThe server has processed TOTAL: " + (s.results.getRejectedPackets() + s.results.getServicedPackets()) + " packets");
+//		Debug.print("\nThe number of serviced packets is: " + s.results.getServicedPackets());
+//		Debug.print("\nThe number of locally serviced packets is: " + s.results.getLocallyServicedPackets());
+//		Debug.print("\nThe number of rejected packets is: " + s.results.getRejectedPackets());
+//		Debug.print("\nThe percentage of rejected packets is: " + format.format(s.results.getAvgRejectedPackets()) );
+//		Debug.print("\nThe average packet service time is: " + format.format(s.results.getAvgPacketServiceTime()) + " s" );
+//		Debug.print("\nThe average queue length is: " + format.format(s.results.getAvgQueueLength()) + " packets");
+//		Debug.print("\nThe maximum queue length is: " + s.results.getMaxQueueLength() + " packets");
 	
 	// Calculations	
 		int serverPacketsTotal = 0;
@@ -77,7 +82,10 @@ public class RaportPrinter {
 			System.out.println("\t\tUtilization: " + format.format(utilization*100) + " %");
 		}
 	}
-	
+	/**
+	 * Prints server configuration and simulation results
+	 * @param s Server for which results are to be printed
+	 */
 	public static void printResultsForServer(Server s) {
 		printInHashes("This is the configuration of server: " + s.getName());
 		printConfiguration(s);
@@ -85,7 +93,10 @@ public class RaportPrinter {
 		printSimulationResults(s);
 		System.out.println("\n\n");
 	}
-	
+	/**
+	 * Prints server configuration
+	 * @param s Server for which configuration is to be printed
+	 */
 	public static void printConfiguration(Server s) {
 		System.out.println("\nThe server has " + s.getInterfacesNumber() + " interface(s):\n");
 		Vector<RoutingTable.Route> routing = s.getRoutingTable().getRouting();
@@ -100,7 +111,10 @@ public class RaportPrinter {
 		}
 		
 	}
-	
+	/**
+	 * Presents data in special format
+	 * @param text Text that needs special formatting
+	 */
 	public static void printInHashes(String text) {
 		System.out.println("\n");
 		for(int i=0; i< text.length()+4; i++) 
