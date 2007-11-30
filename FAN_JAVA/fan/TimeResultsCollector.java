@@ -17,7 +17,10 @@ public class TimeResultsCollector extends ResultsCollector {
 	private HashMap<Integer, Integer> flowRejectedPackets;
 	private HashMap<Integer, Double> flowAvgPacketServiceTime;
 	
-	
+	/**
+	 * Constructor which initializes variables 
+	 * @param filename File name results are to be written to.
+	 */
 	public TimeResultsCollector(String filename) {
 		super();
 		
@@ -182,7 +185,10 @@ public class TimeResultsCollector extends ResultsCollector {
 		}
 		
 	}
-	
+	/**
+	 * Method updates average queue length to results and write these results to file
+	 * @param length This is the current queue length
+	 */
 	public void addQueueLength(int length) {
 		super.addQueueLength(length);
 		try {
