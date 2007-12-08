@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <description>Scenario12:
+::::::
+C=320KB/s = 2.5Mb/s
+::::::
+T=0
+4xVoIP + 6xVoIP
+4x64Kb/s + 6x64Kb/s
+4x8KB/s + 6x8KB/s
+</description>
+    <server n="Server nr 1">
+        <interface bandwidth="320000" maxFlowListSize="1000" maxPL="0.1"
+            minFR="8000" peer="Server nr 2" probability="1.0" queueSize="80000"/>
+        <generator type="constant">
+            <packetSize>800</packetSize>
+            <startTime>0.0</startTime>
+            <flowLowerRange>1</flowLowerRange>
+            <flowHigherRange>4</flowHigherRange>
+            <looped>true</looped>
+            <interval>0.025</interval>
+        </generator>
+        <generator type="constant">
+            <packetSize>800</packetSize>
+            <startTime>0.0</startTime>
+            <flowLowerRange>6</flowLowerRange>
+            <flowHigherRange>11</flowHigherRange>
+            <looped>true</looped>
+            <interval>0.0166667</interval>
+        </generator>
+    </server>
+    <server n="Server nr 2">
+        <interface bandwidth="1" maxFlowListSize="1000" maxPL="100000.0"
+            minFR="1" peer="Server nr 2" probability="1.0" queueSize="1000"/>
+    </server>
+</root>
