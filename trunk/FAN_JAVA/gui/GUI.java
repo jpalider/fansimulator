@@ -487,16 +487,18 @@ public class GUI {
 			shell.update();
 			//Display the results of simulation
 
-			DisplayResultsDialog sumUpDialog = new DisplayResultsDialog(shell, SWT.NONE, serversVector);
-			sumUpDialog.open();
 			//------ jpalider
-				for (int i = 0 ; i < serversVector.size(); i++){
-					for (int j = 0; j < serversVector.elementAt(i).getInterfaces().size(); j++){
-						serversVector.elementAt(i).getInterfaces().elementAt(j).results.finalize();
-					}
+			fan.Debug.print("==================");
+			for (int i = 0 ; i < serversVector.size(); i++){
+				for (int j = 0; j < serversVector.elementAt(i).getInterfaces().size(); j++){
+					serversVector.elementAt(i).getInterfaces().elementAt(j).results.finalize();
+					fan.Debug.print("+++");
 				}
+			}
 			//	System.gc();
 			//------
+			DisplayResultsDialog sumUpDialog = new DisplayResultsDialog(shell, SWT.NONE, serversVector);
+			sumUpDialog.open();
 		}
 	}
 	
