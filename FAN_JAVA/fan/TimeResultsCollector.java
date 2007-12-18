@@ -86,7 +86,6 @@ public class TimeResultsCollector extends ResultsCollector {
 		//put correct average packet service time inside hashmap
 		flowAvgPacketServiceTime.put(	flowID.toInt(),
 										flowAPST);
-
 		//write the data to file
 		try {
 			fileSP.write( 
@@ -99,7 +98,7 @@ public class TimeResultsCollector extends ResultsCollector {
 					);
 			fileSP.flush();
 		} catch (IOException ioe) {
-			ioe.printStackTrace();
+			ioe.printStackTrace();			
 		}
 	}
 	
@@ -200,6 +199,9 @@ public class TimeResultsCollector extends ResultsCollector {
 	}
 	
 	public void finalize() {
+		//--- jpalider
+		Debug.print("TimeResultCollector.Finalize()");
+		//-----------
 		try {
 			fileSP.close();
 			fileRP.close();
