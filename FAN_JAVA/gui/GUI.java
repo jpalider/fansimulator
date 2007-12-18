@@ -425,6 +425,7 @@ public class GUI {
 					errorMsgBox.setMessage("It seems that server nr " + (i+1) + " has wrong routing. Please check the configuration.");
 					errorMsgBox.open();
 				}
+				fan.Debug.print(fan.Debug.ERR, "GUI.validateConfiguration(): Error in configuration");
 				return false;
 			}				
 		}
@@ -432,8 +433,10 @@ public class GUI {
 			MessageBox correctMsgBox = new MessageBox(shell, SWT.ICON_INFORMATION|SWT.OK);
 			correctMsgBox.setMessage("The configuration is set properly.");
 			correctMsgBox.setText("Good configuration");
-			correctMsgBox.open();
+			correctMsgBox.open();			
 		}
+		fan.Debug.print(fan.Debug.INFO, "GUI.validateConfiguration(): configuration validated");
+
 		return true;
 	}
 	
@@ -443,34 +446,31 @@ public class GUI {
 	 */
 	private void runSimulation(double simulationTime) {
 		if(validateConfiguration(false)) {
-			//Clear results of previous simulations
-			for (Iterator iter = serversVector.iterator(); iter.hasNext();) {
-				Server element = (Server) iter.next();
-				element.clearResults();
-			}
-			
 			
 			//Remove files with results of previous simulations
 			File localDir = new File("./");
 			File[] fileList;
 			fileList = localDir.listFiles(new FilenameFilter() {
-
+				
 				public boolean accept(File dir, String name) {
 					if( name.startsWith("Server nr") && name.contains(".txt") )
 						return true;
 					else
 						return false;
-				}
-				
+				}				
 			});
 			
-			System.out.println("filelist size is: " + fileList.length );
+			fan.Debug.print(fan.Debug.INFO, "GUI.runSimulation(): filelist size is: " + fileList.length );
 			
 			for (int i = 0; i < fileList.length; i++) {
 				File file = fileList[i];
 				file.delete();
 			}
-
+			//Clear results of previous simulations			
+			for (Iterator iter = serversVector.iterator(); iter.hasNext();) {
+				Server element = (Server) iter.next();
+				element.clearResults();
+			}
 			
 			//Reset clock and schedule all generators attached to servers
 			Monitor.clock = new Time(-1);
@@ -486,19 +486,17 @@ public class GUI {
 			
 			shell.update();
 			//Display the results of simulation
-
-			//------ jpalider
-			fan.Debug.print("==================");
-			for (int i = 0 ; i < serversVector.size(); i++){
-				for (int j = 0; j < serversVector.elementAt(i).getInterfaces().size(); j++){
-					serversVector.elementAt(i).getInterfaces().elementAt(j).results.finalize();
-					fan.Debug.print("+++");
-				}
-			}
-			//	System.gc();
-			//------
 			DisplayResultsDialog sumUpDialog = new DisplayResultsDialog(shell, SWT.NONE, serversVector);
 			sumUpDialog.open();
+			
+			//------ jpalider
+//			for (int i = 0 ; i < serversVector.size(); i++){
+//				for (int j = 0; j < serversVector.elementAt(i).getInterfaces().size(); j++){
+//					serversVector.elementAt(i).getInterfaces().elementAt(j).results.finalize();
+//					fan.Debug.print("+++");
+//				}
+//			}
+
 		}
 	}
 	
@@ -542,7 +540,7 @@ public class GUI {
 	private void loadConfig(String fname) {
 		//numberOfServers.setText("0");
 		while(!numberOfServers.getText().equals("0")) {
-			System.out.println(numberOfServers.getText());
+			fan.Debug.print(fan.Debug.INFO, "GUI.loadConfig(): number of servers " +numberOfServers.getText());
 			removeServerTab(tabs);
 		}
 		serversVector.clear();
@@ -560,6 +558,7 @@ public class GUI {
 			errorMsgBox.setMessage("Cannot read configuration file");
 			errorMsgBox.setText("Error while loading configuration");
 			errorMsgBox.open();
+			fan.Debug.print(fan.Debug.ERR, "GUI.validateConfiguration(): error while loading configuration");
 		}
 			
 		Event newEvent = new Event();
@@ -633,7 +632,7 @@ public class GUI {
 			        if ((selectedFile.compareTo("") != 0) && (selectedFile!=null)) {
 			        	loadConfig(selectedFile);			        	
 			        } else {
-			        	System.out.println("Not a proger config file!");
+						fan.Debug.print(fan.Debug.ERR, "GUI.addMenu.widgetSelected(): not a proger config file!");
 			        }
 				}
 				
