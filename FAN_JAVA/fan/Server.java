@@ -193,8 +193,8 @@ public class Server {
 		
 		for (Iterator iter = interfaces.iterator(); iter.hasNext();) {
 			Interface element = (Interface) iter.next();
-			element.results = new TimeResultsCollector(element.getLocalhost().getName() + "_" + element.getServer().getName());
 			element.clearInterface();
+			//element.results = new TimeResultsCollector(element.getLocalhost().getName() + "_" + element.getServer().getName());
 		}
 	}
 	
