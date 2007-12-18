@@ -3,6 +3,7 @@ package fan;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.File;
 import java.util.HashMap;
 
 public class TimeResultsCollector extends ResultsCollector {
@@ -28,15 +29,17 @@ public class TimeResultsCollector extends ResultsCollector {
 		flowLocallyServicedPackets = new HashMap<Integer, Integer>();
 		flowRejectedPackets = new HashMap<Integer, Integer>();
 		flowAvgPacketServiceTime = new HashMap<Integer, Double>();
-		
 		try{
+			Debug.print(Debug.INFO, "TimeResultsCollector.TimeResultsCollector(): creating FileWriters");
+			//fileSP = new FileWriter ( new File(".").getCanonicalPath() + File.separator + filename + "SP.txt" );
+			//new File(".").getCanonicalPath();
 			fileSP = new FileWriter (filename + "SP.txt");
 			fileLP = new FileWriter (filename + "LP.txt");
 			fileRP = new FileWriter (filename + "RP.txt");
 			fileQL = new FileWriter (filename + "QL.txt");
 		}
 		catch(FileNotFoundException fnfe) {
-			System.out.println ( "Could not open the file: " + fnfe.getMessage() );
+			Debug.print(Debug.WARN, "Could not open the file: " + fnfe.getMessage() );
 		}
 		catch(IOException ioe) {
 			ioe.printStackTrace();
@@ -163,7 +166,7 @@ public class TimeResultsCollector extends ResultsCollector {
 	public void addRejectedPacket( FlowIdentifier flowID ) {
 		super.addRejectedPacket();
 		if ( flowID == null )
-			System.out.println("Flow ID is null in rejectedPacket");
+			Debug.print(Debug.ERR,"Flow ID is null in rejectedPacket");
 		
 		if( flowRejectedPackets.get( flowID.toInt() ) == null ) {
 			flowRejectedPackets.put( flowID.toInt(), 0 );
@@ -199,9 +202,7 @@ public class TimeResultsCollector extends ResultsCollector {
 	}
 	
 	public void finalize() {
-		//--- jpalider
-		Debug.print("TimeResultCollector.Finalize()");
-		//-----------
+		Debug.print(Debug.INFO,"TimeResultCollector.Finalize()");
 		try {
 			fileSP.close();
 			fileRP.close();
