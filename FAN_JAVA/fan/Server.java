@@ -29,6 +29,7 @@ public class Server {
 	
 	/**
 	 * The FlowList holding the list of protected, registered flows in the system
+	 * !!! not in use anymore !!!
 	 */
 	private	FlowList flowList;
 	
@@ -190,11 +191,10 @@ public class Server {
 	 * This is the method for clearing results already collected for this server
 	 */
 	public void clearResults() {
-		
-		for (Iterator iter = interfaces.iterator(); iter.hasNext();) {
+		Debug.print(Debug.INFO, "Server.clearResults(): " + name);
+		for (Iterator<Interface> iter = interfaces.iterator(); iter.hasNext();) {
 			Interface element = (Interface) iter.next();
 			element.clearInterface();
-			//element.results = new TimeResultsCollector(element.getLocalhost().getName() + "_" + element.getServer().getName());
 		}
 	}
 	

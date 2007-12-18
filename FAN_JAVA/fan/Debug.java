@@ -12,7 +12,7 @@ public class Debug {
 	static final public int ERR = 2; 
 	
 	static final private boolean doDebugging = true;	
-	static final private int severity = INFO;
+	static final private int severity = WARN;
 	
 	/**
 	 * If Debug class allows, it displays all types of information

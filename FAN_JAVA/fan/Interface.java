@@ -1,5 +1,7 @@
 package fan;
 
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter.DEFAULT;
+
 /**
  * This is the class representing a router interface. There are only outgoing interfaces,
  * packet leaving such interface after some time (sending time) reaches its destination
@@ -101,7 +103,7 @@ public class Interface{
 		Packet pkt = queue.removeFirst();
 		if(pkt == null)
 		{
-			System.out.println("null packet from queues");
+			Debug.print(Debug.ERR, "Interface.send(): null packet from queues");
 		}
 		peer.recieve( pkt );
 		results.addAvgpacketLength(pkt);
@@ -110,12 +112,12 @@ public class Interface{
 			Packet p = queue.peekFirst();
 			//Time used to send packet is not added to its service time
 			if( p == null) {
-				Debug.print( "ERROR: The packet was null" );
+				Debug.print(Debug.ERR, "Interface.send(): the packet was null" );
 			} else if ( p.getServiceStartTime() == null ) {
-				Debug.print( "ERROR: The packetServiceStartTime is null" );
+				Debug.print(Debug.ERR, "Interface.send(): the packetServiceStartTime is null" );
 				( (PFQQueueBytes)getQueue() ).printElements() ;
-				Debug.print( "The previous packet had the following parameters:");
-				Debug.print(	"Flow ID: " + pkt.getFlowIdentifier().toInt() + 
+				Debug.print(Debug.ERR, "Interface.send(): the previous packet had the following parameters:");
+				Debug.print(Debug.ERR, "Interface.send(): flow ID: " + pkt.getFlowIdentifier().toInt() + 
 									", service start time: " + pkt.getServiceStartTime().toDouble() );
 			}
 			results.addServicedPacket( 	Monitor.clock.substract(p.getServiceStartTime()).toDouble(),
@@ -174,10 +176,11 @@ public class Interface{
 	 * simulation.
 	 */
 	public void clearInterface() {
-		//this.queue = new FifoQueueBytes(150000,this);
+		Debug.print(Debug.INFO,"Interface.clearInterface()");
 		this.queue = new PFQQueueBytes(maxQueueSize, maxFlowListSize, this); 
 		admissionControl.setQueue(this.queue);
-		//this.queue = new FifoQueueBytes(100000,this);
+		if (results != null) { results.finalize(); results = null; }
+		this.results = new TimeResultsCollector(localhost.getName() + "_" + peer.getName());
 	}
 
 	

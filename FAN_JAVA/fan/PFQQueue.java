@@ -310,23 +310,23 @@ public class PFQQueue implements Queue {
 		
 		//Measurements for Fair Rate
 		if ( Monitor.clock.substract(lastMeasureTimeFR).toDouble() >= 0.5 ){
-			System.out.println(	"Measurements of Fair Rate at " + 
-								Monitor.clock.toString() +
-								", source: " + source );
-			
+//			System.out.println(	"Measurements of Fair Rate at " + 
+//								Monitor.clock.toString() +
+//								", source: " + source );
+//			
 			// I misunderstood something and have added such if statement - hope that won't
 			// make the algorithm worse 
 //			if (virtualTime != vt2){
 			if ( totalIdleTime.toDouble() * bandwidth >= (virtualTime - vt2) ) {
-				System.out.println( "totalIdleTime is bigger: " + totalIdleTime.toDouble() + ",vt = " + virtualTime + ",vt2 = " + vt2);
+				//System.out.println( "totalIdleTime is bigger: " + totalIdleTime.toDouble() + ",vt = " + virtualTime + ",vt2 = " + vt2);
 				fairRate = (long)( totalIdleTime.toDouble() * (double)bandwidth / ( Monitor.clock.substract( lastMeasureTimeFR ).toDouble() ) );
 			}
 			else{
-				System.out.println( "totalIdleTime is smaller: " + totalIdleTime.toDouble() + ",vt = " + virtualTime + ",vt2 = " + vt2 );
+//				System.out.println( "totalIdleTime is smaller: " + totalIdleTime.toDouble() + ",vt = " + virtualTime + ",vt2 = " + vt2 );
 				fairRate = (long)( (double)( virtualTime - vt2 ) / ( Monitor.clock.substract( lastMeasureTimeFR ).toDouble() ) );
 			}
 			
-			System.out.println("Fair Rate is: " + fairRate + "\n");
+//			System.out.println("Fair Rate is: " + fairRate + "\n");
 						
 			lastMeasureTimeFR = new Time( Monitor.clock );
 			vt2 = virtualTime;
