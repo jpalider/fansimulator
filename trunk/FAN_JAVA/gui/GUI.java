@@ -82,7 +82,7 @@ public class GUI {
 				Monitor.clock = now.time;				
 				now.run();
 			}
-			progressDialog.setProgress( simulationTime );
+			progressDialog.setProgress( simulationTime );			
 		}
 	}
 	
@@ -489,6 +489,14 @@ public class GUI {
 
 			DisplayResultsDialog sumUpDialog = new DisplayResultsDialog(shell, SWT.NONE, serversVector);
 			sumUpDialog.open();
+			//------ jpalider
+				for (int i = 0 ; i < serversVector.size(); i++){
+					for (int j = 0; j < serversVector.elementAt(i).getInterfaces().size(); j++){
+						serversVector.elementAt(i).getInterfaces().elementAt(j).results.finalize();
+					}
+				}
+			//	System.gc();
+			//------
 		}
 	}
 	
