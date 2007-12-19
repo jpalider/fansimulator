@@ -112,7 +112,7 @@ public class Configurator {
         // that must be done at the very beginning, mere, before interface configuration
         for (int i = 0; i < totalServers; i++) {
         	NamedNodeMap serverAttributes = xmlListOfServers.item(i).getAttributes();
-        	Debug.print( "ServerNames : " + serverAttributes.getNamedItem("n").getTextContent() );
+        	Debug.print( Debug.INFO, "Configurator.configure(): serverName : " + serverAttributes.getNamedItem("n").getTextContent() );
         	serverVector.add( new Server(serverAttributes.getNamedItem("n").getTextContent()) );
 		}
 
@@ -131,7 +131,7 @@ public class Configurator {
         			String peerName = new String( interfaceElement.getAttributes().getNamedItem("peer").getTextContent() );
             		Server destServ = findServerByName(serverVector, peerName);
             		if (destServ == null){
-            			Debug.print( "fan.Configurator: no such destination server for interface " + (j+1) + ".");
+            			Debug.print( Debug.WARN, "Configurator.configure(): no such destination server for interface " + (j+1) + ".");
             			continue;
             		}
             		// 2. routing probability
@@ -299,7 +299,7 @@ public class Configurator {
 	    	        													flowHigherRange));
 	        				
 	        			} else{
-	        				Debug.print( "fan.Configurator: wrong generator type!");
+	        				Debug.print( Debug.WARN, "fan.Configurator: wrong generator type!");
 	        			}
         			}
         		}        		
@@ -463,7 +463,7 @@ public class Configurator {
         				u.setTextContent(ug.getRange().toString()); 				
         				g.appendChild(u);
         			} else{
-        				Debug.print( "fan.Configurator: wrong generator type!");
+        				Debug.print( Debug.WARN, "Configurator.configure(): wrong generator type!");
         			}
 					
 					s.appendChild(g);
@@ -489,9 +489,10 @@ public class Configurator {
 
         } catch (ParserConfigurationException pce) {
             // Parser with specified options can't be built
+        	Debug.print(Debug.ERR, "Configurator.saveConfiguration(): pce exception caught!");
             pce.printStackTrace();
         } catch (Exception e){
-        	Debug.print("Exception caught!");
+        	Debug.print(Debug.ERR, "Configurator.saveConfiguration(): e exception caught!");
         }
 		return true;
 	}

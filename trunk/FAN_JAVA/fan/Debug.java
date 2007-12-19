@@ -31,6 +31,14 @@ public class Debug {
 	 */
 	static public void  print(int sev, String s) {
 		if (doDebugging && sev >= severity) {
+			switch (sev) {
+			case 0:
+				System.out.print("...INFO...\t");
+			case 1:
+				System.out.print(":::WARN:::\t");
+			case 2:
+				System.out.print("!!!ERR!!!\t");
+			}
 			System.out.println(s);
 		}
 	}
