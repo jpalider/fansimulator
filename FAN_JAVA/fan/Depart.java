@@ -26,7 +26,6 @@ public class Depart extends Event {
 	 * Method that will be runned during actual packet departure
 	 */
 	public void run() {
-		//Debug.print("Inside run of Depart");
 		super.run();
 		intface.send();
 	}

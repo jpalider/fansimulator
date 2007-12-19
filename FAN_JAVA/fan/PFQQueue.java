@@ -318,15 +318,13 @@ public class PFQQueue implements Queue {
 			// make the algorithm worse 
 //			if (virtualTime != vt2){
 			if ( totalIdleTime.toDouble() * bandwidth >= (virtualTime - vt2) ) {
-				//System.out.println( "totalIdleTime is bigger: " + totalIdleTime.toDouble() + ",vt = " + virtualTime + ",vt2 = " + vt2);
 				fairRate = (long)( totalIdleTime.toDouble() * (double)bandwidth / ( Monitor.clock.substract( lastMeasureTimeFR ).toDouble() ) );
 			}
 			else{
-//				System.out.println( "totalIdleTime is smaller: " + totalIdleTime.toDouble() + ",vt = " + virtualTime + ",vt2 = " + vt2 );
 				fairRate = (long)( (double)( virtualTime - vt2 ) / ( Monitor.clock.substract( lastMeasureTimeFR ).toDouble() ) );
 			}
 			
-//			System.out.println("Fair Rate is: " + fairRate + "\n");
+			Debug.print(Debug.INFO,"PFQQueueBytes.performMeasurements(): Fair Rate is: " + fairRate + "\n");
 						
 			lastMeasureTimeFR = new Time( Monitor.clock );
 			vt2 = virtualTime;
@@ -364,8 +362,8 @@ public class PFQQueue implements Queue {
 			Flow flow = (Flow)flowList.getFlow(packet.p.getFlowIdentifier());
 			flow.backlog -= packet.p.getLength();			
 		} else {
-			System.out.println( "Something has gone wrong in PFQQueue.removeFirst()" );
-			System.out.println(	"The flow missing from the list is: " + 
+			Debug.print(Debug.WARN,"PFQQueueBytes.removeFirst(): Something has gone wrong");
+			Debug.print(Debug.WARN,"PFQQueueBytes.removeFirst(): the flow missing from the list is: " + 
 								packet.p.getFlowIdentifier().toInt() );
 		}
 				
@@ -494,7 +492,7 @@ public class PFQQueue implements Queue {
 			Flow flow = (Flow)flowList.getFlow( flowId );
 			flow.backlog -= tempPacket.p.getLength();
 			if( packetQueue.remove( tempPacket ) )
-				System.out.println("REMOVED THE PACKET OF FLOW " + flowId.toInt() );
+				Debug.print(Debug.WARN,"PFQQueue.removeFirstFlowPacket(): removed a packet of flow " + flowId.toInt() );
 			return tempPacket;
 		}
 	}

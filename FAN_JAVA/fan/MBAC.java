@@ -76,10 +76,8 @@ public class MBAC {
 				return true;
 			}
 			if (getFairRate() < minFairRate) { 
-//				System.out.println( "Congestion occured, FR is: " + getFairRate() );
 				return true;		
 			}  else if (getPriorityLoad() > maxPriorityLoad) {
-//				System.out.println( "Congestion occured, PL is: " + getPriorityLoad() );
 				return true;
 			}
 
@@ -87,7 +85,6 @@ public class MBAC {
 
 		} else if ( queue.getType().compareTo("FIFOBytes") == 0) {
 			if (((FifoQueueBytes)queue).getFreeBytes() >= p.getLength()){
-				//	if ( priority load + AFL )
 				return false;
 			}
 		}	

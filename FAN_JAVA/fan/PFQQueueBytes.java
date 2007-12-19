@@ -100,7 +100,7 @@ public class PFQQueueBytes extends PFQQueue {
 //		at first check if there are any free places at packet queue		
 		if(isFull()){
 			p = null;
-			System.out.println("The queue is full");
+			Debug.print(Debug.INFO,"PFQQueueBytes.putPacket(): the queue is full");
 			return false;
 		}
 		
@@ -148,8 +148,8 @@ public class PFQQueueBytes extends PFQQueue {
 				packetFlow.bytes = pTimestamped.p.getLength();
 				flowList.registerNewFlow(packetFlow);
 			} else {
-				System.out.println("CONGESTION IN THE LIST");
-				System.out.println( "Flowlist length: " + flowList.getLength() + ", flowlist max size: " + flowList.getMaxLength() );
+				Debug.print(Debug.INFO,"PFQQueueBytes.putPacket(): congestion in the list");
+				Debug.print(Debug.INFO, "PFQQueueBytes.putPacket(): flowlist length: " + flowList.getLength() + ", flowlist max size: " + flowList.getMaxLength() );
 			}
 			
 		}
@@ -184,7 +184,7 @@ public class PFQQueueBytes extends PFQQueue {
 			sizeInBytes -= tempPacket.p.getLength();
 			return tempPacket;
 		} else {
-			System.out.println("Last packet in Queue!!");
+			Debug.print(Debug.INFO,"PFQQueueBytes.removeFirstFlowPacket(): last packet in Queue!!");
 			return null;
 		}
 	}
