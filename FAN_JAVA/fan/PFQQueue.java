@@ -30,6 +30,11 @@ public class PFQQueue implements Queue {
 	Time lastMeasureTimePL;
 	
 	/**
+	 * Timeout value defining how long an inactive flow is being kept in PFL
+	 */
+	protected static final int timeout = 10;
+	
+	/**
 	 * Field to hold value saying if the measurements were already performed
 	 */
 	boolean measured = false;
@@ -372,11 +377,11 @@ public class PFQQueue implements Queue {
 				
 				virtualTime = packetQueue.peek().startTag;
 //				Remove all queues which finishTag is smaller than virtualTime with timeout
-				flowList.cleanFlows( virtualTime - 10000 );
+				flowList.cleanFlows( virtualTime - (long)((1 - priorityLoad)*(double)bandwidth*(double)timeout) );
 			}
 		}
 		
-		//if PIFO is now empty remove all flows from flowslist
+		//if PIFO is now empty remove all flows from flow list
 		if( packetQueue.isEmpty() ) {
 		//	flowList.cleanAllFlows();
 			idleTime = new Time( Monitor.clock );
@@ -492,7 +497,7 @@ public class PFQQueue implements Queue {
 			Flow flow = (Flow)flowList.getFlow( flowId );
 			flow.backlog -= tempPacket.p.getLength();
 			if( packetQueue.remove( tempPacket ) )
-				Debug.print(Debug.WARN,"PFQQueue.removeFirstFlowPacket(): removed a packet of flow " + flowId.toInt() );
+				Debug.print(Debug.INFO,"PFQQueue.removeFirstFlowPacket(): removed a packet of flow " + flowId.toInt() );
 			return tempPacket;
 		}
 	}

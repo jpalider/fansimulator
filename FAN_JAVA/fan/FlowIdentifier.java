@@ -38,4 +38,11 @@ public class FlowIdentifier {
 	public int toInt() {
 		return this.id;
 	}
+	
+	/**
+	 * Returns String with flowId number
+	 */
+	public String toString() {
+		return String.valueOf( id );
+	}
 }

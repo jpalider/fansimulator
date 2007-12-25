@@ -106,6 +106,7 @@ public class Generate extends Event {
 	 */
 	public Generate(Time t, Server s) {
 		super(t);
+		//Debug.print(Debug.SPEC,"Generate:" + Monitor.clock.toString());
 		place = s;
 		type = GenerateType.basic;
 		this.looped = true;

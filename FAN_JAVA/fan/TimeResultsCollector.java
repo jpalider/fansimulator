@@ -199,6 +199,7 @@ public class TimeResultsCollector extends ResultsCollector {
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
+		//Debug.print(Debug.SPEC,"aQL at " + Monitor.clock.toString() + " " + length);
 	}
 	
 	public void finalize() {

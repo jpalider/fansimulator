@@ -58,9 +58,11 @@ public class Server {
 		
 		//check if MBAC accepts packet - if it is rejected it means that congestion has occurred
 		if ( choiceIntface.getMBAC().congestionOccured( p ) == true ) {
+			Debug.print(Debug.SPEC,"Congestion");
 			if( !( (PFQQueueBytes)choiceIntface.getQueue() ).getFlowList().contains( p.getFlowIdentifier() ) )
 			{
-				//System.out.println("The flow: " + p.getFlowIdentifier().toInt() + " is not in the list" );				
+				//System.out.println("The flow: " + p.getFlowIdentifier().toInt() + " is not in the list" );
+				Debug.print(Debug.SPEC, Monitor.clock + " Not in the list, congestion occured, flowID: " + p.getFlowIdentifier() );
 				choiceIntface.results.addRejectedPacket( p.getFlowIdentifier() );
 				p = null;
 				return;
@@ -68,8 +70,11 @@ public class Server {
 				FlowIdentifier mostBackloggedFlow = ( (PFQQueueBytes)choiceIntface.getQueue() ).flowList.getMostBackloggedFlow();
 				if( mostBackloggedFlow != null ) { 
 					//System.out.println( "The size of the queue before is: " + ( (PFQQueueBytes)choiceIntface.getQueue() ).getSize() );
-					if( ( (PFQQueueBytes)choiceIntface.getQueue() ).removeFirstFlowPacket( mostBackloggedFlow ) != null )
+					if( ( (PFQQueueBytes)choiceIntface.getQueue() ).removeFirstFlowPacket( mostBackloggedFlow ) != null ) {
+						Debug.print(Debug.SPEC, Monitor.clock + " In list, removed packet of most backlogged flow, flowID: " + mostBackloggedFlow );
 						choiceIntface.results.addRejectedPacket( mostBackloggedFlow );
+					}
+						
 //					System.out.println( "The size of the queue after is: " + ( (PFQQueueBytes)choiceIntface.getQueue() ).getSize() );
 				} //else
 					//System.out.println( "There is no backlogged flow" );
@@ -105,6 +110,7 @@ public class Server {
 				
 			//if the queue is full
 			} else {
+				Debug.print(Debug.SPEC, Monitor.clock + " No congestion, the queue is full, flowID: " + p.getFlowIdentifier() );
 				choiceIntface.results.addRejectedPacket( p.getFlowIdentifier() );
 				p=null;
 			}
