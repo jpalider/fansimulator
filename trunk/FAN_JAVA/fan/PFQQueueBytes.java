@@ -99,8 +99,9 @@ public class PFQQueueBytes extends PFQQueue {
 		
 //		at first check if there are any free places at packet queue		
 		if(isFull()){
+			Debug.print(Debug.SPEC,"The FairRate is: " + getFairRate() );
 			p = null;
-			Debug.print(Debug.INFO,"PFQQueueBytes.putPacket(): the queue is full");
+			Debug.print(Debug.SPEC,"PFQQueueBytes.putPacket(): the queue is full");
 			return false;
 		}
 		

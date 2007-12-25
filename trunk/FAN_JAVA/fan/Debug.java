@@ -9,7 +9,8 @@ package fan;
 public class Debug {
 	static final public int INFO = 0;
 	static final public int WARN = 1; 
-	static final public int ERR = 2; 
+	static final public int ERR = 2;
+	static final public int SPEC = 3;
 	
 	static final private boolean doDebugging = true;	
 	static final private int severity = WARN;
@@ -33,11 +34,13 @@ public class Debug {
 		if (doDebugging && sev >= severity) {
 			switch (sev) {
 			case 0:
-				System.out.print("...INFO...\t");
+				System.out.print("...INFO...\t");break;
 			case 1:
-				System.out.print(":::WARN:::\t");
+				System.out.print(":::WARN:::\t");break;
 			case 2:
-				System.out.print("!!!ERR!!!\t");
+				System.out.print("!!!ERR!!!\t");break;
+			case 3:
+				System.out.print("   SPEC   \t");break;
 			}
 			System.out.println(s);
 		}

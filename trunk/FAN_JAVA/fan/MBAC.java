@@ -72,12 +72,14 @@ public class MBAC {
 	public boolean congestionOccured(Packet p){
 		if ( queue.getType().equals("PFQ")){
 			if (flowList.getLength() == flowList.getMaxLength()){
-				System.out.println("FlowList saturated.");
+				Debug.print(Debug.INFO,"FlowList saturated.");
 				return true;
 			}
-			if (getFairRate() < minFairRate) { 
+			if (getFairRate() < minFairRate) {
+				Debug.print(Debug.SPEC, "FR " + Monitor.clock.toString() + " " + getFairRate());
 				return true;		
 			}  else if (getPriorityLoad() > maxPriorityLoad) {
+				Debug.print(Debug.SPEC, "PL " + Monitor.clock.toString() + " " + getPriorityLoad());
 				return true;
 			}
 
