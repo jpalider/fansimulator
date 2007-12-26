@@ -71,7 +71,7 @@ public class PFQQueue implements Queue {
 		 * @param p The packet that should be compared with this packet
 		 */
 		public int compareTo(PacketTimestamped p){
-			if( packetQueue.peek() == p )
+			if( p == packetQueue.peek() )
 				return 1;
 			if (this.startTag == p.startTag) {
 				if ( this.clock == p.clock ) 
@@ -324,9 +324,11 @@ public class PFQQueue implements Queue {
 //			if (virtualTime != vt2){
 			if ( totalIdleTime.toDouble() * bandwidth >= (virtualTime - vt2) ) {
 				fairRate = (long)( totalIdleTime.toDouble() * (double)bandwidth / ( Monitor.clock.substract( lastMeasureTimeFR ).toDouble() ) );
+				Debug.print(Debug.SPEC, "total idle Time" );
 			}
 			else{
 				fairRate = (long)( (double)( virtualTime - vt2 ) / ( Monitor.clock.substract( lastMeasureTimeFR ).toDouble() ) );
+				Debug.print(Debug.SPEC, "virtual Time: " + virtualTime + ",vt2: " + vt2 );
 			}
 			
 			Debug.print(Debug.INFO,"PFQQueueBytes.performMeasurements(): Fair Rate is: " + fairRate + "\n");

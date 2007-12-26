@@ -6,9 +6,14 @@ package fan;
  */
 public class UniformGenerate extends Generate {
 	/**
-	 * Range of the probability distrubution to be used by this generator
+	 * Start Range of the probability distrubution to be used by this generator
 	 */
-	private Time range;
+	private Time rangeStart;
+	
+	/**
+	 * End Range of the probability distrubution to be used by this generator
+	 */
+	private Time rangeEnd;
 	
 	/**
 	 * Constructor for the UniformGenerate class which creates generator with the
@@ -23,8 +28,8 @@ public class UniformGenerate extends Generate {
 	 * @param flowLowerRange the lower limit of generated flow IDs
 	 * @param flowHigherRange the higher limit of generated flow IDs
 	 */
-	public UniformGenerate(Time t, Server s, Time range, Time fTime, int packetSize, int flowLowerRange, int flowHigherRange) {
-		this(t, s, range, fTime);
+	public UniformGenerate(Time t, Server s, Time rangeStart, Time rangeEnd, Time fTime, int packetSize, int flowLowerRange, int flowHigherRange) {
+		this(t, s, rangeStart, rangeEnd, fTime);
 		this.packetSize = packetSize;
 		this.flowLowerRange = flowLowerRange;
 		this.flowHigherRange = flowHigherRange;
@@ -42,8 +47,8 @@ public class UniformGenerate extends Generate {
 	 * @param flowLowerRange the lower limit of generated flow IDs
 	 * @param flowHigherRange the higher limit of generated flow IDs
 	 */
-	public UniformGenerate(Time t, Server s, Time range, int packetSize, int flowLowerRange, int flowHigherRange) {
-		this(t, s, range);
+	public UniformGenerate(Time t, Server s, Time rangeStart, Time rangeEnd, int packetSize, int flowLowerRange, int flowHigherRange) {
+		this(t, s, rangeStart, rangeEnd);
 		this.packetSize = packetSize;
 		this.flowLowerRange = flowLowerRange;
 		this.flowHigherRange = flowHigherRange;
@@ -58,8 +63,8 @@ public class UniformGenerate extends Generate {
 	 * @param range time range of the uniform distribution to be used in this generator
 	 * @param fTime finish time when this generator should be turned off
 	 */
-	public UniformGenerate(Time t, Server s, Time range, Time fTime) {
-		this(t,s,range);
+	public UniformGenerate(Time t, Server s, Time rangeStart, Time rangeEnd, Time fTime) {
+		this(t, s, rangeStart, rangeEnd);
 		this.looped = false;
 		this.finishTime = fTime;
 	}
@@ -71,10 +76,11 @@ public class UniformGenerate extends Generate {
 	 * @param s server where this generator should be connected
 	 * @param range time range of the uniform distribution to be used by this generator
 	 */
-	public UniformGenerate(Time t, Server s, Time range) {
+	public UniformGenerate(Time t, Server s, Time rangeStart, Time rangeEnd ) {
 		super(t, s);
 		this.type = GenerateType.uniform;
-		this.range = range;
+		this.rangeStart = rangeStart;
+		this.rangeEnd = rangeEnd;
 		this.looped = true;
 		this.flowLowerRange = 0;
 		this.flowHigherRange = 5;
@@ -92,33 +98,44 @@ public class UniformGenerate extends Generate {
 								Packet.FlowType.STREAM,
 								packetSize);
 		place.recieve(p);
-		Time newEventTime = Monitor.clock.add( new Time( Monitor.generator.getNumber(range.toDouble()) ) );
+		Time newEventTime = Monitor.clock.add( new Time( rangeStart.toDouble() + Monitor.generator.getNumber(rangeEnd.toDouble() - rangeStart.toDouble()) ) );
 		if(!looped) {
 			if (newEventTime.compareTo(finishTime) > 0)
 				return;
-			Monitor.agenda.schedule(new ConstantGenerate(	newEventTime, 
+			Monitor.agenda.schedule(new UniformGenerate(	newEventTime, 
 															place, 
-															range,
+															rangeStart,
+															rangeEnd,
 															finishTime,
 															packetSize,
 															flowLowerRange,
 															flowHigherRange) );
 		}
 		else 
-			Monitor.agenda.schedule(new ConstantGenerate(	newEventTime, 
-														place, 
-														range,
-														packetSize,
-														flowLowerRange,
-														flowHigherRange) );
+			Monitor.agenda.schedule(new UniformGenerate(	newEventTime, 
+															place, 
+															rangeStart,
+															rangeEnd,
+															packetSize,
+															flowLowerRange,
+															flowHigherRange) );
 	}
+	
 	
 	/**
-	 * Returns range of the Time probability distribution used by this generator
+	 * Returns start range of the Time probability distribution used by this generator
 	 * @return range of distribution
 	 */
-	public Time getRange() {
-		return range;
+	public Time getStartRange() {
+		return rangeStart;
 	}
 	
+	
+	/**
+	 * Returns end range of the Time probability distribution used by this generator
+	 * @return range of distribution
+	 */
+	public Time getEndRange() {
+		return rangeEnd;
+	}
 }
