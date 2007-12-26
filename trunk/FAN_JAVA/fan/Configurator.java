@@ -288,12 +288,17 @@ public class Configurator {
 	    	        													flowHigherRange));
 	        				
 	        			}else if (generatorType.compareTo("uniform") == 0){
-	        				NodeList rangeList = generatorElement.getElementsByTagName("range");  
+	        				NodeList rangeList = generatorElement.getElementsByTagName("StartRange");  
 	        				Element rangeElement = (Element)rangeList.item(0);  
-	        				double range = Double.parseDouble( rangeElement.getTextContent() );
+	        				double rangeStart = Double.parseDouble( rangeElement.getTextContent() );
+	        				
+	        				rangeList = generatorElement.getElementsByTagName("EndRange");  
+	        				rangeElement = (Element)rangeList.item(0);  
+	        				double rangeEnd = Double.parseDouble( rangeElement.getTextContent() );
 	        				generatorVector.add(new UniformGenerate(	start, 
 	        															serverVector.get(i), 
-	        															new Time(range), 
+	        															new Time(rangeStart),
+	        															new Time(rangeEnd),
 	        															packetS,
 	    	        													flowLowerRange,
 	    	        													flowHigherRange));
@@ -458,10 +463,15 @@ public class Configurator {
         				g.appendChild(iv);
         			}else if (generatorType == Generate.GenerateType.uniform){
         				g.setAttribute("type", "uniform");
-        				Element u = (Element) document.createElement("range");
+        				Element u = (Element) document.createElement("StartRange");
         				UniformGenerate ug = (UniformGenerate) generatorVector.get(k);
-        				u.setTextContent(ug.getRange().toString()); 				
+        				u.setTextContent(ug.getStartRange().toString()); 				
         				g.appendChild(u);
+        				
+        				u = (Element) document.createElement("EndRange");
+        				u.setTextContent(ug.getEndRange().toString()); 				
+        				g.appendChild(u);
+        				
         			} else{
         				Debug.print( Debug.WARN, "Configurator.configure(): wrong generator type!");
         			}

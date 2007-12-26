@@ -41,6 +41,7 @@ public class Server {
 	 * @param p Packet to be received by Server
 	 */
 	public void recieve(Packet p){
+		Debug.print(Debug.SPEC, Monitor.clock + " " + name + " !!!NEW PACKET " + p.getFlowIdentifier() );
 		//Choose the next server and its interface that will be a next destination for this packet
 		Interface choiceIntface = routing.getServerInterfaceForResult( Monitor.generator.getNumber(1) );
 		
