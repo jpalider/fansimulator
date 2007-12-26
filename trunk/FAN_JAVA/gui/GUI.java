@@ -351,7 +351,9 @@ public class GUI {
 								}
 								else if( generatorsVector.elementAt(i).getType().equals(GenerateType.uniform) ) {
 									generatorTypeItem = new TreeItem(generatorItem,SWT.NONE);
-									generatorTypeItem.setText( "Range [s]: " + String.valueOf(((UniformGenerate)generatorsVector.elementAt(i)).getRange().toDouble()) );
+									generatorTypeItem.setText( "Start Range [s]: " + String.valueOf(((UniformGenerate)generatorsVector.elementAt(i)).getStartRange().toDouble()) );
+									generatorTypeItem = new TreeItem(generatorItem,SWT.NONE);
+									generatorTypeItem.setText( "End Range [s]: " + String.valueOf(((UniformGenerate)generatorsVector.elementAt(i)).getEndRange().toDouble()) );
 								}
 									
 							}
