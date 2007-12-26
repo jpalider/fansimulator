@@ -181,11 +181,12 @@ public class AddGeneratorDialog extends Dialog {
         		}
         		else if( generatorTypeCombo.getText().equals(GenerateType.uniform.name()) ) {
         			intervalText.setVisible(true);
-        			intervalLabel.setText("Range [s]:");
+        			intervalLabel.setText("Start Range [s]:");
         			intervalLabel.setVisible(true);
         			
-        			varianceLabel.setVisible(false);
-        			varianceText.setVisible(false);
+        			varianceLabel.setVisible(true);
+        			varianceLabel.setText( "End Range [s]:" );
+        			varianceText.setVisible(true);
         		}
         	}
         });
@@ -258,11 +259,13 @@ public class AddGeneratorDialog extends Dialog {
         		}
         		
         		else if( generatorTypeCombo.getText().equals(GenerateType.uniform.name()) ) {
-        			Time rangeTime = new Time( Double.valueOf(intervalText.getText()) );
+        			Time startRangeTime = new Time( Double.valueOf( intervalText.getText() ) );
+        			Time endRangeTime = new Time( Double.valueOf( varianceText.getText() ) );
         			if(finishTime != null)
         				generatorsVector.add( new UniformGenerate(	startTime, 
         															server, 
-        															rangeTime, 
+        															startRangeTime,
+        															endRangeTime,
         															finishTime, 
         															packetSize,
         															Integer.parseInt( lowerFlowIdText.getText() ),
@@ -270,7 +273,8 @@ public class AddGeneratorDialog extends Dialog {
         			else
         				generatorsVector.add( new UniformGenerate(	startTime, 
         															server, 
-        															rangeTime, 
+        															startRangeTime,
+        															endRangeTime,
         															packetSize,
         															Integer.parseInt( lowerFlowIdText.getText() ),
                 													Integer.parseInt( higherFlowIdText.getText() ) ) );
