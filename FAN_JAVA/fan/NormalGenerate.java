@@ -94,7 +94,7 @@ public class NormalGenerate extends Generate {
 								Packet.FlowType.STREAM,
 								packetSize);
 		place.recieve(p);
-		Time newEventTime = Monitor.clock.add( new Time(Monitor.generator.getGaussianNumber(mean.toDouble(), variance.toDouble()) ) );
+		Time newEventTime = Monitor.clock.add( new Time( mean.toDouble() + Math.abs(Monitor.generator.getGaussianNumber(0.0, variance.toDouble())) ) );
 		if(!looped) {
 			if (newEventTime.compareTo(finishTime) > 0)
 				return;
