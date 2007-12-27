@@ -34,7 +34,7 @@ public class AddGeneratorDialog extends Dialog {
 		Shell parent = getParent();
         final Shell shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
         shell.setText("Add Generator To " + getText());
-        shell.setSize(250, 400);
+        shell.setSize(300, 400);
         
         
         
@@ -182,10 +182,12 @@ public class AddGeneratorDialog extends Dialog {
         		else if( generatorTypeCombo.getText().equals(GenerateType.uniform.name()) ) {
         			intervalText.setVisible(true);
         			intervalLabel.setText("Start Range [s]:");
+        			intervalLabel.setSize( intervalLabel.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
         			intervalLabel.setVisible(true);
         			
         			varianceLabel.setVisible(true);
         			varianceLabel.setText( "End Range [s]:" );
+        			varianceLabel.setSize( varianceLabel.computeSize( SWT.DEFAULT, SWT.DEFAULT ) );
         			varianceText.setVisible(true);
         		}
         	}
