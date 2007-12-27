@@ -327,9 +327,9 @@ public class GUI {
 																) );
 								
 								generatorTypeItem = new TreeItem(generatorItem,SWT.NONE);
-								generatorTypeItem.setText( "Lower FlowID Range: " + String.valueOf( generatorsVector.elementAt(i).getFlowIdLowerRange() ) );
+								generatorTypeItem.setText( "Lowest FlowID: " + String.valueOf( generatorsVector.elementAt(i).getFlowIdLowerRange() ) );
 								generatorTypeItem = new TreeItem(generatorItem,SWT.NONE);
-								generatorTypeItem.setText( "Higher FlowID Range: " + String.valueOf( generatorsVector.elementAt(i).getFlowIdHigherRange() ) );
+								generatorTypeItem.setText( "Highest FlowID: " + String.valueOf( generatorsVector.elementAt(i).getFlowIdHigherRange() ) );
 								
 								generatorTypeItem = new TreeItem(generatorItem,SWT.NONE);
 								generatorTypeItem.setText( "Start [s]: " + String.valueOf( generatorsVector.elementAt(i).getTime().toDouble() ) );
@@ -487,17 +487,6 @@ public class GUI {
 			progressDialog.open();
 			
 			shell.update();
-			//Display the results of simulation
-			DisplayResultsDialog sumUpDialog = new DisplayResultsDialog(shell, SWT.NONE, serversVector);
-			sumUpDialog.open();
-			
-			//------ jpalider
-//			for (int i = 0 ; i < serversVector.size(); i++){
-//				for (int j = 0; j < serversVector.elementAt(i).getInterfaces().size(); j++){
-//					serversVector.elementAt(i).getInterfaces().elementAt(j).results.finalize();
-//					fan.Debug.print("+++");
-//				}
-//			}
 
 		}
 	}
@@ -512,6 +501,12 @@ public class GUI {
 		GenerateGraphsDialog test = new GenerateGraphsDialog(shell,SWT.NONE);
 		test.open();
 		
+	}
+	
+	private void summaryDialog(){
+		// Display the results of simulation
+		DisplayResultsDialog sumUpDialog = new DisplayResultsDialog(shell, SWT.NONE, serversVector);
+		sumUpDialog.open();
 	}
 	
 	/**
@@ -765,6 +760,19 @@ public class GUI {
 		validateConfigButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent arg0) {
 				validateConfiguration(true);
+			}
+		});
+		
+		//Simulation summary button
+		Button summaryButton = new Button(shell,SWT.NONE);
+		summaryButton.setText("Simulation summary");
+		summaryButton.setSize(200,50);
+		summaryButton.setLocation(validateConfigButton.getLocation().x,
+								  validateConfigButton.getLocation().y +
+								  validateConfigButton.getSize().y + 5 );
+		summaryButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent arg0) {
+				summaryDialog();
 			}
 		});
 		
