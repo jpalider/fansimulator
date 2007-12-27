@@ -104,7 +104,7 @@ public class GUI {
 		display = new Display();
 		shell = new Shell(display,SWT.DIALOG_TRIM);
 		shell.setLayout( new FillLayout());
-	    shell.setSize(750, 600);
+	    shell.setSize(800, 600);
 	    shell.setText("FAN simulator");
 	    shell.setLayout(null);
 	    shell.setImage(new Image(display,"res/titleimage.png"));
@@ -399,7 +399,7 @@ public class GUI {
 	 */
 	private void addServerTabFolder(Shell shell) {
 		tabs = new TabFolder(shell, SWT.TOP|SWT.NO_REDRAW_RESIZE);
-	    tabs.setSize(650, 300);
+	    tabs.setSize(710, 300);
 	    tabs.setLocation(30,80);
 	    tabs.addListener(100, new Listener(){
 
@@ -745,7 +745,7 @@ public class GUI {
 		removeServerBut.addSelectionListener(buttonListener);
 		
 		descField = new Text(shell, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
-		descField.setSize(330, 60);
+		descField.setSize(370, 60);
 		descField.setLocation( removeServerBut.getLocation().x + removeServerBut.getSize().x + 30, removeServerBut.getLocation().y );
 
 	}
