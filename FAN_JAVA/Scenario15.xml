@@ -19,37 +19,41 @@ T=15
     <server n="Server nr 1">
         <interface bandwidth="320000" maxFlowListSize="1000" maxPL="0.1"
             minFR="8000" peer="Server nr 2" probability="1.0" queueSize="80000"/>
-        <generator type="constant">
+        <generator type="uniform">
             <packetSize>1500</packetSize>
             <startTime>0.0</startTime>
             <flowLowerRange>10</flowLowerRange>
             <flowHigherRange>10</flowHigherRange>
             <looped>true</looped>
-            <interval>0.01</interval>
+            <StartRange>0.0</StartRange>
+            <EndRange>0.02</EndRange>
         </generator>
-        <generator type="constant">
+        <generator type="uniform">
             <packetSize>1500</packetSize>
             <startTime>0.0</startTime>
             <flowLowerRange>11</flowLowerRange>
             <flowHigherRange>11</flowHigherRange>
             <looped>true</looped>
-            <interval>0.01</interval>
+            <StartRange>0.0</StartRange>
+            <EndRange>0.02</EndRange>
         </generator>
-        <generator type="constant">
+        <generator type="uniform">
             <packetSize>800</packetSize>
             <startTime>10.0</startTime>
             <flowLowerRange>4</flowLowerRange>
             <flowHigherRange>4</flowHigherRange>
             <looped>true</looped>
-            <interval>0.1</interval>
+            <StartRange>0.0</StartRange>
+            <EndRange>0.2</EndRange>
         </generator>
-        <generator type="constant">
+        <generator type="uniform">
             <packetSize>800</packetSize>
             <startTime>15.0</startTime>
             <flowLowerRange>5</flowLowerRange>
             <flowHigherRange>5</flowHigherRange>
             <looped>true</looped>
-            <interval>0.1</interval>
+            <StartRange>0.0</StartRange>
+            <EndRange>0.2</EndRange>
         </generator>
     </server>
     <server n="Server nr 2">
