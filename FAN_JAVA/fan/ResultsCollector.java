@@ -99,7 +99,7 @@ public class ResultsCollector {
 	 * @param p Packet 
 	 */
 	public void addAvgpacketLength(Packet p){
-		avgPacketLength = (avgPacketLength*checkedPacketsLength + (double)p.getLength()) / (double)(checkedPacketsLength + 1);
+		avgPacketLength = (avgPacketLength*(double)checkedPacketsLength + (double)p.getLength()) / (double)(checkedPacketsLength + 1);
 		checkedPacketsLength++;
 	}
 	/**
