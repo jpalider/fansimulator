@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
-    <description>Scenario15:
-::::::
-C=320KB/s = 2.5Mb/s
-::::::
-T=0
-2xFTP
-2x1200Kb/s
-2x150KB/s
-T=10
-1xVoIP
-1x64Kb/s
-1x8KB/s
-T=15
-1xVoIP
-1x64Kb/s
+    <description>Scenario15:&#xd;
+::::::&#xd;
+C=320KB/s = 2.5Mb/s&#xd;
+::::::&#xd;
+T=0&#xd;
+2xFTP&#xd;
+2x1200Kb/s&#xd;
+2x150KB/s&#xd;
+T=10&#xd;
+1xVoIP&#xd;
+1x64Kb/s&#xd;
+1x8KB/s&#xd;
+T=15&#xd;
+1xVoIP&#xd;
+1x64Kb/s&#xd;
 1x8KB/s</description>
     <server n="Server nr 1">
         <interface bandwidth="320000" maxFlowListSize="1000" maxPL="0.1"
@@ -24,15 +24,6 @@ T=15
             <startTime>0.0</startTime>
             <flowLowerRange>10</flowLowerRange>
             <flowHigherRange>10</flowHigherRange>
-            <looped>true</looped>
-            <StartRange>0.0</StartRange>
-            <EndRange>0.02</EndRange>
-        </generator>
-        <generator type="uniform">
-            <packetSize>1500</packetSize>
-            <startTime>0.0</startTime>
-            <flowLowerRange>11</flowLowerRange>
-            <flowHigherRange>11</flowHigherRange>
             <looped>true</looped>
             <StartRange>0.0</StartRange>
             <EndRange>0.02</EndRange>
@@ -54,6 +45,15 @@ T=15
             <looped>true</looped>
             <StartRange>0.0</StartRange>
             <EndRange>0.2</EndRange>
+        </generator>
+        <generator type="uniform">
+            <packetSize>1500</packetSize>
+            <startTime>0.13</startTime>
+            <flowLowerRange>11</flowLowerRange>
+            <flowHigherRange>11</flowHigherRange>
+            <looped>true</looped>
+            <StartRange>0.0</StartRange>
+            <EndRange>0.02</EndRange>
         </generator>
     </server>
     <server n="Server nr 2">
