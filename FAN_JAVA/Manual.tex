@@ -14,18 +14,18 @@
 	way to do that is to download either source code from the project site under
 	svn control at \emph{https://fansimulator.googlecode.com/svn/trunk} or the
 	.jar packages that contain all necessary libraries to run the application
-	succesfully under both Windows or Linux -- each package prepeared for one of
+	succesfully under both Windows or Linux -- each package is prepeared for one of
 	the operating systems.	
 	
 	\emph{FAN simulator} has been written with portability in mind. That is why
 	Java has been chosen as programming language. Despite that, there are certain
-	requirements that must be met. First of all, JVM~6.0 must be available, under
-	former versions, Java native algorithms in versions 5.0 and 6.0 seem to behave
-	different thus making it impossible to work\footnote{In some configurations
-	the application simply crashes} stable.\\
+	requirements that must be met. First of all, JVM~6.0 must be available, Java
+	native algorithms in versions 5.0 and 6.0 seem to behave different thus making
+	it impossible to work\footnote{In some configurations the application
+	simply crashes} stable.\\
 	For executable packages nothing but JVM is needed. However, to build and run
 	the application from sources following packages must be available\emph{(some
-	older should also work but were not tested)}:
+	older versions should also work but were not tested)}:
 	\begin{enumerate}
 	\item {SWTv3.3.2 for target platform}
 	\item {jcommon v1.0.10}
@@ -35,19 +35,128 @@
 	
 	\section{User manual}
 	This section will describe all the functionality that GUI of \emph{FAN
-	simulator} provides. It will guide through all the windows and sub-windows
-	that might be displayed to the user while working with \emph{FAN simulator}.
+	simulator} provides. It will show how to deal with the applicaion and guide
+	through all the windows and sub-windows that might be displayed to the user
+	while working with \emph{FAN simulator}.
 	Blue rectangles on screenshots with corresponding numbers were postprocessed
-	to make referring to them easier.
-	
-	\subsection{Main window}
+	to easier identify graphical objects.\\	
 	A group of simulation parameters that control simulation behaviour will be
 	called simulation scenario, or simply scenario. There are two ways of setting
 	simulation scenario. One is by creating an \emph{.xml} file containing
-	necessary information enclosed by xml tags and then loading it or by creating
-	the scenario from within \emph{FAN simulator} application. The latter will be
-	introduced at the beginning.
+	necessary information enclosed by XML tags and then loading it or by creating
+	the scenario from within \emph{FAN simulator} application. 
+	The primary task while constructing a simulating scenario is to define at
+	least two servers (one server works but gives no results) which are
+	going to participate in packet transmission, set a link between them (actualy
+	a one-way interface to the destination server), configure FAN router paramerts
+	and creating a traffic generator adjacent to a server.
+	
+   \subsection{Creating scenario file manually}
 
+    Here is a skeleton of a minimal scenario file. The listing below can be
+    easily generated from GUI, at this point, however, its structure is 
+   being described.
+    \begin{verbatim}
+
+ 1.   <?xml version="1.0" encoding="UTF-8"?>
+ 2.   <root>
+ 3.      <description>
+ 4.          This is a sample description for non-existing scenario.
+ 5.          It can span over several lines and theoretically be as
+ 6.          long as necessary!
+ 7.      </description>
+ 8.      <server n="Server nr 1">
+ 9.          <interface	 bandwidth="320000"
+10.                      maxFlowListSize="25"
+11.                      maxPL="0.1"
+12.                      minFR="16000"
+13.                      peer="Server nr 2"
+14.                      probability="1.0"
+15.                      queueSize="80000"
+16.          />
+17.          <generator  type="constant">
+18.              <packetSize>400</packetSize>
+19.              <startTime>0.0</startTime>
+20.              <flowLowerRange>1</flowLowerRange>
+21.              <flowHigherRange>20</flowHigherRange>
+22.              <looped>true</looped>
+23.              <interval>0.00125</interval>
+24.          </generator>
+25.      </server>
+26.      <server n="Server nr 2">
+27.          <interface  bandwidth="1" 
+28.                      maxFlowListSize="100"
+29.                      maxPL="1.0"
+30.                      minFR="1.0"
+31.                      peer="Server nr 2"
+32.                      probability="1.0"
+33.                      queueSize="100000"
+34.          />
+35.      </server>
+36.  </root> 
+
+	\end{verbatim}
+
+	Each scenario file should be a properly formatted \emph{.xml} file. Line 1
+	consists of a comment including coding type used in that document.\\
+	Lines 2 and 36 are the root tags, by convention named \emph{root}. It is
+	obligatory to have them in the scenario file.\\
+	Lines 3 and 7 denoted as \emph{description} tag enclose some
+	additional text, usually a description of a scenario. As this is an XML file
+	some characters are forbidden -- XML documentation gives further
+	information about that issue.\\
+	\emph{Server} tag embracing lines 8-25 sets a server name and describes its
+	behaviour. Child nodes that might appear in \emph{server} section can be
+	\emph{interface} or \emph{generator}.\\
+	The \emph{interface} tag does not have any sub-tags, as all the necessary
+	information is represented as attributes of a tag. These are:
+	\begin{enumerate}
+      \item bandwidth -- bandwidth in B/s of a link from \emph{this} interface
+      to the destination server
+      \item maxFlowListSize -- the total number of flows kept in FAN router
+      \item maxPL -- maximum priority load of a flow
+      \item minFR -- minimum fair rate of a flow
+      \item peer -- name of a server this interface in liked to
+      \item probability -- probability that a packet while being
+      statistically routed (no real routing algorithms are implemented) will
+      be switched to this interface. A sum of \emph{probability} over all
+      \emph{interfaces} on a server must be equal to 1.0.
+      \item queueSize -- maximum size in B of a queue that keeps packets
+      waiting for trasmission
+    \end{enumerate}
+    \emph{Generator} tag describes traffic sources. There are four types of
+    traffic generators (time values are given in seconds):
+    \begin{enumerate}
+      \item constant -- packets are sent every \emph{interval} 
+      \item uniform -- packets are sent in various intervals between
+      \emph{StartRange} and \emph{EndRange}
+      \item normal -- packets are sent in time spaces accordingly to Gaussian
+      distribution configured with \emph{mean} and \emph{variance}. 
+      \item basic -- TODO
+    \end{enumerate}
+    Apart from specyfic parameters of generators' types, there are a few
+    additional one:
+    \begin{enumerate}
+      \item packetSize -- defines a size of every generated packet, does not
+      change for particular simulation
+      \item startTime -- specifies where a generator starts creating packets
+      \item stopTime (optional) -- if a generator is to stop at a particular
+      point in time, this field should be set. By default packets are generated
+      from \emph{startTime} till the simulation end.
+      \item flowLowerRange -- with \emph{flowHigherRange (see below)} defines a
+      range of flow identifiers that are randomly generated. If there is a need
+      to generate packets with exaclty one flow identifier,
+      \emph{flowLowerRange} should be equal to \emph{flowHigherRange}
+      \item flowHigherRange -- see \emph{flowLowerRange}
+      \item looped -- must be true if \emph{stopTime} is not set 
+    \end{enumerate}
+    Notice: locally serviced packets are immediadely removed from server, thus
+    if for a local interface (looping to the server an interface is assigned to)
+    \emph{probability} in line 32 is set to 1.0 \emph{bandwidth} may be set to
+    any integer value, here 1 as in line 27.
+
+	\subsection{Main window}
+	
 	\begin{figure}[h]
 	\includegraphics[width=150mm]{man/MainWindow.eps}
 	\caption{Main FAN simulator window}
@@ -80,41 +189,9 @@
 	of simulation results}
     \end{enumerate}
     
-    \subsection{Creating scenario file by hand}
-    
-    Here is a skeleton of a minimal scenario file.
-    \begin{verbatim}
- <?xml version="1.0" encoding="UTF-8"?>
-  <root>
-   <description>
-    This is a sample description for non-existing scenario.
-    It can span over several lines and theoretically be as
-    long as necessary!
-   </description>
-   <server n="Server nr 1">
-    <interface	bandwidth="320000"
-        			maxFlowListSize="25"
-            		maxPL="0.1"
-            		minFR="16000"
-            		peer="Server nr 2"
-            		probability="1.0"
-            		queueSize="80000"
-		/>
-        <generator	type="constant">
-            <packetSize>400</packetSize>
-            <startTime>0.0</startTime>
-            <flowLowerRange>1</flowLowerRange>
-            <flowHigherRange>20</flowHigherRange>
-            <looped>true</looped>
-            <interval>0.00125</interval>
-        </generator>
-    </server>
-    <server n="Server nr 2">
-        <interface bandwidth="1" maxFlowListSize="100" maxPL="1.0"
-            minFR="1.0" peer="Server nr 2" probability="1.0"
-            queueSize="100000"/> </server>
-	</root> 
-	\end{verbatim}
+ 
+
+	\subsection{Creating scenario from within \emph{FAN simulator}}
 
 	\subsection{Menu bar}
 	
