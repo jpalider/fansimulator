@@ -195,8 +195,8 @@ public class TimeResultsCollector extends ResultsCollector {
 		super.addQueueLength(length);
 		try {
 			
-			fileQL.write( Monitor.clock.toDouble() + ":" + length + "\n" );
-//			fileQL.write( Monitor.clock.toDouble() + ":" + getAvgQueueLength() + "\n" );
+//			fileQL.write( Monitor.clock.toDouble() + ":" + length + "\n" );
+			fileQL.write( Monitor.clock.toDouble() + ":" + getAvgQueueLength() + "\n" );
 			fileQL.flush();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
