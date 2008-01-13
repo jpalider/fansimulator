@@ -365,7 +365,7 @@ public class GenerateGraphsDialog extends Dialog {
 			
 			JFreeChart chartSP = ChartFactory.createXYLineChart(
 						"Total Number of Serviced Packets on " + name,  // Title
-						"Time",           								// X-Axis label
+						"Time [s]",           								// X-Axis label
 						"Number of Serviced Packets",           			// Y-Axis label
 						servicedPacketCol,								// Dataset
 						PlotOrientation.VERTICAL,
@@ -376,8 +376,8 @@ public class GenerateGraphsDialog extends Dialog {
 			
 			JFreeChart chartAST = ChartFactory.createXYLineChart(
 					"Average Packet Service Time on " + name,  // Title
-					"Time",           								// X-Axis label
-					"Average Packet Service Time",        			// Y-Axis label
+					"Time [s]",           								// X-Axis label
+					"Average Packet Service Time [s]",        			// Y-Axis label
 					avgServTimeCol,								// Dataset
 					PlotOrientation.VERTICAL,
 					true,				            	    		// Show legend
@@ -437,7 +437,7 @@ public class GenerateGraphsDialog extends Dialog {
 			
 			JFreeChart chart = ChartFactory.createXYLineChart(
 						"Total Number of Locally Serviced Packets on " + name,  	// Title
-						"Time",           											// X-Axis label
+						"Time [s]",           											// X-Axis label
 						"Number of Locally Serviced Packets",           						// Y-Axis label
 						locServicedPacketCol,										// Dataset
 						PlotOrientation.VERTICAL,
@@ -518,7 +518,7 @@ public class GenerateGraphsDialog extends Dialog {
 			
 			JFreeChart chart = ChartFactory.createXYLineChart(
 						"Total Number of Rejected Packets on " + name,  	// Title
-						"Time",           									// X-Axis label
+						"Time [s]",           									// X-Axis label
 						"Number of Rejected Packets",           			// Y-Axis label
 						rejectedPacketCol,									// Dataset
 						PlotOrientation.VERTICAL,
@@ -572,8 +572,8 @@ public class GenerateGraphsDialog extends Dialog {
 			
 			JFreeChart chart = ChartFactory.createXYLineChart(
 						"Average Queue Length on " + name,  	// Title
-						"Time",           						// X-Axis label
-						"Average Queue Length",          		// Y-Axis label
+						"Time [s]",           						// X-Axis label
+						"Average Queue Length [B]",          		// Y-Axis label
 						queueLenCol,							// Dataset
 						PlotOrientation.VERTICAL,
 						true,				            	    // Show legend
