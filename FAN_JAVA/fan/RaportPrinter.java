@@ -55,12 +55,12 @@ public class RaportPrinter {
 
 		System.out.println("\nThe average queue length for interface pointing to: ");
 		for (int i = 0; i < s.getInterfaces().size(); i++) {
-			System.out.println("\t" + s.getInterfaces().elementAt(i).getServer().getName() + ": " + format.format(s.getInterfaces().elementAt(i).results.getAvgQueueLength()) + " packets");
+			System.out.println("\t" + s.getInterfaces().elementAt(i).getServer().getName() + ": " + format.format(s.getInterfaces().elementAt(i).results.getAvgQueueLength()) + " bytes");
 		}
 		
 		System.out.println("\nThe maximum queue length for interface pointing to: ");
 		for (int i = 0; i < s.getInterfaces().size(); i++) {		
-			System.out.println("\t" + s.getInterfaces().elementAt(i).getServer().getName() + ": " + s.getInterfaces().elementAt(i).results.getMaxQueueLength() + " packets");
+			System.out.println("\t" + s.getInterfaces().elementAt(i).getServer().getName() + ": " + s.getInterfaces().elementAt(i).results.getMaxQueueLength() + " bytes");
 		}
 		
 		System.out.println("\nTheNumber of rejected packet for interface pointing to: ");
