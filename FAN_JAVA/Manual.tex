@@ -39,7 +39,7 @@
 	through all the windows and sub-windows that might be displayed to the user
 	while working with \emph{FAN simulator}.
 	Blue rectangles on screenshots with corresponding numbers were postprocessed
-	to easier identify graphical objects.\\	
+	to easier identify graphical objects. They will be called \emph{regions}.\\	
 	A group of simulation parameters that control simulation behaviour will be
 	called simulation scenario, or simply scenario. There are two ways of setting
 	simulation scenario. One is by creating an \emph{.xml} file containing
@@ -52,7 +52,7 @@
 	and creating a traffic generator adjacent to a server.
 	
    \subsection{Creating scenario file manually}
-
+	\label{MANUALCREATION}
     Here is a skeleton of a minimal scenario file. The listing below can be
     easily generated from GUI, at this point, however, its structure is 
    being described.
@@ -154,8 +154,12 @@
     if for a local interface (looping to the server an interface is assigned to)
     \emph{probability} in line 32 is set to 1.0 \emph{bandwidth} may be set to
     any integer value, here 1 as in line 27.
-
-	\subsection{Main window}
+    
+	\subsection{Creating scenario from GUI}
+	Usually, the easiest way of creating scenario is to use GUI. Having the
+	knowlegde of how a scenario is built and what certain scenario parts do it
+	is just a matter of filling empty gaps.
+	Creating scenario from \ref{MANUALCREATION} in GUI will be presented here.
 	
 	\begin{figure}[h]
 	\includegraphics[width=150mm]{man/MainWindow.eps}
@@ -169,10 +173,7 @@
 	simulation window. Following objects (group of objects) are visible on the main
 	simulation window described with corresponding numbers and their functionality:
 	\begin{enumerate}
-	\item {adds/removes one simulating server -- there should be at least two
-	servers to perform simulation properly, of which one used as a drain for
-	packets generated on others (and this one as well, but there is no point in
-	doing that)}
+	\item {adds/removes one simulating server}
 	\item {text area -- can serve genreal purpose but it is advised for commenting
 	a scenario, as reverse engineering from configuration might not give the whole
 	picture of simulation aim}
@@ -189,9 +190,16 @@
 	of simulation results}
     \end{enumerate}
     
- 
+    As already mentioned \ref{MANUALCREATION} there should be at least two
+    servers. To achieve this their number should be adjusted by clicking either
+    ''+'' or ''-'' button of region 1 from picture \ref{MAINWINDOW}.
+ 	\begin{figure}[h]
+	\includegraphics[width=150mm]{man/ServerTab.eps}
+	\caption{Main FAN simulator window with server tabs}
+	\label{SERVERTAB}
+	\end{figure}
 
-	\subsection{Creating scenario from within \emph{FAN simulator}}
+
 
 	\subsection{Menu bar}
 	
