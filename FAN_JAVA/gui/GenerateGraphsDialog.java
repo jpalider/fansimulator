@@ -35,7 +35,7 @@ public class GenerateGraphsDialog extends Dialog {
 	private final String REJ_PACKET_STRING = "Rejected Packets";
 	private final String QUE_LENGTH_STRING = "Queue Length";
 	
-	private final Color BACKGROUND_COLOR = Color.BLACK;
+	private final Color BACKGROUND_COLOR = Color.WHITE;
 	
 	private Vector<ChartFrame> openedFrames;
 
