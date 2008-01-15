@@ -48,10 +48,10 @@ public class RaportPrinter {
 		System.out.println("\tlocally: " + serverPacketsServicedLocally);
 		//System.out.println("\nThe percentage of rejected packets is: " + format.format(serverPacketsRejectedPercentage) );
 	// Data that might be interesting from the point of view of each interface	
-		System.out.println("\nThe average packet service time for interface pointing to: ");
-		for (int i = 0; i < s.getInterfaces().size(); i++) {
-			System.out.println("\t" + s.getInterfaces().elementAt(i).getServer().getName() + ": " + format.format(s.getInterfaces().elementAt(i).results.getAvgPacketServiceTime()) + " s" );
-		}		
+//		System.out.println("\nThe average packet service time for interface pointing to: ");
+//		for (int i = 0; i < s.getInterfaces().size(); i++) {
+//			System.out.println("\t" + s.getInterfaces().elementAt(i).getServer().getName() + ": " + format.format(s.getInterfaces().elementAt(i).results.getAvgPacketServiceTime()) + " s" );
+//		}		
 
 		System.out.println("\nThe average queue length for interface pointing to: ");
 		for (int i = 0; i < s.getInterfaces().size(); i++) {
